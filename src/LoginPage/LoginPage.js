@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import { Form, Icon, Input, Button, Checkbox } from 'antd';
+import axios from 'axios'
+import { message } from 'antd';
 
 class LoginForm extends Component {
 
@@ -8,12 +10,32 @@ class LoginForm extends Component {
     this.props.form.validateFields();
   }
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
-      if (!err) {
+      if (err) {
         console.log('Received values of form: ', values);
+        return
       }
+
+      let username = values.username
+      let password = values.password
+
+      message.loading({ content: 'Đang trong quá trình xử lý....', key: 'DangNhap'}, 1000)
+      axios.post("http://localhost:5000/api/v1/auth/login", {
+        username, password
+      })
+      .then((result) => {
+        let data = result.data
+        localStorage.setItem('token', JSON.stringify(data));
+        message.success({ content: data.message, key: 'DangNhap', duration: 2})
+        .then(() => {
+          this.props.history.push("/home");
+        })        
+      }).catch((err) => {
+        console.log(err)
+        // message.error({ content: 'Đăng nhập thất bại!!!', key: 'DangNhap'})
+      })
     });
   };
 
