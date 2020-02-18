@@ -11,18 +11,12 @@ import {
   Breadcrumb,
   Icon,
   Dropdown,
-  Button,
   Badge,
   Avatar,
 } from 'antd';
 import Setting from "./Setting/Setting";
 import ListUser from "../ClientManage/ListUer";
 import Employee from "../Admin/Employee";
-import axios from 'axios'
-import to from 'await-to-js'
-import { message } from 'antd';
-import { connect } from 'react-redux'
-import { store_User } from '../store/store'
 import Comparison from "./Comparison/Comparison";
 
 const { SubMenu } = Menu;
@@ -36,60 +30,6 @@ class HomePage extends Component {
       collapsed: false,
     }
   }
-
-  componentDidMount = async() => {
-    await this.getProfileUser()
-  }
-
-  logout = () => {
-    this.props.dispatch(store_User(null))
-    localStorage.clear()
-    this.props.history.push("/");
-  }
-
-  renderUser = () => {
-    return (
-      <Menu>
-        <Menu.Item>
-          <a onClick={this.logout}>
-            Thoát
-          </a>
-        </Menu.Item>
-      </Menu>
-    )
-  }
-
-  getProfileUser = async() => {
-    let token = JSON.parse(localStorage.getItem("token"))
-
-    if (token && token !== null) {
-      let accessToken = token.accessToken
-      let [ err, response ] = await to(axios.get(`http://localhost:5000/api/v1/user/info`, {
-        headers: { Authorization: `JWT ${accessToken}` }
-      }))
-  
-      if (err) {
-        message.error(err, 2.5)
-        return
-      }
-
-      let data = response.data
-      if (data.success) {
-        this.props.dispatch(store_User(data.user))
-      } else {
-        this.props.dispatch(store_User(null))
-        localStorage.clear()
-        this.props.history.push("/")
-      }
-    } else {
-      this.props.history.push("/")
-    }
-  }
-  
-  onCollapse = collapsed => {
-    console.log(collapsed);
-    this.setState({ collapsed });
-  };
 
   handleOnChangePage = (type) => {
     console.log(type)
@@ -275,4 +215,4 @@ class HomePage extends Component {
   }
 }
 
-export default connect()(HomePage)
+export default HomePage
