@@ -18,6 +18,7 @@ import {
 import Setting from "./Setting/Setting";
 import ListUser from "../ClientManage/ListUer";
 import Employee from "../Admin/Employee";
+import Comparison from "./Comparison/Comparison";
 
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
@@ -36,9 +37,15 @@ class HomePage extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      content: <AccountList/>
+      content: <AccountList/>,
+      collapsed: false,
     }
   }
+
+  onCollapse = collapsed => {
+    console.log(collapsed);
+    this.setState({ collapsed });
+  };
 
   handleOnChangePage = (type) => {
     console.log(type)
@@ -69,6 +76,9 @@ class HomePage extends Component {
         break
       case 'employeeList':
         this.setState({content: <Employee/>})
+        break
+      case 'comparison':
+        this.setState({content: <Comparison/>})
         break
       default:
         break
@@ -107,7 +117,7 @@ class HomePage extends Component {
           </Menu>
         </Header>
         <Layout>
-          <Sider width={250} style={{ background: '#fff' }}>
+          <Sider theme="light" collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse} style={{ background: '#fff' }}>
             <Menu
               mode="inline"
               defaultSelectedKeys={['1']}
@@ -129,11 +139,11 @@ class HomePage extends Component {
                 </Menu.Item>
                 <Menu.Item key="2" onClick={() => this.handleOnChangePage("internalTrans")}>
                   <Icon type="retweet" />
-                  <span >Chuyển khoản nội bộ</span>
+                  <span >Chuyển nội bộ</span>
                 </Menu.Item>
                 <Menu.Item key="3" onClick={() => this.handleOnChangePage("externalTrans")}>
                   <Icon type="swap" />
-                  <span>Chuyển khoản liên ngân hàng</span>
+                  <span>Chuyển liên ngân hàng</span>
                 </Menu.Item>
                 <Menu.Item key="4" onClick={() => this.handleOnChangePage("transHistory")}>
                   <Icon type="history" />
@@ -171,7 +181,7 @@ class HomePage extends Component {
                 </Menu.Item>
               </SubMenu>
               <SubMenu
-                key="sub3"
+                key="sub4"
                 title={
                   <span>
                     <Icon type="control" />
@@ -182,12 +192,12 @@ class HomePage extends Component {
                 <Menu.Item key="19" onClick={() => this.handleOnChangePage("employeeList")}>
                   <Icon type="setting"/>Danh sách nhân viên
                 </Menu.Item>
-                <Menu.Item key="191" onClick={() => this.handleOnChangePage("employeeList")}>
+                <Menu.Item key="191" onClick={() => this.handleOnChangePage("comparison")}>
                   <Icon type="setting"/>Đối soát
                 </Menu.Item>
               </SubMenu>
               <SubMenu
-                key="sub4"
+                key="sub5"
                 title={
                   <span>
                 <Icon type="control" />
