@@ -18,20 +18,15 @@ import {
 import Setting from "./Setting/Setting";
 import ListUser from "../ClientManage/ListUer";
 import Employee from "../Admin/Employee";
+import axios from 'axios'
+import to from 'await-to-js'
+import { message } from 'antd';
+import { connect } from 'react-redux'
+import { store_User } from '../store/store'
 import Comparison from "./Comparison/Comparison";
 
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
-
-const menu = (
-  <Menu>
-    <Menu.Item>
-      <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
-        Thoát
-      </a>
-    </Menu.Item>
-  </Menu>
-);
 
 class HomePage extends Component {
   constructor(props) {
@@ -42,6 +37,55 @@ class HomePage extends Component {
     }
   }
 
+  componentDidMount = async() => {
+    await this.getProfileUser()
+  }
+
+  logout = () => {
+    this.props.dispatch(store_User(null))
+    localStorage.clear()
+    this.props.history.push("/");
+  }
+
+  renderUser = () => {
+    return (
+      <Menu>
+        <Menu.Item>
+          <a onClick={this.logout}>
+            Thoát
+          </a>
+        </Menu.Item>
+      </Menu>
+    )
+  }
+
+  getProfileUser = async() => {
+    let token = JSON.parse(localStorage.getItem("token"))
+
+    if (token && token !== null) {
+      let accessToken = token.accessToken
+      let [ err, response ] = await to(axios.get(`http://localhost:5000/api/v1/user/info`, {
+        headers: { Authorization: `JWT ${accessToken}` }
+      }))
+  
+      if (err) {
+        message.error(err, 2.5)
+        return
+      }
+
+      let data = response.data
+      if (data.success) {
+        this.props.dispatch(store_User(data.user))
+      } else {
+        this.props.dispatch(store_User(null))
+        localStorage.clear()
+        this.props.history.push("/")
+      }
+    } else {
+      this.props.history.push("/")
+    }
+  }
+  
   onCollapse = collapsed => {
     console.log(collapsed);
     this.setState({ collapsed });
@@ -107,7 +151,7 @@ class HomePage extends Component {
               <Badge dot>
                 <Icon type="notification" />
               </Badge>
-              <Dropdown overlay={menu}>
+              <Dropdown overlay={this.renderUser}>
                 <a style={{float: 'right', marginLeft: 10}} className="ant-dropdown-link" href="#">
                   <Avatar>USER</Avatar>
                 </a>
@@ -231,4 +275,4 @@ class HomePage extends Component {
   }
 }
 
-export default HomePage;
+export default connect()(HomePage)
