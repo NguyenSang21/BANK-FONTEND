@@ -1,24 +1,18 @@
 import React from 'react';
 import './App.css';
 import { Switch, BrowserRouter as Router, Route } from 'react-router-dom';
-import routes from "./routes";
+import HomePage from "./HomePage/HomePage";
+import LoginPage from "./LoginPage/LoginPage";
 
 function App() {
   return (
     <Router>
       <Switch>
-        {routes.map((it, idx) => {
-          return <Route
-            key={idx}
-            path={it.path}
-            exact={it.exact}
-            component={it.component}
-          />
-        })}
+        <Route path="/home" component={HomePage}/>
+        <Route path="/login" component={LoginPage}/>
       </Switch>
     </Router>
   );
 }
 
 export default App;
-
