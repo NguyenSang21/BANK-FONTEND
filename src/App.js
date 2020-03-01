@@ -1,12 +1,14 @@
 import React from 'react';
 import './App.css';
-import { Switch, BrowserRouter as Router, Route } from 'react-router-dom';
+import { Switch, Router, Route, Redirect } from 'react-router-dom';
 import HomePage from "./HomePage/HomePage";
 import LoginPage from "./LoginPage/LoginPage";
+import PrivateRoute from './Components/PrivateRoute';
+import { history } from './helpers';
 
 function App() {
   return (
-    <Router>
+    <Router history={history}>
       <Switch>
         <Route path="/home" component={HomePage}/>
         <Route path="/login" component={LoginPage}/>

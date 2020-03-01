@@ -5,8 +5,8 @@ import TransactionHistory from "./HomePage/TransHistory/TransactionHistory";
 import SettingDebt from "./HomePage/DebtNotice/SettingDebt";
 import DebtList from "./HomePage/DebtNotice/DebtList";
 import Setting from "./HomePage/Setting/Setting";
-import ListUser from "./ClientManage/ListUer";
-import Employee from "./Admin/Employee";
+import ListUser from "./HomePage/ClientManage/ListUer";
+import Employee from "./HomePage/Admin/Employee";
 import Comparison from "./HomePage/Comparison/Comparison";
 
 const routes = [

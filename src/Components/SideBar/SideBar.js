@@ -1,18 +1,18 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import {
   Icon,
   Layout,
   Menu,
 } from 'antd'
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom"
 
 const { SubMenu } = Menu
 const { Sider } = Layout
 
 class SideBar extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
-    this.state ={
+    this.state = {
       collapsed: false,
     }
 
@@ -25,7 +25,7 @@ class SideBar extends Component {
   };
 
   render() {
-    const {routes} = this.props
+    const { routes } = this.props
     return (
       <Sider
         theme="light"
@@ -42,21 +42,21 @@ class SideBar extends Component {
         >
           {
             routes.map((item, idx) => {
-            return <SubMenu
-              key={`sub${idx + 1}`}
-              title={<span>
-                  <Icon type={item.icon}/>
+              return <SubMenu
+                key={`sub${idx + 1}`}
+                title={<span>
+                  <Icon type={item.icon} />
                   {item.name}
-              </span>}>
-              {item.items.map((item, idx) => {
-                return <Menu.Item key={idx}>
-                    <Icon type={item.icon}/>
+                </span>}>
+                {item.items.map((item, idx) => {
+                  return <Menu.Item key={item.path}>
+                    <Icon type={item.icon} />
                     <span>{item.name}</span>
-                    <Link to={item.layout + item.path}/>
-                </Menu.Item>
-              })}
-            </SubMenu>
-          })}
+                    <Link to={item.layout + item.path} />
+                  </Menu.Item>
+                })}
+              </SubMenu>
+            })}
         </Menu>
       </Sider>
     );
