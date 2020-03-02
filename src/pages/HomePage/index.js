@@ -32,14 +32,14 @@ class HomePage extends Component {
   render() {
     return (
       <Layout>
-        <Header style={{ background: '#3b6271' }}>
+        <Header style={{ background: '#24292e' }}>
           <div className="logo">
             <p style={{ lineHeight: '30px', fontSize: 14, fontWeight: 'bold', color: 'white', textAlign: 'center' }}>Internet Banking</p>
           </div>
           <Menu
             theme="light"
             mode="horizontal"
-            style={{ lineHeight: '64px', background: '#3b6271', color: 'white' }}
+            style={{ lineHeight: '64px', background: '#24292e', color: 'white' }}
           >
             <Menu.Item key="1">Tiết kiệm trực tuyến</Menu.Item>
             <Menu.Item key="2">Tiện ích gia tăng</Menu.Item>
