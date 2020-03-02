@@ -10,7 +10,9 @@ function App() {
   return (
     <Router history={history}>
       <Switch>
-        <Route path="/home" component={HomePage}/>
+        <Route path="/home" render={(props) => {
+          return localStorage.getItem('user') ? <HomePage {...props}/> : <Redirect to="/login"/>
+        }}/>
         <Route path="/login" component={LoginPage}/>
         <Redirect path="/" to="/login"/>
       </Switch>

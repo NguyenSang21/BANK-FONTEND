@@ -15,7 +15,7 @@ export const notification = (state = initialState, action) => {
         description: action.message
       });
       return { status: true }
-    case notifConstants.NOTIF_FAILURE:
+    case notificationConstants.NOTIF_FAILURE:
       notifAntd.error({
         message: 'Thông báo',
         description: action.message

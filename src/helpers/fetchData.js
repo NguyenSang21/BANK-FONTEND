@@ -25,10 +25,7 @@ export const fetchData = ({ path, method, data, params }) => {
       if (res.status !== 200 && res.status !== 201) {
         throw new Error('Error');
       } else {
-        return {
-          success: true,
-          data: res.data || []
-        };
+        return res.data
       }
     })
     .catch(error => {
@@ -41,9 +38,6 @@ export const fetchData = ({ path, method, data, params }) => {
           error.response.data.message) ||
         'Resource Not Found!'
       );
-      return {
-        success: false
-      };
     })
     .finally(() => {
       // always executed
