@@ -1,10 +1,10 @@
 import React from 'react';
 import './App.css';
 import { Switch, Router, Route, Redirect } from 'react-router-dom';
-import HomePage from "./HomePage/HomePage";
-import LoginPage from "./LoginPage/LoginPage";
-import PrivateRoute from './Components/PrivateRoute';
+import PrivateRoute from './components/PrivateRoute';
 import { history } from './helpers';
+import HomePage from './pages/HomePage';
+import LoginPage from './pages/LoginPage';
 
 function App() {
   return (
@@ -12,6 +12,7 @@ function App() {
       <Switch>
         <Route path="/home" component={HomePage}/>
         <Route path="/login" component={LoginPage}/>
+        <Redirect path="/" to="/login"/>
       </Switch>
     </Router>
   );

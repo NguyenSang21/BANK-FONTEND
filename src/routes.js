@@ -1,13 +1,14 @@
-import AccountList from "./HomePage/AccountManage/AccountList";
-import InternalTransaction from "./HomePage/InternalTransaction/InternalTransaction";
-import ExternalTransaction from "./HomePage/ExternalTransaction/ExternalTransaction";
-import TransactionHistory from "./HomePage/TransHistory/TransactionHistory";
-import SettingDebt from "./HomePage/DebtNotice/SettingDebt";
-import DebtList from "./HomePage/DebtNotice/DebtList";
-import Setting from "./HomePage/Setting/Setting";
-import ListUser from "./HomePage/ClientManage/ListUer";
-import Employee from "./HomePage/Admin/Employee";
-import Comparison from "./HomePage/Comparison/Comparison";
+
+import AccountManage from "./pages/HomePage/AccountManage";
+import InternalTransaction from "./pages/HomePage/InternalTransaction";
+import ExternalTransaction from "./pages/HomePage/ExternalTransaction";
+import TransHistory from "./pages/HomePage/TransHistory";
+import SettingDebt from "./pages/HomePage/DebtNotice/SettingDebt";
+import DebtList from "./pages/HomePage/DebtNotice/DebtList";
+import UserList from "./pages/HomePage/ClientManage/UserList";
+import Setting from "./pages/HomePage/Setting";
+import Comparison from "./pages/HomePage/Comparison";
+import Employee from "./pages/HomePage/Administrator/Employee";
 
 const routes = [
   {
@@ -16,15 +17,15 @@ const routes = [
     icon: 'appstore',
     items: [
       {
-        path: '/accountList',
+        path: '/account-list',
         exact: true,
         icon: 'solution',
         layout: '/home',
         name: 'Danh sách tài khoản',
-        component: AccountList,
+        component: AccountManage,
       },
       {
-        path: '/internalTrans',
+        path: '/internal-trans',
         exact: true,
         icon: 'retweet',
         layout: '/home',
@@ -32,7 +33,7 @@ const routes = [
         component: InternalTransaction,
       },
       {
-        path: '/externalTrans',
+        path: '/external-trans',
         exact: true,
         icon: 'swap',
         layout: '/home',
@@ -40,12 +41,12 @@ const routes = [
         component: ExternalTransaction,
       },
       {
-        path: '/TransactionHistory',
+        path: '/transaction-history',
         exact: true,
         icon: 'history',
         layout: '/home',
         name: 'Lịch sử giao dịch',
-        component: TransactionHistory,
+        component: TransHistory,
       },
     ]
   },
@@ -55,7 +56,7 @@ const routes = [
     icon: 'bell',
     items: [
       {
-        path: '/settingDebt',
+        path: '/setting-debt',
         exact: true,
         icon: 'setting',
         layout: '/home',
@@ -63,7 +64,7 @@ const routes = [
         component: SettingDebt,
       },
       {
-        path: '/debtList',
+        path: '/debt-list',
         exact: true,
         icon: 'container',
         layout: '/home',
@@ -78,12 +79,12 @@ const routes = [
     icon: 'control',
     items: [
       {
-        path: '/userList',
+        path: '/user-list',
         exact: true,
         icon: 'solution',
         layout: '/home',
         name: 'Danh sách khách hàng',
-        component: ListUser,
+        component: UserList,
       },
     ]
   },
@@ -93,7 +94,7 @@ const routes = [
     icon: 'control',
     items: [
       {
-        path: '/employeeList',
+        path: '/employee-list',
         exact: true,
         icon: 'solution',
         layout: '/home',

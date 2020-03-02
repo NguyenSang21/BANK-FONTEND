@@ -3,6 +3,7 @@ import { fetchData } from "../helpers";
 export const userService = {
   login
 }
+
 /**
  *
  * @param {Object} data.username
