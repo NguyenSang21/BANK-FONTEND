@@ -49,7 +49,7 @@ class HomePage extends Component {
                 <Icon type="notification" />
               </Badge>
               <Dropdown>
-                <a style={{ float: 'right', marginLeft: 10 }} className="ant-dropdown-link" href="#">
+                <a style={{ float: 'right', marginLeft: 10 }} className="ant-dropdown-link">
                   <Avatar>USER</Avatar>
                 </a>
               </Dropdown>

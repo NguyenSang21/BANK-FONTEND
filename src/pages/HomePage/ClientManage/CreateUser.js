@@ -1,97 +1,118 @@
-import React, {Component} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Form,
   Input,
-  Button,
+  Modal,
+  InputNumber,
 } from 'antd';
+import PropTypes from 'prop-types'
+import { userService } from '../../../services';
+import { connect } from 'react-redux'
+import { notificationActions } from '../../../actions/notification.action';
 
-class CreateUserForm extends Component {
+function CreateUserForm(props) {
+  const [visible, setVisible] = useState(false)
 
-  handleSubmit = e => {
+  useEffect(() => {
+    setVisible(props.open)
+  }, [props.open])
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    this.props.form.validateFields((err, values) => {
+    props.form.validateFields( async (err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
+        const result = await userService.create(values)
+
+        if(result && result.success) {
+          props.notify_success("Tạo thành công!")
+          setVisible(false)
+        }
+
       }
     });
   };
 
-  render() {
-    const { getFieldDecorator } = this.props.form;
-    const formItemLayout = {
-      labelCol: { span: 6 },
-      wrapperCol: { span: 14 },
-    };
-    return (
-      <Form {...formItemLayout} onSubmit={this.handleSubmit}>
+  const { getFieldDecorator } = props.form;
+  const formItemLayout = {
+    labelCol: { span: 6 },
+    wrapperCol: { span: 14 },
+  };
+  return (
+    <Modal
+      maskClosable={false}
+      title="Tạo tài khoản mới"
+      visible={visible}
+      onOk={(e) => handleSubmit(e)}
+      okText="Tạo mới"
+      onCancel={() => setVisible(false)}
+      cancelText="Hủy"
+    >
+      <Form {...formItemLayout}>
         <Form.Item {...formItemLayout} label="Tên đăng nhập:">
-          {getFieldDecorator('loginName', {
+          {getFieldDecorator('username', {
             rules: [
               {
                 required: true,
                 message: 'Nhập vào tên đăng nhập!',
               },
             ],
-          })(<Input style={{width: '100%'}} placeholder="Nhập vào tên đăng nhập!"/>)}
+          })(<Input placeholder="Nhập vào tên đăng nhập!" />)}
         </Form.Item>
-        <Form.Item {...formItemLayout} label="Nhập vào mật khẩu:">
-          {getFieldDecorator('newPassword', {
+        <Form.Item {...formItemLayout} label="Mật khẩu:">
+          {getFieldDecorator('password', {
             rules: [
               {
                 required: true,
                 message: 'Nhập vào mật khẩu!',
               },
             ],
-          })(<Input.Password style={{width: '100%'}} placeholder="Nhập vào mật khẩu!"/>)}
+          })(<Input.Password placeholder="Nhập vào mật khẩu!" />)}
         </Form.Item>
         <Form.Item {...formItemLayout} label="Họ và tên:">
-          {getFieldDecorator('username', {
+          {getFieldDecorator('name', {
             rules: [
               {
                 required: true,
                 message: 'Nhập vào họ và tên!',
               },
             ],
-          })(<Input style={{width: '100%'}} placeholder="Nhập vào họ và tên!"/>)}
+          })(<Input placeholder="Nhập vào họ và tên!" />)}
         </Form.Item>
         <Form.Item {...formItemLayout} label="Email:">
-          {getFieldDecorator('email', {
+          {getFieldDecorator('gmail', {
             rules: [
               {
                 required: true,
                 message: 'Nhập vào email!',
               },
             ],
-          })(<Input style={{width: '100%'}} placeholder="Nhập vào mail!"/>)}
+          })(<Input placeholder="Nhập vào mail!" />)}
         </Form.Item>
         <Form.Item {...formItemLayout} label="Số điện thoại:">
-          {getFieldDecorator('numberPhone', {
+          {getFieldDecorator('sdt', {
             rules: [
               {
                 required: true,
                 message: 'Nhập vào số điện thoại!',
               },
             ],
-          })(<Input style={{width: '100%'}} placeholder="Nhập vào số điện thoại!"/>)}
+          })(<InputNumber style={{width: '100%'}} placeholder="Nhập vào số điện thoại!" />)}
         </Form.Item>
-        <Form.Item {...formItemLayout} label="Địa chỉ:">
-          {getFieldDecorator('address', {
-            rules: [
-              {
-                required: true,
-                message: 'Nhập vào địa chỉ!',
-              },
-            ],
-          })(<Input style={{width: '100%'}} placeholder="Nhập vào địa chỉ!"/>)}
-        </Form.Item>
-        <Button style={{float: 'right', marginRight: '10%'}} type="primary" htmlType="submit" className="login-form-button">
-          Tạo tài khoản
-        </Button>
       </Form>
-    );
-  }
+    </Modal>
+  )
 }
 
-const CreateUser = Form.create({ name: 'validate_other' })(CreateUserForm)
+const CreateUser = Form.create({ name: 'create_user' })(CreateUserForm)
 
-export default CreateUser;
+CreateUser.propTypes = {
+  open: PropTypes.bool,
+}
+
+const actionCreators = {
+  notify_success: notificationActions.success,
+  notify_failure: notificationActions.failure
+}
+
+export default connect(null, actionCreators)(CreateUser);
