@@ -97,7 +97,7 @@ function UserListForm(props) {
               <Input style={{ width: '100%' }} placeholder="Nhập vào thông tin tìm kiếm!" />
             </Col>
             <Col span={12}>
-              <Radio.Group onChange={() => {console.log('test')}} value={1}>
+              <Radio.Group onChange={() => { console.log('test') }} value={1}>
                 <Radio value={1}>Số tài khoản</Radio>
                 <Radio value={2}>Email</Radio>
                 <Radio value={3}>Số điện thoại</Radio>
@@ -115,13 +115,14 @@ function UserListForm(props) {
           columns={columns}
           rowClassName="editable-row"
           pagination={{
-            onChange: () => {console.log('aaaa')},
+            onChange: () => { console.log('aaaa') },
           }}
         />
       </EditableContext.Provider>
       <CreateUser
         open={openModal}
-       />
+        handleClose={() => setOpenModal(false)}
+      />
     </div>
   )
 }

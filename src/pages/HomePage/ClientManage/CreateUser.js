@@ -19,12 +19,12 @@ function CreateUserForm(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    props.form.validateFields( async (err, values) => {
+    props.form.validateFields(async (err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
         const result = await userService.create(values)
 
-        if(result && result.success) {
+        if (result && result.success) {
           props.notify_success("Tạo thành công!")
           setVisible(false)
         }
@@ -45,7 +45,7 @@ function CreateUserForm(props) {
       visible={visible}
       onOk={(e) => handleSubmit(e)}
       okText="Tạo mới"
-      onCancel={() => setVisible(false)}
+      onCancel={() => props.handleClose()}
       cancelText="Hủy"
     >
       <Form {...formItemLayout}>
@@ -97,7 +97,7 @@ function CreateUserForm(props) {
                 message: 'Nhập vào số điện thoại!',
               },
             ],
-          })(<InputNumber style={{width: '100%'}} placeholder="Nhập vào số điện thoại!" />)}
+          })(<InputNumber style={{ width: '100%' }} placeholder="Nhập vào số điện thoại!" />)}
         </Form.Item>
       </Form>
     </Modal>
@@ -108,6 +108,7 @@ const CreateUser = Form.create({ name: 'create_user' })(CreateUserForm)
 
 CreateUser.propTypes = {
   open: PropTypes.bool,
+  handleClose: PropTypes.func,
 }
 
 const actionCreators = {
