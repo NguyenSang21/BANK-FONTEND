@@ -1,67 +1,115 @@
-import React, {Component} from 'react';
-import {
-  Form,
-  Input,
-  Button,
-} from 'antd';
+import React, { useState } from 'react';
+import { Form, Input, Button } from 'antd';
 
-class SettingForm extends Component {
+const formItemLayout = {
+  labelCol: {
+    xs: {
+      span: 14
+    },
+    sm: {
+      span: 8
+    }
+  },
+  wrapperCol: {
+    xs: {
+      span: 14
+    },
+    sm: {
+      span: 6
+    }
+  }
+};
 
-  handleSubmit = e => {
-    e.preventDefault();
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        console.log('Received values of form: ', values);
-      }
-    });
+const tailFormItemLayout = {
+  wrapperCol: {
+    xs: {
+      span: 24,
+      offset: 0
+    },
+    sm: {
+      span: 24,
+      offset: 8
+    }
+  }
+};
+
+const Setting = props => {
+  const [form] = Form.useForm();
+
+  const onFinish = values => {
+    console.log('Received values of form: ', values);
   };
 
-  render() {
-    const { getFieldDecorator } = this.props.form;
-    const formItemLayout = {
-      labelCol: { span: 6 },
-      wrapperCol: { span: 14 },
-    };
-    return (
-      <Form {...formItemLayout} onSubmit={this.handleSubmit}>
-        <Form.Item {...formItemLayout} label="Mật khẩu cũ:">
-          {getFieldDecorator('oldPassword', {
-            rules: [
-              {
-                required: true,
-                message: 'Nhập vào mật khẩu cũ!',
-              },
-            ],
-          })(<Input.Password style={{width: '100%'}} placeholder="Nhập vào mật khẩu cũ!"/>)}
-        </Form.Item>
-        <Form.Item {...formItemLayout} label="Mật khẩu mới:">
-          {getFieldDecorator('newPassword', {
-            rules: [
-              {
-                required: true,
-                message: 'Nhập vào mật khẩu mới!',
-              },
-            ],
-          })(<Input.Password style={{width: '100%'}} placeholder="Nhập vào mật khẩu mới!"/>)}
-        </Form.Item>
-        <Form.Item {...formItemLayout} label="Nhập lại mật khẩu mới:">
-          {getFieldDecorator('newPassword2', {
-            rules: [
-              {
-                required: true,
-                message: 'Nhập vào mật khẩu mới!',
-              },
-            ],
-          })(<Input.Password style={{width: '100%'}} placeholder="Nhập lại mật khẩu mới!"/>)}
-        </Form.Item>
-        <Button style={{float: 'right', marginRight: '30%'}} type="primary" htmlType="submit" className="login-form-button">
+  return (
+    <Form
+      {...formItemLayout}
+      form={form}
+      name="register"
+      onFinish={onFinish}
+      initialValues={{
+        residence: ['zhejiang', 'hangzhou', 'xihu'],
+        prefix: '86'
+      }}
+      scrollToFirstError
+    >
+      <Form.Item
+        name="oldPassword"
+        label="Mật khẩu cũ"
+        rules={[
+          {
+            required: true,
+            message: 'Vui lòng nhập mật khẩu cũ!'
+          }
+        ]}
+      >
+        <Input.Password />
+      </Form.Item>
+
+      <Form.Item
+        name="newPassword"
+        label="Mật khẩu mới"
+        rules={[
+          {
+            required: true,
+            message: 'Vui lòng nhập mật khẩu mới!'
+          }
+        ]}
+        hasFeedback
+      >
+        <Input.Password />
+      </Form.Item>
+
+      <Form.Item
+        name="confirm"
+        label="Xác nhận mật khẩu"
+        dependencies={['newPassword']}
+        hasFeedback
+        rules={[
+          {
+            required: true,
+            message: 'Vui lòng nhập xác nhận lại mật khẩu!'
+          },
+          ({ getFieldValue }) => ({
+            validator(rule, value) {
+              if (!value || getFieldValue('newPassword') === value) {
+                return Promise.resolve();
+              }
+
+              return Promise.reject('Vui lòng nhập vào chính xác password!');
+            }
+          })
+        ]}
+      >
+        <Input.Password />
+      </Form.Item>
+
+      <Form.Item {...tailFormItemLayout}>
+        <Button type="primary" htmlType="submit">
           Đổi mật khẩu
         </Button>
-      </Form>
-    );
-  }
-}
-
-const Setting = Form.create({ name: 'validate_other' })(SettingForm)
+      </Form.Item>
+    </Form>
+  );
+};
 
 export default Setting;

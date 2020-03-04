@@ -1,11 +1,11 @@
 import { notification as notifAntd } from 'antd';
 import { notificationConstants } from '../constants';
 
-const initialState = {}
+const initialState = {};
 /**
- * 
- * @param {Object} state 
- * @param {Object} action 
+ *
+ * @param {Object} state
+ * @param {Object} action
  */
 export const notification = (state = initialState, action) => {
   switch (action.type) {
@@ -14,7 +14,7 @@ export const notification = (state = initialState, action) => {
         message: 'Thông báo',
         description: action.message
       });
-      return { status: true }
+      return { status: true };
     case notificationConstants.NOTIF_FAILURE:
       notifAntd.error({
         message: 'Thông báo',

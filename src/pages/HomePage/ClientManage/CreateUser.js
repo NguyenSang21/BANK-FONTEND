@@ -1,119 +1,138 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Form,
-  Input,
-  Modal,
-  InputNumber,
-} from 'antd';
-import PropTypes from 'prop-types'
-import { userService } from '../../../services';
-import { connect } from 'react-redux'
+import { Form, Input, Modal, InputNumber, Spin } from 'antd';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { notificationActions } from '../../../actions/notification.action';
+import { userService } from '../../../services';
 
-function CreateUserForm(props) {
-  const [visible, setVisible] = useState(false)
+const layout = {
+  labelCol: {
+    span: 7
+  },
+  wrapperCol: {
+    span: 14
+  }
+};
+
+const CreateUser = props => {
+  const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    setVisible(props.open)
-  }, [props.open])
+    setVisible(props.open);
+  }, [props.open]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    props.form.validateFields(async (err, values) => {
-      if (!err) {
-        console.log('Received values of form: ', values);
-        const result = await userService.create(values)
+  const handleSubmit = async () => {
+    setLoading(true); // start loading
+    try {
+      const values = await form.validateFields();
+      console.log('Success:', values);
+      const result = await userService.create(values);
 
-        if (result && result.success) {
-          props.notify_success("Tạo thành công!")
-          setVisible(false)
-        }
-
+      if (result && result.success) {
+        props.notify_success('Tạo thành công!');
+        setVisible(false);
       }
-    });
+    } catch (errorInfo) {
+      console.log('Failed:', errorInfo);
+    }
+    setLoading(false); // end loading
   };
 
-  const { getFieldDecorator } = props.form;
-  const formItemLayout = {
-    labelCol: { span: 6 },
-    wrapperCol: { span: 14 },
+  const onFinishFailed = errorInfo => {
+    console.log('Failed: ', errorInfo);
   };
+
   return (
     <Modal
       maskClosable={false}
       title="Tạo tài khoản mới"
       visible={visible}
-      onOk={(e) => handleSubmit(e)}
+      onOk={() => handleSubmit()}
       okText="Tạo mới"
       onCancel={() => props.handleClose()}
       cancelText="Hủy"
     >
-      <Form {...formItemLayout}>
-        <Form.Item {...formItemLayout} label="Tên đăng nhập:">
-          {getFieldDecorator('username', {
-            rules: [
+      <Spin spinning={loading}>
+        <Form {...layout} form={form} onFinishFailed={onFinishFailed}>
+          <Form.Item
+            name="username"
+            label="Tên đăng nhập:"
+            rules={[
               {
                 required: true,
-                message: 'Nhập vào tên đăng nhập!',
-              },
-            ],
-          })(<Input placeholder="Nhập vào tên đăng nhập!" />)}
-        </Form.Item>
-        <Form.Item {...formItemLayout} label="Mật khẩu:">
-          {getFieldDecorator('password', {
-            rules: [
+                message: 'Nhập vào tên đăng nhập!'
+              }
+            ]}
+          >
+            <Input placeholder="Nhập vào tên đăng nhập!" />
+          </Form.Item>
+          <Form.Item
+            name="password"
+            label="Mật khẩu:"
+            rules={[
               {
                 required: true,
-                message: 'Nhập vào mật khẩu!',
-              },
-            ],
-          })(<Input.Password placeholder="Nhập vào mật khẩu!" />)}
-        </Form.Item>
-        <Form.Item {...formItemLayout} label="Họ và tên:">
-          {getFieldDecorator('name', {
-            rules: [
+                message: 'Nhập vào mật khẩu!'
+              }
+            ]}
+          >
+            <Input.Password placeholder="Nhập vào mật khẩu!" />
+          </Form.Item>
+          <Form.Item
+            label="Họ và tên:"
+            name="name"
+            rules={[
               {
                 required: true,
-                message: 'Nhập vào họ và tên!',
-              },
-            ],
-          })(<Input placeholder="Nhập vào họ và tên!" />)}
-        </Form.Item>
-        <Form.Item {...formItemLayout} label="Email:">
-          {getFieldDecorator('gmail', {
-            rules: [
+                message: 'Nhập vào họ và tên!'
+              }
+            ]}
+          >
+            <Input placeholder="Nhập vào họ và tên!" />
+          </Form.Item>
+          <Form.Item
+            name="gmail"
+            label="Email:"
+            rules={[
               {
                 required: true,
-                message: 'Nhập vào email!',
-              },
-            ],
-          })(<Input placeholder="Nhập vào mail!" />)}
-        </Form.Item>
-        <Form.Item {...formItemLayout} label="Số điện thoại:">
-          {getFieldDecorator('sdt', {
-            rules: [
+                message: 'Nhập vào email!'
+              }
+            ]}
+          >
+            <Input placeholder="Nhập vào mail!" />
+          </Form.Item>
+          <Form.Item
+            name="sdt"
+            label="Số điện thoại:"
+            rules={[
               {
                 required: true,
-                message: 'Nhập vào số điện thoại!',
-              },
-            ],
-          })(<InputNumber style={{ width: '100%' }} placeholder="Nhập vào số điện thoại!" />)}
-        </Form.Item>
-      </Form>
+                message: 'Nhập vào số điện thoại!'
+              }
+            ]}
+          >
+            <InputNumber
+              style={{ width: '100%' }}
+              placeholder="Nhập vào số điện thoại!"
+            />
+          </Form.Item>
+        </Form>
+      </Spin>
     </Modal>
-  )
-}
-
-const CreateUser = Form.create({ name: 'create_user' })(CreateUserForm)
+  );
+};
 
 CreateUser.propTypes = {
   open: PropTypes.bool,
-  handleClose: PropTypes.func,
-}
+  handleClose: PropTypes.func
+};
 
 const actionCreators = {
   notify_success: notificationActions.success,
   notify_failure: notificationActions.failure
-}
+};
 
 export default connect(null, actionCreators)(CreateUser);

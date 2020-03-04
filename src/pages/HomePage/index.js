@@ -1,55 +1,66 @@
 import React, { Component } from 'react';
-import {
-  Layout,
-  Menu,
-  Breadcrumb,
-  Icon,
-  Dropdown,
-  Badge,
-  Avatar,
-} from 'antd';
-import routes from "../../routes";
-import SideBar from "../../components/SideBar";
-import { Route, Switch, Redirect } from "react-router-dom";
-import AccountList from "./AccountManage";
+import { Layout, Menu, Breadcrumb, Dropdown, Badge, Avatar } from 'antd';
+import routes from '../../routes';
+import SideBar from '../../components/SideBar';
+import { Route, Switch, Redirect } from 'react-router-dom';
+import AccountList from './AccountManage';
+import { NotificationOutlined } from '@ant-design/icons';
 
 const { Header, Content } = Layout;
 
 class HomePage extends Component {
-
   getRoutes = routes => {
     return routes.map(item => {
       return item.items.map((item, idx) => {
-        return <Route
-          path={item.layout + item.path}
-          component={item.component}
-          key={item.layout + item.path}
-        />
-      })
-    })
-  }
+        return (
+          <Route
+            path={item.layout + item.path}
+            render={() => item.component}
+            key={item.layout + item.path}
+          />
+        );
+      });
+    });
+  };
 
   render() {
     return (
       <Layout>
         <Header style={{ background: '#24292e' }}>
           <div className="logo">
-            <p style={{ lineHeight: '30px', fontSize: 14, fontWeight: 'bold', color: 'white', textAlign: 'center' }}>Internet Banking</p>
+            <p
+              style={{
+                lineHeight: '30px',
+                fontSize: 14,
+                fontWeight: 'bold',
+                color: 'white',
+                textAlign: 'center'
+              }}
+            >
+              Internet Banking
+            </p>
           </div>
           <Menu
             theme="light"
             mode="horizontal"
-            style={{ lineHeight: '64px', background: '#24292e', color: 'white' }}
+            style={{
+              lineHeight: '64px',
+              background: '#24292e',
+              color: 'white'
+            }}
           >
             <Menu.Item key="1">Tiết kiệm trực tuyến</Menu.Item>
             <Menu.Item key="2">Tiện ích gia tăng</Menu.Item>
             <Menu.Item key="3">Hỗ trợ giao dịch</Menu.Item>
             <div style={{ float: 'right' }}>
               <Badge dot>
-                <Icon type="notification" />
+                <NotificationOutlined />
               </Badge>
               <Dropdown>
-                <a style={{ float: 'right', marginLeft: 10 }} className="ant-dropdown-link">
+                <a
+                  style={{ float: 'right', marginLeft: 10 }}
+                  className="ant-dropdown-link"
+                >
                   <Avatar>USER</Avatar>
                 </a>
               </Dropdown>
@@ -68,13 +79,11 @@ class HomePage extends Component {
                 background: '#fff',
                 padding: 24,
                 margin: 0,
-                minHeight: 280,
+                minHeight: 280
               }}
             >
               <Switch>
-                {
-                  this.getRoutes(routes)
-                }
+                {this.getRoutes(routes)}
                 <Route path="/" component={AccountList} />
                 <Redirect from="*" to="/" />
               </Switch>
@@ -86,4 +95,4 @@ class HomePage extends Component {
   }
 }
 
-export default HomePage
+export default HomePage;

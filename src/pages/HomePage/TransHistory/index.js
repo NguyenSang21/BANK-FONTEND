@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import { Table, Input, InputNumber, Form, Button, Icon, Tag, } from 'antd';
+import React, { Component } from 'react';
+import { Table, Input, InputNumber, Form, Button, Icon, Tag } from 'antd';
 
 const data = [];
 for (let i = 0; i < 5; i++) {
@@ -7,14 +7,14 @@ for (let i = 0; i < 5; i++) {
     transNumber: 234657 + i,
     content: i % 2 === 0 ? 'Lương tháng' : 'Gửi lại tiền mượn',
     amount: `${i % 2 === 0 ? '-' : '+'} ${5000000 * (i + 1)}`,
-    time: "12/12/2020",
-    transType: i % 2 === 0 ? 0 : 1,
+    time: '12/12/2020',
+    transType: i % 2 === 0 ? 0 : 1
   });
 }
 
 const EditableContext = React.createContext();
 
-class TransactionHistoryForm extends Component {
+class TransHistory extends Component {
   constructor(props) {
     super(props);
     this.state = { data, editingKey: '' };
@@ -23,19 +23,19 @@ class TransactionHistoryForm extends Component {
         title: 'Số giao dịch',
         dataIndex: 'transNumber',
         width: '25%',
-        editable: true,
+        editable: true
       },
       {
         title: 'Nội dung',
         dataIndex: 'content',
         width: '25%',
-        editable: true,
+        editable: true
       },
       {
         title: 'Số tiền',
         dataIndex: 'amount',
         width: '20%',
-        editable: true,
+        editable: true
       },
       {
         title: 'Loại giao dịch',
@@ -45,9 +45,9 @@ class TransactionHistoryForm extends Component {
         render: (text, record) => {
           switch (record.transType) {
             case 0:
-              return <Tag color="red">Tiền ra</Tag>
+              return <Tag color="red">Tiền ra</Tag>;
             case 1:
-              return <Tag color="green">Tiền vào</Tag>
+              return <Tag color="green">Tiền vào</Tag>;
           }
         }
       },
@@ -55,8 +55,8 @@ class TransactionHistoryForm extends Component {
         title: 'Thời gian',
         dataIndex: 'time',
         width: '15%',
-        editable: true,
-      },
+        editable: true
+      }
     ];
   }
 
@@ -71,8 +71,8 @@ class TransactionHistoryForm extends Component {
           record,
           inputType: col.dataIndex === 'age' ? 'number' : 'text',
           dataIndex: col.dataIndex,
-          title: col.title,
-        }),
+          title: col.title
+        })
       };
     });
     return (
@@ -83,14 +83,12 @@ class TransactionHistoryForm extends Component {
           columns={columns}
           rowClassName="editable-row"
           pagination={{
-            onChange: this.cancel,
+            onChange: this.cancel
           }}
         />
       </EditableContext.Provider>
     );
   }
 }
-
-const TransHistory = Form.create({name: 'validate_other'})(TransactionHistoryForm);
 
 export default TransHistory;

@@ -1,19 +1,10 @@
-import React, {Component} from 'react';
-import {
-  Form,
-  Select,
-  Card,
-  Input,
-  InputNumber,
-  Button,
-  Col,
-  Row, Icon,
-} from 'antd';
+import React, { Component } from 'react';
+import { Form, Select, Card, Input, InputNumber, Button, Col, Row } from 'antd';
+import { SettingOutlined } from '@ant-design/icons';
 
-const {TextArea} = Input;
+const { TextArea } = Input;
 
-class SettingDebtFrom extends Component {
-
+class SettingDebt extends Component {
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
@@ -27,11 +18,16 @@ class SettingDebtFrom extends Component {
     const { getFieldDecorator } = this.props.form;
     const formItemLayout = {
       labelCol: { span: 6 },
-      wrapperCol: { span: 14 },
+      wrapperCol: { span: 14 }
     };
     return (
       <Form {...formItemLayout} onSubmit={this.handleSubmit}>
-        <Card extra={<Icon type="setting" />} headStyle={{background: '#fafafa'}} title="Tạo nhắc nợ" style={{ width: '100%' }}>
+        <Card
+          extra={<SettingOutlined />}
+          headStyle={{ background: '#fafafa' }}
+          title="Tạo nhắc nợ"
+          style={{ width: '100%' }}
+        >
           <Row gutter={16}>
             <Col span={12}>
               <Card>
@@ -40,27 +36,41 @@ class SettingDebtFrom extends Component {
                     rules: [
                       {
                         required: true,
-                        message: 'Nhập số tài khoản người nợ!',
-                      },
-                    ],
-                  })(<InputNumber style={{width: '100%'}} min={1} max={20000000} placeholder="Nhập số tài khoản người nợ!"/>)}
+                        message: 'Nhập số tài khoản người nợ!'
+                      }
+                    ]
+                  })(
+                    <InputNumber
+                      style={{ width: '100%' }}
+                      min={1}
+                      max={20000000}
+                      placeholder="Nhập số tài khoản người nợ!"
+                    />
+                  )}
                 </Form.Item>
                 <Form.Item {...formItemLayout} label="Số tiền nợ:">
                   {getFieldDecorator('debtAmount', {
                     rules: [
                       {
                         required: true,
-                        message: 'Nhập số tiền nợ cần trả!',
-                      },
-                    ],
-                  })(<InputNumber style={{width: '100%'}} min={1} max={20000000} placeholder="Nhập số tiền nợ cần trả!"/>)}
+                        message: 'Nhập số tiền nợ cần trả!'
+                      }
+                    ]
+                  })(
+                    <InputNumber
+                      style={{ width: '100%' }}
+                      min={1}
+                      max={20000000}
+                      placeholder="Nhập số tiền nợ cần trả!"
+                    />
+                  )}
                 </Form.Item>
                 <Form.Item label="Nội dung:" hasFeedback>
                   {getFieldDecorator('content', {
-                    rules: [{required: true, message: 'Vui lòng nhập nội dung!'}],
-                  })(<TextArea
-                    rows={4}/>,
-                  )}
+                    rules: [
+                      { required: true, message: 'Vui lòng nhập nội dung!' }
+                    ]
+                  })(<TextArea rows={4} />)}
                 </Form.Item>
               </Card>
             </Col>
@@ -71,23 +81,31 @@ class SettingDebtFrom extends Component {
                   &nbsp;
                   <span>12312314</span>
                 </div>
-                <br/>
+                <br />
                 <div>
                   <label>Chủ tài khoản:</label>
                   &nbsp;
                   <span>Sang Sang</span>
                 </div>
-                <br/>
+                <br />
                 <div>
                   <label>Ngân hàng:</label>
                   &nbsp;
                   <span>JAV Banking</span>
                 </div>
-                <br/><br/><br/><br/>
+                <br />
+                <br />
+                <br />
+                <br />
               </Card>
             </Col>
           </Row>
-          <Button style={{float: 'right'}} type="primary" htmlType="submit" className="login-form-button">
+          <Button
+            style={{ float: 'right' }}
+            type="primary"
+            htmlType="submit"
+            className="login-form-button"
+          >
             Gủi nhắc nợ
           </Button>
         </Card>
@@ -95,7 +113,5 @@ class SettingDebtFrom extends Component {
     );
   }
 }
-
-const SettingDebt = Form.create({ name: 'validate_other' })(SettingDebtFrom)
 
 export default SettingDebt;

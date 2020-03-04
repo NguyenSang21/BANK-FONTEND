@@ -1,21 +1,21 @@
-import React, {Component} from 'react';
-import {Table, Form, Row, Button, Icon, Col, Card, Input, Radio} from 'antd';
-
+import React, { Component } from 'react';
+import { Table, Form, Row, Button, Icon, Col, Card, Input, Radio } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
 const data = [];
 
 for (let i = 0; i < 5; i++) {
   data.push({
     username: i % 2 === 0 ? 'Nguyễn văn ' + i : 'Nguyễn thị ' + i,
     position: i % 2 === 0 ? 'Nhân viên' : 'Siêu Nhân Viên',
-    email: i % 2 === 0 ? `nguyenvan${i}@gmail.com`: `nguyenthi${i}@gmail.com`,
-    numberPhone: i % 2 === 0 ? "003-113-456" : "004-115-789",
-    address: i % 2 === 0 ? 'TP.HCM' : 'HÀ NỘI',
+    email: i % 2 === 0 ? `nguyenvan${i}@gmail.com` : `nguyenthi${i}@gmail.com`,
+    numberPhone: i % 2 === 0 ? '003-113-456' : '004-115-789',
+    address: i % 2 === 0 ? 'TP.HCM' : 'HÀ NỘI'
   });
 }
 
 const EditableContext = React.createContext();
 
-class EmployeeForm extends Component {
+class Employee extends Component {
   constructor(props) {
     super(props);
     this.state = { data, editingKey: '', selectedOption: 1 };
@@ -24,31 +24,31 @@ class EmployeeForm extends Component {
         title: 'Họ tên',
         dataIndex: 'username',
         width: '20%',
-        editable: true,
+        editable: true
       },
       {
         title: 'Chức danh',
         dataIndex: 'position',
         width: '20%',
-        editable: true,
+        editable: true
       },
       {
         title: 'Email',
         dataIndex: 'email',
         width: '20%',
-        editable: true,
+        editable: true
       },
       {
         title: 'Số điện thoại',
         dataIndex: 'numberPhone',
         width: '20%',
-        editable: true,
+        editable: true
       },
       {
         title: 'Địa chỉ',
         dataIndex: 'address',
         width: '20%',
-        editable: true,
+        editable: true
       },
       {
         title: 'Action 1',
@@ -56,20 +56,30 @@ class EmployeeForm extends Component {
         width: '20%',
         editable: true,
         render: (text, record) => {
-          return <Button type="danger" onClick={()=> {console.log(record)}}><Icon type="delete"/>Xóa</Button>
+          return (
+            <Button
+              type="danger"
+              onClick={() => {
+                console.log(record);
+              }}
+            >
+              <DeleteOutlined />
+              Xóa
+            </Button>
+          );
         }
-      },
+      }
     ];
   }
 
-  onChangeSelectedOption = (e) => {
-    this.setState({selectedOption: e.target.value})
-  }
+  onChangeSelectedOption = e => {
+    this.setState({ selectedOption: e.target.value });
+  };
 
   render() {
     const formItemLayout = {
       labelCol: { span: 6 },
-      wrapperCol: { span: 14 },
+      wrapperCol: { span: 14 }
     };
     const columns = this.columns.map(col => {
       if (!col.editable) {
@@ -81,26 +91,32 @@ class EmployeeForm extends Component {
           record,
           inputType: col.dataIndex === 'age' ? 'number' : 'text',
           dataIndex: col.dataIndex,
-          title: col.title,
-        }),
+          title: col.title
+        })
       };
     });
     return (
       <div>
         <Form {...formItemLayout} onSubmit={this.handleSubmit}>
-          <Card style={{width: '100%', marginBottom: 10}}>
+          <Card style={{ width: '100%', marginBottom: 10 }}>
             <Row gutter={16}>
               <Col span={8}>
-                <Input style={{width: '100%'}} placeholder="Nhập vào thông tin tìm kiếm!"/>
+                <Input
+                  style={{ width: '100%' }}
+                  placeholder="Nhập vào thông tin tìm kiếm!"
+                />
               </Col>
               <Col span={12}>
-                <Radio.Group onChange={this.onChangeSelectedOption} value={this.state.selectedOption}>
+                <Radio.Group
+                  onChange={this.onChangeSelectedOption}
+                  value={this.state.selectedOption}
+                >
                   <Radio value={1}>Số tài khoản</Radio>
                   <Radio value={2}>Email</Radio>
                   <Radio value={3}>Số điện thoại</Radio>
                   <Radio value={4}>CMND</Radio>
                 </Radio.Group>
-                <Button style={{marginLeft: 20}}>Tìm kiếm</Button>
+                <Button style={{ marginLeft: 20 }}>Tìm kiếm</Button>
               </Col>
             </Row>
           </Card>
@@ -112,7 +128,7 @@ class EmployeeForm extends Component {
             columns={columns}
             rowClassName="editable-row"
             pagination={{
-              onChange: this.cancel,
+              onChange: this.cancel
             }}
           />
         </EditableContext.Provider>
@@ -120,7 +136,5 @@ class EmployeeForm extends Component {
     );
   }
 }
-
-const Employee = Form.create({name: 'validate_other'})(EmployeeForm);
 
 export default Employee;

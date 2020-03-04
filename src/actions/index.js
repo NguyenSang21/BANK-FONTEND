@@ -1,1 +1,1 @@
-export * from './notify.action'
+export * from './notify.action';

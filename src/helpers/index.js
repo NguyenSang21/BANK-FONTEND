@@ -1,3 +1,3 @@
-export * from './fetchData'
-export * from './history'
-export * from './store'
+export * from './fetchData';
+export * from './history';
+export * from './store';

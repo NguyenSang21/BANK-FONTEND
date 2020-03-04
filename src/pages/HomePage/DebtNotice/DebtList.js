@@ -1,17 +1,17 @@
-import React, {Component} from 'react';
-import {Form, Table, Button, Tag} from "antd";
+import React, { Component } from 'react';
+import { Form, Table, Button, Tag } from 'antd';
 
 const EditableContext = React.createContext();
 const data = [];
 for (let i = 0; i < 5; i++) {
   data.push({
-    initiator: "Nguyễn Văn " + i,
-    debtor: "Nguyễn Thị " + i,
+    initiator: 'Nguyễn Văn ' + i,
+    debtor: 'Nguyễn Thị ' + i,
     amount: 50000 * i + 10,
-    type: i / 2 === 0 ? 0 : 1,
+    type: i / 2 === 0 ? 0 : 1
   });
 }
-class DebtListForm extends Component {
+class DebtList extends Component {
   constructor(props) {
     super(props);
     this.state = { data, editingKey: '' };
@@ -20,19 +20,19 @@ class DebtListForm extends Component {
         title: 'Người tạo(Nhắc nợ)',
         dataIndex: 'initiator',
         width: '25%',
-        editable: true,
+        editable: true
       },
       {
         title: 'Người bị nợ',
         dataIndex: 'debtor',
         width: '25%',
-        editable: true,
+        editable: true
       },
       {
         title: 'Số Tiền',
         dataIndex: 'amount',
         width: '15%',
-        editable: true,
+        editable: true
       },
       {
         title: 'Loại',
@@ -42,9 +42,9 @@ class DebtListForm extends Component {
         render: (text, record) => {
           switch (record.type) {
             case 0:
-              return <Tag color="red">Bị nợ</Tag>
+              return <Tag color="red">Bị nợ</Tag>;
             case 1:
-              return <Tag color="green">Nhắc nợ</Tag>
+              return <Tag color="green">Nhắc nợ</Tag>;
           }
         }
       },
@@ -53,7 +53,15 @@ class DebtListForm extends Component {
         dataIndex: 'actions',
         width: '20%',
         editable: true,
-        render: () => <Button onClick={(e) => {console.log(e.target)}}>Hủy Nhắc Nợ</Button>
+        render: () => (
+          <Button
+            onClick={e => {
+              console.log(e.target);
+            }}
+          >
+            Hủy Nhắc Nợ
+          </Button>
+        )
       }
     ];
   }
@@ -76,8 +84,8 @@ class DebtListForm extends Component {
           inputType: col.dataIndex === 'age' ? 'number' : 'text',
           dataIndex: col.dataIndex,
           title: col.title,
-          editing: this.isEditing(record),
-        }),
+          editing: this.isEditing(record)
+        })
       };
     });
 
@@ -89,14 +97,12 @@ class DebtListForm extends Component {
           columns={columns}
           rowClassName="editable-row"
           pagination={{
-            onChange: this.cancel,
+            onChange: this.cancel
           }}
         />
       </EditableContext.Provider>
     );
   }
 }
-
-const DebtList = Form.create()(DebtListForm);
 
 export default DebtList;

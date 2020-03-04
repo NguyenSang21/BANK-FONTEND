@@ -1,9 +1,9 @@
-import { fetchData, refreshToken } from "../helpers";
+import { fetchData, refreshToken } from '../helpers';
 
 export const userService = {
   login,
   create
-}
+};
 
 /**
  *
@@ -15,7 +15,7 @@ function login(data) {
     path: '/auth/login',
     method: 'post',
     data
-  })
+  });
 }
 
 async function create(data) {
@@ -23,17 +23,17 @@ async function create(data) {
     path: '/user',
     method: 'post',
     data
-  })
+  });
 
-  // check expire token 
-  if(resultData.status === 401) {
-    const result = await refreshToken()
-    if(result) {
+  // check expire token
+  if (resultData.status === 401) {
+    const result = await refreshToken();
+    if (result) {
       return fetchData({
         path: '/user',
         method: 'post',
         data
-      })
+      });
     }
   }
 }

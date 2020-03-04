@@ -1,5 +1,6 @@
 import React from 'react';
 import { Table, Input, InputNumber, Form, Button, Icon } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
 
 const data = [];
 for (let i = 0; i < 5; i++) {
@@ -7,7 +8,7 @@ for (let i = 0; i < 5; i++) {
     stk: 123456780 + i,
     accountType: i / 2 === 0 ? 'Tiết kiệm' : 'Thanh toán',
     amount: 5000000 * (i + 1),
-    moneyType: i / 2 === 0 ? 'VNĐ' : 'USD',
+    moneyType: i / 2 === 0 ? 'VNĐ' : 'USD'
   });
 }
 const EditableContext = React.createContext();
@@ -39,10 +40,10 @@ class EditableCell extends React.Component {
               rules: [
                 {
                   required: true,
-                  message: `Please Input ${title}!`,
-                },
+                  message: `Please Input ${title}!`
+                }
               ],
-              initialValue: record[dataIndex],
+              initialValue: record[dataIndex]
             })(this.getInput())}
           </Form.Item>
         ) : (
@@ -53,7 +54,9 @@ class EditableCell extends React.Component {
   };
 
   render() {
-    return <EditableContext.Consumer>{this.renderCell}</EditableContext.Consumer>;
+    return (
+      <EditableContext.Consumer>{this.renderCell}</EditableContext.Consumer>
+    );
   }
 }
 
@@ -66,25 +69,25 @@ class EditableTable extends React.Component {
         title: 'Số tài khoản',
         dataIndex: 'stk',
         width: '25%',
-        editable: true,
+        editable: true
       },
       {
         title: 'Loại Tài Khoản',
         dataIndex: 'accountType',
         width: '25%',
-        editable: true,
+        editable: true
       },
       {
         title: 'Số Tiền',
         dataIndex: 'amount',
         width: '15%',
-        editable: true,
+        editable: true
       },
       {
         title: 'Loại Tiền',
         dataIndex: 'moneyType',
         width: '15%',
-        editable: true,
+        editable: true
       },
       {
         title: 'Actions',
@@ -92,9 +95,18 @@ class EditableTable extends React.Component {
         width: '20%',
         editable: true,
         render: (text, record) => {
-          return <Button onClick={()=> {console.log(record)}}><Icon type="eye"/>Xem chi tiết</Button>
+          return (
+            <Button
+              onClick={() => {
+                console.log(record);
+              }}
+            >
+              <DeleteOutlined />
+              Xem chi tiết
+            </Button>
+          );
         }
-      },
+      }
     ];
   }
 
@@ -107,8 +119,8 @@ class EditableTable extends React.Component {
   render() {
     const components = {
       body: {
-        cell: EditableCell,
-      },
+        cell: EditableCell
+      }
     };
 
     const columns = this.columns.map(col => {
@@ -122,8 +134,8 @@ class EditableTable extends React.Component {
           inputType: col.dataIndex === 'age' ? 'number' : 'text',
           dataIndex: col.dataIndex,
           title: col.title,
-          editing: this.isEditing(record),
-        }),
+          editing: this.isEditing(record)
+        })
       };
     });
 
@@ -136,7 +148,7 @@ class EditableTable extends React.Component {
           columns={columns}
           rowClassName="editable-row"
           pagination={{
-            onChange: this.cancel,
+            onChange: this.cancel
           }}
         />
       </EditableContext.Provider>

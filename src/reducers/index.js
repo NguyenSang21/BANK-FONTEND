@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import { notification } from './notification.reducer';
 
 const rootReducer = combineReducers({
-  notification,
+  notification
 });
 
 export default rootReducer;
