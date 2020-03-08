@@ -84,8 +84,7 @@ class HomePage extends Component {
             >
               <Switch>
                 {this.getRoutes(routes)}
-                <Route path="/" component={AccountList} />
-                <Redirect from="*" to="/" />
+                <Redirect from="/" to="/home/account-list" />
               </Switch>
             </Content>
           </Layout>

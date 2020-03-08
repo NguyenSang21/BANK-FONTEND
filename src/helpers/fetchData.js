@@ -15,7 +15,6 @@ export const fetchData = ({ path, method, data, params }) => {
   const ACCESS_HEADERS = {
     'Content-Type': 'application/json',
     'x-access-token': userInfo.accessToken || '',
-    'x-refresh-token': userInfo.refreshToken || ''
   };
 
   const requestOptions = {

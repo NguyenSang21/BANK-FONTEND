@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout, Menu } from 'antd';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -6,11 +6,16 @@ import PropTypes from 'prop-types';
 const { SubMenu } = Menu;
 const { Sider } = Layout;
 
-function SideBar(props) {
-  const [collapsed, setCollapsed] = useState(false);
-  const [selectedKey, setSelectedKey] = useState(props.location.pathname);
+const SideBar = (props) => {
+  const [collapsed, setCollapsed] = useState(false)
+  const [selectedKey, setSelectedKey] = useState(props.location.pathname)
 
-  const { routes } = props || [];
+  useEffect(() => {
+    console.log(props.location.pathname)
+    setSelectedKey(props.location.pathname)
+  }, [props.location.pathname])
+
+  const { routes } = props || []
   return (
     <Sider
       theme="light"
@@ -35,14 +40,14 @@ function SideBar(props) {
                 </span>
               }
             >
-              {item.items.map((item, idx) => {
+              {item.items.map(item => {
                 return (
                   <Menu.Item key={item.layout + item.path}>
                     {item.icon}
                     <span>{item.name}</span>
                     <Link to={item.layout + item.path} />
                   </Menu.Item>
-                );
+                )
               })}
             </SubMenu>
           );
@@ -54,6 +59,6 @@ function SideBar(props) {
 
 SideBar.propTypes = {
   routes: PropTypes.array
-};
+}
 
-export default SideBar;
+export default SideBar
