@@ -7,15 +7,25 @@ import { message } from 'antd';
  * @param {Object} Object.data
  * @param {Object} Object.method
  * @param {Object} Object.path
+ * @param type
  */
-export const fetchData = ({ path, method, data, params }) => {
+export const fetchData = ({ path, method, data, params }, type) => {
   // get current token
   const userInfo = JSON.parse(localStorage.getItem('user')) || {};
   // headers
-  const ACCESS_HEADERS = {
-    'Content-Type': 'application/json',
-    'x-access-token': userInfo.accessToken || '',
-  };
+  let ACCESS_HEADERS = null
+  // check call refresh token or other call
+  if (type === 'REFRESH_TOKEN') {
+    ACCESS_HEADERS = {
+      'Content-Type': 'application/json',
+      'x-refresh-token': userInfo.refreshToken || '',
+    };
+  } else {
+    ACCESS_HEADERS = {
+      'Content-Type': 'application/json',
+      'x-access-token': userInfo.accessToken || '',
+    };
+  }
 
   const requestOptions = {
     method: method,
@@ -34,15 +44,29 @@ export const fetchData = ({ path, method, data, params }) => {
     })
     .catch(async error => {
       console.log(error.response);
+      // check if expire token . Call refresh token
+      if (error.response && error.response.status) {
+        const statusCode = error.response.status
 
-      if (error.response) {
-        // show error to user interface
-        message.error(
-          (error.response.data &&
-            // eslint-disable-next-line no-mixed-operators
-            error.response.data.message) ||
-            'Resource Not Found!'
-        );
+        switch (statusCode) {
+          case 404: // expire token
+            const refreshToken = refreshToken() // get new token
+            if (refreshToken) {
+              fetchData({ path, method, data, params })
+            }
+            break
+          case 401: // Unauthorized
+            // nothing to do
+            break
+          default: // show error to user interface
+            message.error(
+              (error.response.data &&
+                // eslint-disable-next-line no-mixed-operators
+                error.response.data.message) ||
+              'Resource Not Found!'
+            );
+            break
+        }
       }
 
       return error.response;
@@ -55,8 +79,8 @@ export const fetchData = ({ path, method, data, params }) => {
 export const refreshToken = async () => {
   const result = await fetchData({
     method: 'get',
-    path: '/auth/gettoken'
-  });
+    path: '/auth/getNewToken'
+  }, 'REFRESH_TOKEN');
 
   if (result && result.success) {
     let userInfo = JSON.parse(localStorage.getItem('user'));

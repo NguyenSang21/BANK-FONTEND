@@ -29,10 +29,10 @@ const CreateUser = props => {
       const values = await form.validateFields();
       console.log('Success:', values);
       const result = await userService.create(values);
-
+      console.log('Result=:', result);
       if (result && result.success) {
         props.notify_success('Tạo thành công!');
-        setVisible(false);
+        props.handleClose()
       }
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
