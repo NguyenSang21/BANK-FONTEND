@@ -75,7 +75,6 @@ const LoginPage = props => {
         >
           <h1 style={{ color: 'white' }}>Internet Banking</h1>
           <Form.Item
-            style={{ color: 'white' }}
             name="username"
             label="Username"
             rules={[
@@ -88,7 +87,6 @@ const LoginPage = props => {
             <Input />
           </Form.Item>
           <Form.Item
-            style={{ color: 'white' }}
             label="Password"
             name="password"
             rules={[
@@ -101,7 +99,7 @@ const LoginPage = props => {
             <Input.Password />
           </Form.Item>
           <Form.Item {...tailLayout} valuePropName="checked">
-            <Checkbox>Nhớ mật khẩu</Checkbox>
+            <Checkbox style={{color: 'white'}}>Nhớ mật khẩu</Checkbox>
           </Form.Item>
 
           <Form.Item {...tailLayout}>

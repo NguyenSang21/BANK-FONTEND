@@ -39,6 +39,7 @@ export const fetchData = ({ path, method, data, params }, type) => {
       if (res.status !== 200 && res.status !== 201) {
         throw new Error('Error');
       } else {
+        console.log(res.data)
         return res.data;
       }
     })
@@ -50,8 +51,8 @@ export const fetchData = ({ path, method, data, params }, type) => {
 
         switch (statusCode) {
           case 404: // expire token
-            const refreshToken = refreshToken() // get new token
-            if (refreshToken) {
+            const rfToken = await refreshToken() // get new token
+            if (rfToken) {
               fetchData({ path, method, data, params })
             }
             break

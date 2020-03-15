@@ -2,7 +2,8 @@ import { fetchData, refreshToken } from '../helpers';
 
 export const userService = {
   login,
-  create
+  create,
+  changePass,
 };
 
 /**
@@ -36,4 +37,13 @@ async function create(data) {
       });
     }
   }
+}
+
+async function changePass(data) {
+  const result = await fetchData({
+    path: '/auth/change/password',
+    method: 'post',
+    data
+  })
+  return result
 }
