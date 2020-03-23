@@ -4,6 +4,7 @@ export const userService = {
   login,
   create,
   changePass,
+  getAccountList,
 };
 
 /**
@@ -45,5 +46,15 @@ async function changePass(data) {
     method: 'post',
     data
   })
+  return result
+}
+
+async function getAccountList() {
+  const userInfo = JSON.parse(localStorage.getItem('user'))
+  const result = await fetchData({
+    path: `/user/danhsach/tk/${userInfo.username}`,
+    method: 'get'
+  })
+
   return result
 }

@@ -50,7 +50,7 @@ export const fetchData = ({ path, method, data, params }, type) => {
         const statusCode = error.response.status
 
         switch (statusCode) {
-          case 404: // expire token
+          case 403: // expire token
             const rfToken = await refreshToken() // get new token
             if (rfToken) {
               fetchData({ path, method, data, params })

@@ -1,109 +1,83 @@
-import React, { useState } from 'react';
-import { Table, Form, Button } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Table, Form, Button, Tag } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
-const originData = [];
-
-for (let i = 0; i < 10; i++) {
-  originData.push({
-    stk: 123456780 + i,
-    accountType: i / 2 === 0 ? 'Tiết kiệm' : 'Thanh toán',
-    amount: 5000000 * (i + 1),
-    moneyType: i / 2 === 0 ? 'VNĐ' : 'USD'
-  });
-}
+import { userService } from '../../../services';
 
 function AccountManage(props) {
-  const [form] = Form.useForm();
-  const [data, setData] = useState(originData);
-  const [editingKey, setEditingKey] = useState('');
-
-  const edit = record => {
-    form.setFieldsValue({ ...record });
-    setEditingKey(record.key);
-  };
-
-  const cancel = () => {
-    setEditingKey('');
-  };
-
-  const save = async key => {
-    try {
-      const row = await form.validateFields();
-      const newData = [...data];
-      const index = newData.findIndex(item => key === item.key);
-
-      if (index > -1) {
-        const item = newData[index];
-        newData.splice(index, 1, { ...item, ...row });
-        setData(newData);
-        setEditingKey('');
-      } else {
-        newData.push(row);
-        setData(newData);
-        setEditingKey('');
-      }
-    } catch (errInfo) {
-      console.log('Validate Failed:', errInfo);
-    }
-  };
-
+  const [data, setData] = useState([]);
+  const [isLoading, setLoading] = useState(false)
   const columns = [
     {
       title: 'Số tài khoản',
-      dataIndex: 'stk',
-      width: '25%',
-      editable: true
-    },
-    {
-      title: 'Loại Tài Khoản',
-      dataIndex: 'accountType',
+      dataIndex: 'ID_TaiKhoanTTTK',
       width: '25%',
       editable: true
     },
     {
       title: 'Số Tiền',
-      dataIndex: 'amount',
+      dataIndex: 'SoDu',
       width: '15%',
       editable: true
     },
     {
-      title: 'Loại Tiền',
-      dataIndex: 'moneyType',
+      title: 'Loại',
+      dataIndex: 'Loai',
       width: '15%',
-      editable: true
-    },
-    {
-      title: 'Actions',
-      dataIndex: 'detail',
-      width: '20%',
       editable: true,
       render: (text, record) => {
-        return (
-          <Button
-            onClick={() => {
-              console.log(record);
-            }}
-          >
-            <DeleteOutlined />
-            Xem chi tiết
-          </Button>
-        );
+        console.log(record)
+        switch (record.Loai) {
+          case 'TT':
+            return <Tag color="blue">Thanh toán</Tag>;
+          case 'TK':
+            return <Tag color="green">Tiết kiệm</Tag>;
+        }
       }
-    }
+    },
+    {
+      title: 'Tình Trạng',
+      dataIndex: 'TinhTrang',
+      width: '25%',
+      editable: true,
+      render: (text, record) => {
+        console.log(record)
+        switch (record.TinhTrang) {
+          case 'BinhThuong':
+            return <Tag color="green">Bình Thường</Tag>;
+          case 'TK':
+            return <Tag color="green">Tiết kiệm</Tag>;
+          default :
+            return <Tag color="green">Bình thường</Tag>;
+        }
+      }
+    },
   ];
 
+  useEffect(() => {
+    async function fetchData () {
+      setLoading(true)
+      const result = await userService.getAccountList()
+
+      if(result && result.success) {
+        setData(result.user)
+        setLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [])
+
   return (
-    <Form form={form} component={false}>
       <Table
+        loading={isLoading}
         bordered
         dataSource={data}
         columns={columns}
         rowClassName="editable-row"
         pagination={{
-          onChange: cancel
+          onChange: () => {}
         }}
       />
-    </Form>
   );
 }
 
