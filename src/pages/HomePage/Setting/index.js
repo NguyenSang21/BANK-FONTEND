@@ -49,10 +49,11 @@ const Setting = props => {
       username: userInfo.username,
       password: values.newPassword
     })
-    console.log("RESULT=", result)
-    if(result && result.success) {
+
+    if (result && result.success) {
       props.notify_success(result.message);
     }
+    
     setLoading(false) // end loading
   };
 

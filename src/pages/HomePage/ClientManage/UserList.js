@@ -1,23 +1,12 @@
-import React, { useState } from 'react';
-import { Table, Form, Row, Button, Col, Card, Input, Radio } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Table, Form, Row, Button, Col, Card, Input, Radio, Tag } from 'antd';
 import CreateUser from './CreateUser';
 import {
   PlusCircleOutlined,
   EyeOutlined,
   DownOutlined
 } from '@ant-design/icons';
-
-const data = [];
-for (let i = 0; i < 5; i++) {
-  data.push({
-    key: i,
-    accountNumber: 23465777778 + i,
-    username: i % 2 === 0 ? 'Nguyễn văn ' + i : 'Nguyễn thị ' + i,
-    email: i % 2 === 0 ? `nguyenvan${i}@gmail.com` : `nguyenthi${i}@gmail.com`,
-    numberPhone: i % 2 === 0 ? '003-113-456' : '004-115-789',
-    address: i % 2 === 0 ? 'TP.HCM' : 'HÀ NỘI'
-  });
-}
+import { userService } from '../../../services';
 
 const layout = {
   labelCol: {
@@ -28,42 +17,42 @@ const layout = {
   }
 };
 
-const EditableContext = React.createContext();
 
 const UserList = props => {
   const [form] = Form.useForm();
   const [openModal, setOpenModal] = useState(false);
-
   const columns = [
     {
-      title: 'Số tài khoản (Thanh Toán)',
-      dataIndex: 'accountNumber',
-      width: '20%',
-      editable: true
-    },
-    {
       title: 'Họ tên',
-      dataIndex: 'username',
+      dataIndex: 'HoTen',
       width: '20%',
       editable: true
     },
     {
       title: 'Email',
-      dataIndex: 'email',
+      dataIndex: 'Email',
       width: '20%',
       editable: true
     },
     {
       title: 'Số điện thoại',
-      dataIndex: 'numberPhone',
+      dataIndex: 'DienThoai',
       width: '20%',
       editable: true
     },
     {
-      title: 'Địa chỉ',
-      dataIndex: 'address',
+      title: 'Tình trạng',
+      dataIndex: 'TinhTrang',
       width: '20%',
-      editable: true
+      editable: true,
+      render: (text, record) => {
+        switch (record.Loai) {
+          case 'KichThoat':
+            return <Tag color="blue">Đã kích hoạt</Tag>;
+          default :
+            return <Tag color="green">Tiết kiệm</Tag>;
+        }
+      }
     },
     {
       title: 'Action 1',
@@ -104,6 +93,23 @@ const UserList = props => {
     }
   ];
 
+  const [data, setData] = useState([]);
+  const [isLoading, setLoading] = useState(false)
+
+  useEffect(() => {
+    async function fetchData () {
+      setLoading(true)
+      const result = await userService.getListClient()
+      console.log("DATA=", result)
+      if(result && result.success) {
+        setData(result.data)
+        setLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [])
+
   return (
     <div>
       <Form {...layout} form={form}>
@@ -138,6 +144,7 @@ const UserList = props => {
         </Card>
       </Form>
       <Table
+        loading={isLoading}
         bordered
         dataSource={data}
         columns={columns}

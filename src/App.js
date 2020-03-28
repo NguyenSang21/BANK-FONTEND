@@ -1,7 +1,6 @@
 import React from 'react';
 import './App.css';
 import { Switch, Router, Route, Redirect } from 'react-router-dom';
-import PrivateRoute from './components/PrivateRoute';
 import { history } from './helpers';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';

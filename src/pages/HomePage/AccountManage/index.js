@@ -35,6 +35,15 @@ function AccountManage(props) {
       }
     },
     {
+      title: 'Đơn vị',
+      dataIndex: 'SoDu',
+      width: '15%',
+      editable: true,
+      render: (text, record) => {
+        return <Tag color="yellow">VNĐ</Tag>
+      }
+    },
+    {
       title: 'Tình Trạng',
       dataIndex: 'TinhTrang',
       width: '25%',

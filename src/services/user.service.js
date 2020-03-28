@@ -5,6 +5,8 @@ export const userService = {
   create,
   changePass,
   getAccountList,
+  getListClient,
+  getAccountByType,
 };
 
 /**
@@ -22,22 +24,44 @@ function login(data) {
 
 async function create(data) {
   const resultData = await fetchData({
-    path: '/user',
+    path: '/client',
     method: 'post',
     data
   });
 
   // check expire token
-  if (resultData.status === 401) {
+  if (resultData.status === 403) {
     const result = await refreshToken();
     if (result) {
-      return fetchData({
+      return await fetchData({
         path: '/user',
         method: 'post',
         data
       });
     }
   }
+
+  return resultData
+}
+
+async function getListClient() {
+  const resultData = await fetchData({
+    path: '/client',
+    method: 'get'
+  });
+
+  // check expire token
+  if (resultData.status === 403) {
+    const result = await refreshToken();
+    if (result) {
+      return await fetchData({
+        path: '/client',
+        method: 'get'
+      });
+    }
+  }
+
+  return resultData
 }
 
 async function changePass(data) {
@@ -51,10 +75,42 @@ async function changePass(data) {
 
 async function getAccountList() {
   const userInfo = JSON.parse(localStorage.getItem('user'))
+    
   const result = await fetchData({
-    path: `/user/danhsach/tk/${userInfo.username}`,
+    path: `/user/all/${userInfo.username}`,
     method: 'get'
   })
 
+  // check expire token
+  if (result.status === 403) {
+    const result = await refreshToken();
+    if (result) {
+      return await fetchData({
+        path: `/user/all/${userInfo.username}`,
+        method: 'get'
+      });
+    }
+  }
+
   return result
+}
+
+async function getAccountByType(username, type) {
+  const resultData = await fetchData({
+    path: `/user/${type}/${username}`,
+    method: 'get'
+  });
+
+  // check expire token
+  if (resultData.status === 403) {
+    const result = await refreshToken();
+    if (result) {
+      return await fetchData({
+        path: `/user/${type}/${username}`,
+        method: 'get'
+      });
+    }
+  }
+
+  return resultData
 }

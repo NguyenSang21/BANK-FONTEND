@@ -4,157 +4,151 @@ import { Form, Select, Card, Input, InputNumber, Button, Col, Row } from 'antd';
 const { Option } = Select;
 const { TextArea } = Input;
 
-class ExternalTransaction extends Component {
-  handleSubmit = e => {
-    e.preventDefault();
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        console.log('Received values of form: ', values);
-      }
-    });
+const ExternalTransaction = props => {
+  const [form] = Form.useForm();
+
+  const formItemLayout = {
+    labelCol: { span: 6 },
+    wrapperCol: { span: 14 }
   };
 
-  render() {
-    const { getFieldDecorator } = this.props.form;
-    const formItemLayout = {
-      labelCol: { span: 6 },
-      wrapperCol: { span: 14 }
-    };
-    return (
-      <Form {...formItemLayout} onSubmit={this.handleSubmit}>
-        <Row gutter={16}>
-          <Col span={12}>
-            <Card
-              headStyle={{ background: '#fafafa' }}
-              title="THÔNG TIN NGƯỜI CHUYỂN"
-              style={{ width: '100%' }}
-            >
-              <div>
-                <label>Tài khoản nguồn:</label>
+  return (
+    <Form form={form}>
+      <Row gutter={16}>
+        <Col span={12}>
+          <Card
+            headStyle={{ background: '#fafafa' }}
+            title="THÔNG TIN NGƯỜI CHUYỂN"
+            style={{ width: '100%' }}
+          >
+            <div>
+              <label>Tài khoản nguồn:</label>
                 &nbsp;
                 <span>12312314</span>
-              </div>
-              <br />
-              <div>
-                <label>Số dư khả dụng:</label>
+            </div>
+            <br />
+            <div>
+              <label>Số dư khả dụng:</label>
                 &nbsp;
                 <span>120.000.000 VNĐ</span>
-              </div>
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-            </Card>
-          </Col>
-          <Col span={12}>
-            <Card
-              headStyle={{ background: '#fafafa' }}
-              title="THÔNG TIN NGƯỜI HƯỞNG"
-              style={{ width: '100%' }}
-            >
-              <Form.Item label="Ngân hàng:" hasFeedback>
-                {getFieldDecorator('selectBanking', {
-                  rules: [{ required: true, message: 'Vui lòng chọn phí!' }]
-                })(
-                  <Select placeholder="Vui lòng chọn phí">
-                    <Option value="china">China Banking</Option>
-                    <Option value="usa">Japan Banking</Option>
-                    <Option value="taiwain">Taiwain Banking</Option>
-                  </Select>
-                )}
-              </Form.Item>
-              <Form.Item {...formItemLayout} label="Số tài khoản:">
-                {getFieldDecorator('accountNumber', {
-                  rules: [
-                    {
-                      required: true,
-                      message: 'Vui lòng nhập số tài khoản!'
-                    }
-                  ]
-                })(
-                  <InputNumber
-                    style={{ width: '100%' }}
-                    min={1}
-                    max={20000000}
-                    placeholder="Vui lòng nhập số tài khoản!"
-                  />
-                )}
-              </Form.Item>
-              <Form.Item {...formItemLayout} label="Người hưởng:">
-                {getFieldDecorator('recipientName', {
-                  rules: [
-                    {
-                      required: true,
-                      message: 'Vui lòng nhập số tài khoản!'
-                    }
-                  ]
-                })(
-                  <Input
-                    style={{ width: '100%' }}
-                    placeholder="Vui lòng nhập tên người hưởng!"
-                  />
-                )}
-              </Form.Item>
-            </Card>
-          </Col>
-        </Row>
-        <br />
-        <Card
-          headStyle={{ background: '#fafafa' }}
-          title="THÔNG TIN GIAO DỊCH"
-          style={{ width: '100%' }}
-        >
-          <Form.Item {...formItemLayout} label="Số tiền chuyển:">
-            {getFieldDecorator('amount', {
-              rules: [
-                {
-                  required: true,
-                  message: 'Vui lòng nhập số tiền'
-                }
-              ]
-            })(
+            </div>
+            <br />
+            <br />
+            <br />
+            <br />
+          </Card>
+        </Col>
+        <Col span={12}>
+          <Card
+            headStyle={{ background: '#fafafa' }}
+            title="THÔNG TIN NGƯỜI HƯỞNG"
+            style={{ width: '100%' }}
+          >
+            <Form.Item
+              {...formItemLayout}
+              name="selectBanking"
+              label="Ngân hàng:"
+              rules={[
+                { required: true, message: 'Vui lòng chọn phí!' }
+              ]}
+              hasFeedback>
+              <Select placeholder="Vui lòng chọn phí">
+                <Option value="china">China Banking</Option>
+                <Option value="usa">Japan Banking</Option>
+                <Option value="taiwain">Taiwain Banking</Option>
+              </Select>
+            </Form.Item>
+            <Form.Item
+              {...formItemLayout}
+              name="accountNumber"
+              rules={[{
+                required: true,
+                message: 'Vui lòng nhập số tài khoản!'
+              }]}
+              label="Số tài khoản:">
               <InputNumber
                 style={{ width: '100%' }}
                 min={1}
                 max={20000000}
-                placeholder="Vui lòng nhập số tiền"
+                placeholder="Vui lòng nhập số tài khoản!"
               />
-            )}
-          </Form.Item>
-          <Form.Item label="Nội dung chuyển tiền" hasFeedback>
-            {getFieldDecorator('content', {
-              rules: [
+            </Form.Item>
+            <Form.Item
+              {...formItemLayout}
+              name="recipientName"
+              rules={[
                 {
                   required: true,
-                  message: 'Vui lòng nhập nội dung chuyển tiền!'
+                  message: 'Vui lòng nhập số tài khoản!'
                 }
-              ]
-            })(<TextArea rows={4} />)}
-          </Form.Item>
-          <Form.Item label="Phí chuyển tiền" hasFeedback>
-            {getFieldDecorator('amountType', {
-              rules: [{ required: true, message: 'Vui lòng chọn phí!' }]
-            })(
-              <Select placeholder="Vui lòng chọn phí">
-                <Option value="china">Người chuyển trả</Option>
-                <Option value="usa">Người hưởng trả</Option>
-              </Select>
-            )}
-          </Form.Item>
-          <Button
-            style={{ float: 'right' }}
-            type="primary"
-            htmlType="submit"
-            className="login-form-button"
-          >
-            Chuyển tiền
+              ]}
+              label="Người hưởng:">
+              <Input
+                style={{ width: '100%' }}
+                placeholder="Vui lòng nhập tên người hưởng!"
+              />
+            </Form.Item>
+          </Card>
+        </Col>
+      </Row>
+      <br />
+      <Card
+        headStyle={{ background: '#fafafa' }}
+        title="THÔNG TIN GIAO DỊCH"
+        style={{ width: '100%' }}
+      >
+        <Form.Item
+          {...formItemLayout}
+          name="amount"
+          rules={[
+            {
+              required: true,
+              message: 'Vui lòng nhập số tiền'
+            }
+          ]}
+          label="Số tiền chuyển:">
+          <InputNumber
+            style={{ width: '100%' }}
+            min={1}
+            max={20000000}
+            placeholder="Vui lòng nhập số tiền"
+          />
+        </Form.Item>
+        <Form.Item
+          {...formItemLayout}
+          name="content"
+          rules={[
+            {
+              required: true,
+              message: 'Vui lòng nhập nội dung chuyển tiền!'
+            }
+          ]}
+          label="Nội dung chuyển tiền"
+          hasFeedback>
+          <TextArea rows={4} />
+        </Form.Item>
+        <Form.Item
+          {...formItemLayout}
+          name="amountType"
+          label="Phí chuyển tiền"
+          rules={[{ required: true, message: 'Vui lòng chọn phí!' }]}
+          hasFeedback>
+          <Select placeholder="Vui lòng chọn phí">
+            <Option value="china">Người chuyển trả</Option>
+            <Option value="usa">Người hưởng trả</Option>
+          </Select>
+        </Form.Item>
+        <Button
+          style={{ float: 'right', marginRight: '20%' }}
+          type="primary"
+          htmlType="submit"
+          className="login-form-button"
+        >
+          Chuyển tiền
           </Button>
-        </Card>
-      </Form>
-    );
-  }
+      </Card>
+    </Form>
+  )
 }
 
 export default ExternalTransaction;
