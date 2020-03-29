@@ -1,94 +1,98 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import { Table, Input, InputNumber, Form, Button, Icon, Tag } from 'antd';
+import { transactionService } from '../../../services';
 
-const data = [];
-for (let i = 0; i < 5; i++) {
-  data.push({
-    transNumber: 234657 + i,
-    content: i % 2 === 0 ? 'Lương tháng' : 'Gửi lại tiền mượn',
-    amount: `${i % 2 === 0 ? '-' : '+'} ${5000000 * (i + 1)}`,
-    time: '12/12/2020',
-    transType: i % 2 === 0 ? 0 : 1
-  });
-}
+const TransHistory = props => {
+  const [data, setData] = useState([]);
+  const [isLoading, setLoading] = useState(false)
 
-const EditableContext = React.createContext();
-
-class TransHistory extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { data, editingKey: '' };
-    this.columns = [
-      {
-        title: 'Số giao dịch',
-        dataIndex: 'transNumber',
-        width: '25%',
-        editable: true
-      },
-      {
-        title: 'Nội dung',
-        dataIndex: 'content',
-        width: '25%',
-        editable: true
-      },
-      {
-        title: 'Số tiền',
-        dataIndex: 'amount',
-        width: '20%',
-        editable: true
-      },
-      {
-        title: 'Loại giao dịch',
-        dataIndex: 'transType',
-        width: '15%',
-        editable: true,
-        render: (text, record) => {
-          switch (record.transType) {
-            case 0:
-              return <Tag color="red">Tiền ra</Tag>;
-            case 1:
-              return <Tag color="green">Tiền vào</Tag>;
-          }
+  const columns = [
+    {
+      title: 'Số giao dịch',
+      dataIndex: 'ID_GiaoDich',
+      width: '25%',
+      editable: true
+    },
+    {
+      title: 'Nội dung',
+      dataIndex: 'GhiChu',
+      width: '25%',
+      editable: true
+    },
+    {
+      title: 'Số tiền',
+      dataIndex: 'SoTien',
+      width: '20%',
+      editable: true
+    },
+    {
+      title: 'Loại giao dịch',
+      dataIndex: 'LoaiGiaoDich',
+      width: '15%',
+      editable: true,
+      render: (text, record) => {
+        switch (record.LoaiGiaoDich) {
+          case 'Gui':
+            return <Tag color="yellow">Gửi tiền</Tag>;
+          case 'Nhan':
+            return <Tag color="green">Nhận tiền</Tag>;
+          case 'Doi':
+            return <Tag color="red">Đòi tiền</Tag>;
+          case 'TraNo':
+            return <Tag color="yellow">Trả nợ</Tag>
         }
-      },
-      {
-        title: 'Thời gian',
-        dataIndex: 'time',
-        width: '15%',
-        editable: true
       }
-    ];
-  }
+    },
+    {
+      title: 'Thời gian',
+      dataIndex: 'ThoiGian',
+      width: '15%',
+      editable: true
+    },
+    {
+      title: 'Trạng thái',
+      dataIndex: 'TrangThai',
+      width: '15%',
+      editable: true,
+      render: (text, record) => {
+        switch (record.TinhTrang) {
+          case 'DaGui':
+            return <Tag color="blue">Đã gửi</Tag>;
+          case 'DaNhan':
+            return <Tag color="green">Đã nhận</Tag>;
+        }
+      }
+    },
+  ];
 
-  render() {
-    const columns = this.columns.map(col => {
-      if (!col.editable) {
-        return col;
+  useEffect(() => {
+    async function fetchData () {
+      setLoading(true)
+      const userInfo = JSON.parse(localStorage.getItem('user'))
+
+      const result = await transactionService.getTransByUser(userInfo.username)
+
+      if(result && result.success) {
+        setData(result.data)
+        setLoading(false)
       }
-      return {
-        ...col,
-        onCell: record => ({
-          record,
-          inputType: col.dataIndex === 'age' ? 'number' : 'text',
-          dataIndex: col.dataIndex,
-          title: col.title
-        })
-      };
-    });
-    return (
-      <EditableContext.Provider value={this.props.form}>
-        <Table
-          bordered
-          dataSource={this.state.data}
-          columns={columns}
-          rowClassName="editable-row"
-          pagination={{
-            onChange: this.cancel
-          }}
-        />
-      </EditableContext.Provider>
-    );
-  }
+    }
+
+    fetchData()
+  }, [])
+
+  return (
+    <Table
+      loading={isLoading}
+      bordered
+      dataSource={data}
+      columns={columns}
+      rowClassName="editable-row"
+      pagination={{
+        onChange: () => {}
+      }}
+    />
+  )
 }
 
 export default TransHistory;

@@ -68,7 +68,7 @@ function AccountManage(props) {
       const result = await userService.getAccountList()
 
       if(result && result.success) {
-        setData(result.user)
+        setData(result.data)
         setLoading(false)
       }
     }

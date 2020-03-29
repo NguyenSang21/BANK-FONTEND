@@ -2,7 +2,8 @@ import { fetchData, refreshToken } from '../helpers';
 
 export const transactionService = {
   getAll,
-  internalTrans
+  getTransByUser,
+  internalTrans,
 };
 
 async function getAll() {
@@ -40,6 +41,27 @@ async function internalTrans(data) {
         path: '/trans/internal',
         method: 'post',
         data
+      });
+    }
+  }
+
+  return resultData
+}
+
+
+async function getTransByUser(username) {
+  const resultData = await fetchData({
+    path: `/trans/${username}`,
+    method: 'get'
+  });
+
+  // check expire token
+  if (resultData.status === 403) {
+    const result = await refreshToken();
+    if (result) {
+      return await fetchData({
+        path: `/trans/${username}`,
+        method: 'get'
       });
     }
   }
