@@ -30,7 +30,7 @@ async function create(data) {
   });
 
   // check expire token
-  if (resultData.status === 403) {
+  if (resultData && resultData.status === 403) {
     const result = await refreshToken();
     if (result) {
       return await fetchData({
@@ -51,7 +51,7 @@ async function getListClient() {
   });
 
   // check expire token
-  if (resultData.status === 403) {
+  if (resultData && resultData.status === 403) {
     const result = await refreshToken();
     if (result) {
       return await fetchData({
@@ -82,7 +82,7 @@ async function getAccountList() {
   })
 
   // check expire token
-  if (result.status === 403) {
+  if (result && result.status === 403) {
     const result = await refreshToken();
     if (result) {
       return await fetchData({
@@ -102,7 +102,7 @@ async function getAccountByType(username, type) {
   });
 
   // check expire token
-  if (resultData.status === 403) {
+  if (resultData && resultData.status === 403) {
     const result = await refreshToken();
     if (result) {
       return await fetchData({

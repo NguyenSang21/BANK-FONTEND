@@ -90,7 +90,6 @@ const Employee = props => {
                 <Radio value={1}>Số tài khoản</Radio>
                 <Radio value={2}>Email</Radio>
                 <Radio value={3}>Số điện thoại</Radio>
-                <Radio value={4}>CMND</Radio>
               </Radio.Group>
               <Button style={{ marginLeft: 20 }}>Tìm kiếm</Button>
             </Col>
