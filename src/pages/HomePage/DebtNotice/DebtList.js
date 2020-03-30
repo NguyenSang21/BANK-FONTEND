@@ -1,108 +1,103 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import { Form, Table, Button, Tag } from 'antd';
+import { debtService } from '../../../services';
+import moment from 'moment';
 
-const EditableContext = React.createContext();
-const data = [];
-for (let i = 0; i < 5; i++) {
-  data.push({
-    initiator: 'Nguyễn Văn ' + i,
-    debtor: 'Nguyễn Thị ' + i,
-    amount: 50000 * i + 10,
-    type: i / 2 === 0 ? 0 : 1
-  });
-}
-class DebtList extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { data, editingKey: '' };
-    this.columns = [
-      {
-        title: 'Người tạo(Nhắc nợ)',
-        dataIndex: 'initiator',
-        width: '25%',
-        editable: true
-      },
-      {
-        title: 'Người bị nợ',
-        dataIndex: 'debtor',
-        width: '25%',
-        editable: true
-      },
-      {
-        title: 'Số Tiền',
-        dataIndex: 'amount',
-        width: '15%',
-        editable: true
-      },
-      {
-        title: 'Loại',
-        dataIndex: 'type',
-        width: '15%',
-        editable: true,
-        render: (text, record) => {
-          switch (record.type) {
-            case 0:
-              return <Tag color="red">Bị nợ</Tag>;
-            case 1:
-              return <Tag color="green">Nhắc nợ</Tag>;
-          }
+const DebtList = props => {
+  const [data, setData] = useState([]);
+  const [isLoading, setLoading] = useState(false)
+  
+  const columns = [
+    {
+      title: 'Người bị nợ',
+      dataIndex: 'Username',
+      width: '25%',
+      editable: true
+    },
+    {
+      title: 'Số Tiền',
+      dataIndex: 'SoTien',
+      width: '15%',
+      editable: true
+    },
+    {
+      title: 'Loại giao dịch',
+      dataIndex: 'LoaiGiaoDich',
+      width: '15%',
+      editable: true,
+      render: (text, record) => {
+        switch (record.LoaiGiaoDich) {
+          case 'Gui':
+            return <Tag color="yellow">Gửi tiền</Tag>;
+          case 'Nhan':
+            return <Tag color="green">Nhận tiền</Tag>;
+          case 'Doi':
+            return <Tag color="red">Đòi tiền</Tag>;
+          case 'TraNo':
+            return <Tag color="yellow">Trả nợ</Tag>
+          case 'DaNhan':
+            return <Tag color="green">Đã trã</Tag>
+          case 'DangDoi':
+            return <Tag color="yellow">Đang đòi</Tag>
         }
-      },
-      {
-        title: 'Actions',
-        dataIndex: 'actions',
-        width: '20%',
-        editable: true,
-        render: () => (
-          <Button
-            onClick={e => {
-              console.log(e.target);
-            }}
-          >
-            Hủy Nhắc Nợ
-          </Button>
-        )
       }
-    ];
-  }
-
-  isEditing = record => record.key === this.state.editingKey;
-
-  cancel = () => {
-    this.setState({ editingKey: '' });
-  };
-
-  render() {
-    const columns = this.columns.map(col => {
-      if (!col.editable) {
-        return col;
-      }
-      return {
-        ...col,
-        onCell: record => ({
-          record,
-          inputType: col.dataIndex === 'age' ? 'number' : 'text',
-          dataIndex: col.dataIndex,
-          title: col.title,
-          editing: this.isEditing(record)
-        })
-      };
-    });
-
-    return (
-      <EditableContext.Provider value={this.props.form}>
-        <Table
-          bordered
-          dataSource={this.state.data}
-          columns={columns}
-          rowClassName="editable-row"
-          pagination={{
-            onChange: this.cancel
+    },
+    {
+      title: 'Thời gian',
+      dataIndex: 'ThoiGian',
+      width: '15%',
+      editable: true
+    },
+    {
+      title: 'Actions',
+      dataIndex: 'actions',
+      width: '20%',
+      editable: true,
+      render: () => (
+        <Button
+          onClick={e => {
+            console.log(e.target);
           }}
-        />
-      </EditableContext.Provider>
-    );
-  }
+        >
+          Hủy Nhắc Nợ
+        </Button>
+      )
+    }
+  ]
+
+  useEffect(() => {
+    async function fetchData () {
+      setLoading(true)
+      const userInfo = JSON.parse(localStorage.getItem('user'))
+
+      const result = await debtService.getDebtList(userInfo.username)
+
+      if(result && result.success) {
+        let data = result.data
+        data = data.map(item => {
+          item.ThoiGian = moment(item.ThoiGian).format('hh:mm:ss DD/MM/YYYY')
+          return item
+        })
+        setData(data)
+        setLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [])
+
+  return (
+    <Table
+      loading={isLoading}
+      bordered
+      dataSource={data}
+      columns={columns}
+      rowClassName="editable-row"
+      pagination={{
+        onChange: () => {}
+      }}
+    />
+  )
 }
 
 export default DebtList;

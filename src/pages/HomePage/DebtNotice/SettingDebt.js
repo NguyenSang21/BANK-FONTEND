@@ -1,27 +1,52 @@
-import React, { Component } from 'react';
-import { Form, Select, Card, Input, InputNumber, Button, Col, Row } from 'antd';
+import React, { Component, useState } from 'react';
+import { Form, Select, Card, Input, InputNumber, Button, Col, Row, Spin } from 'antd';
 import { SettingOutlined } from '@ant-design/icons';
+import { userService, debtService } from '../../../services';
+import { notificationActions } from '../../../actions/notification.action';
+import { connect } from 'react-redux'
 
 const { TextArea } = Input;
 
-class SettingDebt extends Component {
-  handleSubmit = e => {
-    e.preventDefault();
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        console.log('Received values of form: ', values);
-      }
-    });
+const SettingDebt = props => {
+  const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false)
+
+  const formItemLayout = {
+    labelCol: { span: 6 },
+    wrapperCol: { span: 14 }
   };
 
-  render() {
-    const { getFieldDecorator } = this.props.form;
-    const formItemLayout = {
-      labelCol: { span: 6 },
-      wrapperCol: { span: 14 }
-    };
-    return (
-      <Form {...formItemLayout} onSubmit={this.handleSubmit}>
+  const onFinish = async values => {
+    setLoading(true);
+    const userDetail = JSON.parse(localStorage.getItem("user"))
+    const result = await userService.getAccountByType(userDetail.username, 'TT')
+
+    if (result && result.success) {
+      values.accountNumberA = result.data[0].ID_TaiKhoanTTTK
+      values.payer = 'B'
+
+      const result_2 = await debtService.create(values);
+
+      if (result_2 && result_2.success) {
+        props.notify_success(result_2.message);
+      } else {
+        props.notify_failure(result_2.message);
+      }
+    }
+    setLoading(false);
+  };
+
+  const onFinishFailed = errorInfo => {
+    console.log('Failed:', errorInfo);
+  };
+
+  return (
+    <Spin spinning={loading}>
+      <Form
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        {...formItemLayout}
+        form={form}>
         <Card
           extra={<SettingOutlined />}
           headStyle={{ background: '#fafafa' }}
@@ -31,46 +56,51 @@ class SettingDebt extends Component {
           <Row gutter={16}>
             <Col span={12}>
               <Card>
-                <Form.Item {...formItemLayout} label="Số tài khoản:">
-                  {getFieldDecorator('accountNumber', {
-                    rules: [
-                      {
-                        required: true,
-                        message: 'Nhập số tài khoản người nợ!'
-                      }
-                    ]
-                  })(
-                    <InputNumber
-                      style={{ width: '100%' }}
-                      min={1}
-                      max={20000000}
-                      placeholder="Nhập số tài khoản người nợ!"
-                    />
-                  )}
+                <Form.Item
+                  name="accountNumberB"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Nhập số tài khoản người nợ!'
+                    }
+                  ]}
+                  {...formItemLayout}
+                  label="Số tài khoản:">
+                  <InputNumber
+                    style={{ width: '100%' }}
+                    min={1}
+                    max={20000000}
+                    placeholder="Nhập số tài khoản người nợ!"
+                  />
                 </Form.Item>
-                <Form.Item {...formItemLayout} label="Số tiền nợ:">
-                  {getFieldDecorator('debtAmount', {
-                    rules: [
-                      {
-                        required: true,
-                        message: 'Nhập số tiền nợ cần trả!'
-                      }
-                    ]
-                  })(
-                    <InputNumber
-                      style={{ width: '100%' }}
-                      min={1}
-                      max={20000000}
-                      placeholder="Nhập số tiền nợ cần trả!"
-                    />
-                  )}
+                <div style={{ marginBottom: 20 }}>
+                  <Button style={{ marginLeft: 135 }} type="primary">Kiểm tra</Button>
+                </div>
+                <Form.Item
+                  name="amount"
+                  {...formItemLayout}
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Nhập số tiền nợ cần trả!'
+                    }
+                  ]}
+                  label="Số tiền nợ:">
+                  <InputNumber
+                    style={{ width: '100%' }}
+                    min={1}
+                    max={20000000}
+                    placeholder="Nhập số tiền nợ cần trả!"
+                  />
                 </Form.Item>
-                <Form.Item label="Nội dung:" hasFeedback>
-                  {getFieldDecorator('content', {
-                    rules: [
-                      { required: true, message: 'Vui lòng nhập nội dung!' }
-                    ]
-                  })(<TextArea rows={4} />)}
+                <Form.Item
+                  name="note"
+                  label="Nội dung:"
+                  rules={[
+                    { required: true, message: 'Vui lòng nhập nội dung!' }
+                  ]}
+                  hasFeedback>
+                  <TextArea rows={4} />
                 </Form.Item>
               </Card>
             </Col>
@@ -88,20 +118,14 @@ class SettingDebt extends Component {
                   <span>Sang Sang</span>
                 </div>
                 <br />
-                <div>
-                  <label>Ngân hàng:</label>
-                  &nbsp;
-                  <span>JAV Banking</span>
-                </div>
                 <br />
                 <br />
-                <br />
-                <br />
+                <br /><br />
               </Card>
             </Col>
           </Row>
           <Button
-            style={{ float: 'right' }}
+            style={{ float: 'right', marginRight: '5%', marginTop: '2%' }}
             type="primary"
             htmlType="submit"
             className="login-form-button"
@@ -110,8 +134,13 @@ class SettingDebt extends Component {
           </Button>
         </Card>
       </Form>
-    );
-  }
+    </Spin>
+  )
 }
 
-export default SettingDebt;
+const actionCreators = {
+  notify_success: notificationActions.success,
+  notify_failure: notificationActions.failure
+};
+
+export default connect(null, actionCreators)(SettingDebt);

@@ -68,13 +68,13 @@ const InternalTransaction = props => {
               <div>
                 <label>Tài khoản nguồn:</label>
                 &nbsp;
-                <span>{userInfo.ID_TaiKhoanTTTK}</span>
+                <span>{ userInfo && userInfo.ID_TaiKhoanTTTK }</span>
               </div>
               <br />
               <div>
                 <label>Số dư khả dụng:</label>
                 &nbsp;
-                <span>{userInfo.SoDu} VNĐ</span>
+                <span>{ userInfo &&userInfo.SoDu } VNĐ</span>
               </div>
               <br />
               <br />

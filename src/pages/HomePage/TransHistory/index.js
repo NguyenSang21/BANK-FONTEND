@@ -1,6 +1,7 @@
 import React, { Component, useState, useEffect } from 'react';
 import { Table, Input, InputNumber, Form, Button, Icon, Tag } from 'antd';
 import { transactionService } from '../../../services';
+import moment from 'moment'
 
 const TransHistory = props => {
   const [data, setData] = useState([]);
@@ -60,6 +61,10 @@ const TransHistory = props => {
             return <Tag color="blue">Đã gửi</Tag>;
           case 'DaNhan':
             return <Tag color="green">Đã nhận</Tag>;
+          case 'DangDoi':
+            return <Tag color="yellow">Đang đòi</Tag>;
+          case 'DaNhan':
+            return <Tag color="green">Đã nhận</Tag>;
         }
       }
     },
@@ -73,7 +78,12 @@ const TransHistory = props => {
       const result = await transactionService.getTransByUser(userInfo.username)
 
       if(result && result.success) {
-        setData(result.data)
+        let data = result.data
+        data = data.map(item => {
+          item.ThoiGian = moment(item.ThoiGian).format('hh:mm:ss DD/MM/YYYY')
+          return item
+        })
+        setData(data)
         setLoading(false)
       }
     }
