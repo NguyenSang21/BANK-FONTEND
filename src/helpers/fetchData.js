@@ -13,17 +13,17 @@ export const fetchData = ({ path, method, data, params }, type) => {
   // get current token
   const userInfo = JSON.parse(localStorage.getItem('user')) || {};
   // headers
-  let ACCESS_HEADERS = null
+  let ACCESS_HEADERS = null;
   // check call refresh token or other call
   if (type === 'REFRESH_TOKEN') {
     ACCESS_HEADERS = {
       'Content-Type': 'application/json',
-      'x-refresh-token': userInfo.refreshToken || '',
+      'x-refresh-token': userInfo.refreshToken || ''
     };
   } else {
     ACCESS_HEADERS = {
       'Content-Type': 'application/json',
-      'x-access-token': userInfo.accessToken || '',
+      'x-access-token': userInfo.accessToken || ''
     };
   }
 
@@ -39,7 +39,7 @@ export const fetchData = ({ path, method, data, params }, type) => {
       if (res.status !== 200 && res.status !== 201) {
         throw new Error('Error');
       } else {
-        console.log(res.data)
+        console.log(res.data);
         return res.data;
       }
     })
@@ -47,26 +47,27 @@ export const fetchData = ({ path, method, data, params }, type) => {
       console.log(error.response);
       // check if expire token . Call refresh token
       if (error.response && error.response.status) {
-        const statusCode = error.response.status
+        const statusCode = error.response.status;
 
         switch (statusCode) {
           case 403: // expire token
-            const rfToken = await refreshToken() // get new token
+            const rfToken = await refreshToken(); // get new token
             if (rfToken) {
-              fetchData({ path, method, data, params })
+              fetchData({ path, method, data, params });
             }
-            break
+            break;
           case 401: // Unauthorized
             // nothing to do
-            break
-          default: // show error to user interface
+            break;
+          default:
+            // show error to user interface
             message.error(
               (error.response.data &&
                 // eslint-disable-next-line no-mixed-operators
                 error.response.data.message) ||
-              'Resource Not Found!'
+                'Resource Not Found!'
             );
-            break
+            break;
         }
       }
 
@@ -78,10 +79,13 @@ export const fetchData = ({ path, method, data, params }, type) => {
 };
 
 export const refreshToken = async () => {
-  const result = await fetchData({
-    method: 'get',
-    path: '/auth/getNewToken'
-  }, 'REFRESH_TOKEN');
+  const result = await fetchData(
+    {
+      method: 'get',
+      path: '/auth/getNewToken'
+    },
+    'REFRESH_TOKEN'
+  );
 
   if (result && result.success) {
     let userInfo = JSON.parse(localStorage.getItem('user'));

@@ -1,24 +1,24 @@
 import { fetchData, refreshToken } from '../helpers';
 
-export const employeeService = {
-  getAll
+export const bankService = {
+  getBankList
 };
 
-async function getAll() {
+async function getBankList() {
   const resultData = await fetchData({
-    path: '/employee',
+    path: '/bank',
     method: 'get'
   });
 
   // check expire token
-  if (resultData.status === 403) {
+  if (resultData && resultData.status === 403) {
     const result = await refreshToken();
     if (result) {
       return await fetchData({
-        path: '/employee',
+        path: '/bank',
         method: 'get'
       });
-    }
+    } 
   }
 
   return resultData;

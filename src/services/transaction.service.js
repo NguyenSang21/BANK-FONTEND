@@ -4,6 +4,7 @@ export const transactionService = {
   getAll,
   getTransByUser,
   internalTrans,
+  getOTP
 };
 
 async function getAll() {
@@ -23,7 +24,7 @@ async function getAll() {
     }
   }
 
-  return resultData
+  return resultData;
 }
 
 async function internalTrans(data) {
@@ -45,9 +46,8 @@ async function internalTrans(data) {
     }
   }
 
-  return resultData
+  return resultData;
 }
-
 
 async function getTransByUser(username) {
   const resultData = await fetchData({
@@ -66,5 +66,25 @@ async function getTransByUser(username) {
     }
   }
 
-  return resultData
+  return resultData;
+}
+
+async function getOTP(username) {
+  const resultData = await fetchData({
+    path: `/trans/otp/${username}`,
+    method: 'get'
+  });
+
+  // check expire token
+  if (resultData && resultData.status === 403) {
+    const result = await refreshToken();
+    if (result) {
+      return await fetchData({
+        path: `/trans/otp/${username}`,
+        method: 'get'
+      });
+    }
+  }
+
+  return resultData;
 }

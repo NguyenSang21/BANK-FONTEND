@@ -99,7 +99,7 @@ const LoginPage = props => {
             <Input.Password />
           </Form.Item>
           <Form.Item {...tailLayout} valuePropName="checked">
-            <Checkbox style={{color: 'white'}}>Nhớ mật khẩu</Checkbox>
+            <Checkbox style={{ color: 'white' }}>Nhớ mật khẩu</Checkbox>
           </Form.Item>
 
           <Form.Item {...tailLayout}>

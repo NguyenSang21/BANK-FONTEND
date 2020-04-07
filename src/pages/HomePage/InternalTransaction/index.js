@@ -1,17 +1,20 @@
 import React, { Component, useState, useEffect } from 'react';
-import { Form, Select, Card, Input, InputNumber, Button, Col, Row, Spin } from 'antd';
-import { userService, transactionService } from '../../../services';
+import { Form, Select, Card, Input, InputNumber, Button, Col, Row, Spin, AutoComplete } from 'antd';
+import { userService, transactionService, clientService } from '../../../services';
 import { notificationActions } from '../../../actions/notification.action';
 import { connect } from 'react-redux'
+import DialogOTP from './DialogOTP';
+import { recieverService } from '../../../services/reciever.service';
 
 const { Option } = Select;
 const { TextArea } = Input;
 
 const InternalTransaction = props => {
   const [form] = Form.useForm()
-  const [loading, setLoading] = useState(false)
   const [userInfo, setUserInfo] = useState({})
-  const [reload, setReload] = useState(false)
+  const [openModal, setOpenModal] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [formData, setFormData] = useState([])
 
   const formItemLayout = {
     labelCol: { span: 6 },
@@ -22,35 +25,73 @@ const InternalTransaction = props => {
     async function getUserInfo() {
       const userDetail = JSON.parse(localStorage.getItem("user"))
       const result = await userService.getAccountByType(userDetail.username, 'TT')
-      console.log("DATA=", result)
-      
+
       if (result && result.success) {
         setUserInfo(result.data[0])
       }
     }
 
     getUserInfo()
-  }, [reload])
+  }, [openModal])
+
+  const [recieverList, setRecieverList] = useState([])
+  useEffect(() => {
+    async function fetchData() {
+      const userInfo = JSON.parse(localStorage.getItem('user'));
+      const result = await recieverService.getReciverList(userInfo.username);
+      console.log('DATA=', result);
+      if (result && result.success) {
+        setRecieverList(result.data);
+      }
+    }
+
+    fetchData();
+  }, []);
 
   const onFinish = async values => {
-    setLoading(true);
+    setLoading(true)
+
+    const userDetail = JSON.parse(localStorage.getItem("user"))
     values.accountNumberA = userInfo.ID_TaiKhoanTTTK
-    console.log(values)
-    const result = await transactionService.internalTrans(values);
+    values.username = userDetail.username
+
+    const result = await transactionService.getOTP(userDetail.username)
 
     if (result && result.success) {
-      props.notify_success(result.message);
-      setReload(true)
-    } else {
-      props.notify_failure(result.message);
+      setFormData(values)
+      setOpenModal(true)
+      setLoading(false)
     }
-    
-    setLoading(false);
+
   };
 
   const onFinishFailed = errorInfo => {
     console.log('Failed:', errorInfo);
   };
+
+  const handleChangeAutoComplete = async (e) => {
+    if(e) {
+      const username = await getUserByAcountNumber(e)
+      form.setFieldsValue({nameB: username})
+    }
+  }
+
+  const getUserByAcountNumber = async (id) => {
+    const result = await clientService.getInfoByTK(id)
+    if(result && result.success) {
+      return result.data[0] && result.data[0].HoTen || ''
+    }
+    return null
+  }
+
+  const options = []
+
+  recieverList.map(it => {
+    options.push({
+      label: it.BietDanh,
+      value: it.ID_TaiKhoan_TTTK_B
+    })
+  });
 
   return (
     <Spin spinning={loading}>
@@ -68,13 +109,13 @@ const InternalTransaction = props => {
               <div>
                 <label>Tài khoản nguồn:</label>
                 &nbsp;
-                <span>{ userInfo && userInfo.ID_TaiKhoanTTTK }</span>
+                <span>{userInfo && userInfo.ID_TaiKhoanTTTK}</span>
               </div>
               <br />
               <div>
                 <label>Số dư khả dụng:</label>
                 &nbsp;
-                <span>{ userInfo &&userInfo.SoDu } VNĐ</span>
+                <span>{userInfo && userInfo.SoDu} VNĐ</span>
               </div>
               <br />
               <br />
@@ -97,11 +138,10 @@ const InternalTransaction = props => {
                 {...formItemLayout}
                 name="accountNumberB"
                 label="Số tài khoản:">
-                <InputNumber
-                  style={{ width: '100%' }}
-                  min={1}
-                  max={20000000}
-                  placeholder="Vui lòng nhập số tài khoản!"
+                <AutoComplete
+                  onChange={(e) => handleChangeAutoComplete(e)}
+                  placeholder="Nhập vào STK hoặc chọn người nhận!"
+                  options={options}
                 />
               </Form.Item>
               <Form.Item
@@ -184,6 +224,7 @@ const InternalTransaction = props => {
           </Button>
         </Card>
       </Form>
+      <DialogOTP open={openModal} data={formData} handleClose={() => setOpenModal(false)} />
     </Spin>
   )
 }

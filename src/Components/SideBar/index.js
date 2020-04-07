@@ -6,16 +6,16 @@ import PropTypes from 'prop-types';
 const { SubMenu } = Menu;
 const { Sider } = Layout;
 
-const SideBar = (props) => {
-  const [collapsed, setCollapsed] = useState(false)
-  const [selectedKey, setSelectedKey] = useState(props.location.pathname)
+const SideBar = props => {
+  const [collapsed, setCollapsed] = useState(false);
+  const [selectedKey, setSelectedKey] = useState(props.location.pathname);
 
   useEffect(() => {
-    console.log(props.location.pathname)
-    setSelectedKey(props.location.pathname)
-  }, [props.location.pathname])
+    console.log(props.location.pathname);
+    setSelectedKey(props.location.pathname);
+  }, [props.location.pathname]);
 
-  const { routes } = props || []
+  const { routes } = props || [];
   return (
     <Sider
       theme="light"
@@ -47,7 +47,7 @@ const SideBar = (props) => {
                     <span>{item.name}</span>
                     <Link to={item.layout + item.path} />
                   </Menu.Item>
-                )
+                );
               })}
             </SubMenu>
           );
@@ -55,10 +55,10 @@ const SideBar = (props) => {
       </Menu>
     </Sider>
   );
-}
+};
 
 SideBar.propTypes = {
   routes: PropTypes.array
-}
+};
 
-export default SideBar
+export default SideBar;

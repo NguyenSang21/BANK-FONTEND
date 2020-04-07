@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Form, Input, Button, Spin } from 'antd';
 import { userService } from '../../../services';
 import { message } from 'antd';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 import { notificationActions } from '../../../actions/notification.action';
 
 const formItemLayout = {
@@ -39,22 +39,25 @@ const tailFormItemLayout = {
 
 const Setting = props => {
   const [form] = Form.useForm();
-  const [isLoading, setLoading] = useState(false)
+  const [isLoading, setLoading] = useState(false);
 
   const onFinish = async values => {
-    setLoading(true) // start loading
-    console.log('Received values of form: ', JSON.parse(localStorage.getItem('user')));
-    const userInfo = JSON.parse(localStorage.getItem('user'))
+    setLoading(true); // start loading
+    console.log(
+      'Received values of form: ',
+      JSON.parse(localStorage.getItem('user'))
+    );
+    const userInfo = JSON.parse(localStorage.getItem('user'));
     const result = await userService.changePass({
       username: userInfo.username,
       password: values.newPassword
-    })
+    });
 
     if (result && result.success) {
       props.notify_success(result.message);
     }
-    
-    setLoading(false) // end loading
+
+    setLoading(false); // end loading
   };
 
   return (
@@ -136,4 +139,4 @@ const actionCreators = {
   notify_failure: notificationActions.failure
 };
 
-export default connect(null, actionCreators)(Setting)
+export default connect(null, actionCreators)(Setting);

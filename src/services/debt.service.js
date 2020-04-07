@@ -2,7 +2,7 @@ import { fetchData, refreshToken } from '../helpers';
 
 export const debtService = {
   create,
-  getDebtList,
+  getDebtList
 };
 
 async function create(data) {
@@ -24,7 +24,7 @@ async function create(data) {
     }
   }
 
-  return resultData
+  return resultData;
 }
 
 async function getDebtList(username) {
@@ -44,5 +44,5 @@ async function getDebtList(username) {
     }
   }
 
-  return resultData
+  return resultData;
 }

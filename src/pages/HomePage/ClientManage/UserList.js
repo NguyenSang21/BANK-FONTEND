@@ -17,7 +17,6 @@ const layout = {
   }
 };
 
-
 const UserList = props => {
   const [form] = Form.useForm();
   const [openModal, setOpenModal] = useState(false);
@@ -49,7 +48,7 @@ const UserList = props => {
         switch (record.Loai) {
           case 'KichThoat':
             return <Tag color="blue">Đã kích hoạt</Tag>;
-          default :
+          default:
             return <Tag color="green">Tiết kiệm</Tag>;
         }
       }
@@ -94,21 +93,21 @@ const UserList = props => {
   ];
 
   const [data, setData] = useState([]);
-  const [isLoading, setLoading] = useState(false)
+  const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
-    async function fetchData () {
-      setLoading(true)
-      const result = await userService.getListClient()
-      console.log("DATA=", result)
-      if(result && result.success) {
-        setData(result.data)
-        setLoading(false)
+    async function fetchData() {
+      setLoading(true);
+      const result = await userService.getListClient();
+      console.log('DATA=', result);
+      if (result && result.success) {
+        setData(result.data);
+        setLoading(false);
       }
     }
 
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
 
   return (
     <div>

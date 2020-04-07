@@ -5,8 +5,8 @@ import moment from 'moment';
 
 const DebtList = props => {
   const [data, setData] = useState([]);
-  const [isLoading, setLoading] = useState(false)
-  
+  const [isLoading, setLoading] = useState(false);
+
   const columns = [
     {
       title: 'Người bị nợ',
@@ -34,11 +34,11 @@ const DebtList = props => {
           case 'Doi':
             return <Tag color="red">Đòi tiền</Tag>;
           case 'TraNo':
-            return <Tag color="yellow">Trả nợ</Tag>
+            return <Tag color="yellow">Trả nợ</Tag>;
           case 'DaNhan':
-            return <Tag color="green">Đã trã</Tag>
+            return <Tag color="green">Đã trã</Tag>;
           case 'DangDoi':
-            return <Tag color="yellow">Đang đòi</Tag>
+            return <Tag color="yellow">Đang đòi</Tag>;
         }
       }
     },
@@ -63,28 +63,28 @@ const DebtList = props => {
         </Button>
       )
     }
-  ]
+  ];
 
   useEffect(() => {
-    async function fetchData () {
-      setLoading(true)
-      const userInfo = JSON.parse(localStorage.getItem('user'))
+    async function fetchData() {
+      setLoading(true);
+      const userInfo = JSON.parse(localStorage.getItem('user'));
 
-      const result = await debtService.getDebtList(userInfo.username)
+      const result = await debtService.getDebtList(userInfo.username);
 
-      if(result && result.success) {
-        let data = result.data
+      if (result && result.success) {
+        let data = result.data;
         data = data.map(item => {
-          item.ThoiGian = moment(item.ThoiGian).format('hh:mm:ss DD/MM/YYYY')
-          return item
-        })
-        setData(data)
-        setLoading(false)
+          item.ThoiGian = moment(item.ThoiGian).format('hh:mm:ss DD/MM/YYYY');
+          return item;
+        });
+        setData(data);
+        setLoading(false);
       }
     }
 
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
 
   return (
     <Table
@@ -97,7 +97,7 @@ const DebtList = props => {
         onChange: () => {}
       }}
     />
-  )
-}
+  );
+};
 
 export default DebtList;

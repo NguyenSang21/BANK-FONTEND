@@ -1,21 +1,21 @@
 import { fetchData, refreshToken } from '../helpers';
 
-export const employeeService = {
-  getAll
+export const clientService = {
+  getInfoByTK
 };
 
-async function getAll() {
+async function getInfoByTK(id) {
   const resultData = await fetchData({
-    path: '/employee',
+    path: '/client/tktt/' + id,
     method: 'get'
   });
 
   // check expire token
-  if (resultData.status === 403) {
+  if (resultData && resultData.status === 403) {
     const result = await refreshToken();
     if (result) {
       return await fetchData({
-        path: '/employee',
+        path: '/client/tktt/' + id,
         method: 'get'
       });
     }

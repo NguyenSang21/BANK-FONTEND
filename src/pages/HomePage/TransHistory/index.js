@@ -1,11 +1,11 @@
 import React, { Component, useState, useEffect } from 'react';
 import { Table, Input, InputNumber, Form, Button, Icon, Tag } from 'antd';
 import { transactionService } from '../../../services';
-import moment from 'moment'
+import moment from 'moment';
 
 const TransHistory = props => {
   const [data, setData] = useState([]);
-  const [isLoading, setLoading] = useState(false)
+  const [isLoading, setLoading] = useState(false);
 
   const columns = [
     {
@@ -40,7 +40,7 @@ const TransHistory = props => {
           case 'Doi':
             return <Tag color="red">Đòi tiền</Tag>;
           case 'TraNo':
-            return <Tag color="yellow">Trả nợ</Tag>
+            return <Tag color="yellow">Trả nợ</Tag>;
         }
       }
     },
@@ -67,29 +67,29 @@ const TransHistory = props => {
             return <Tag color="green">Đã nhận</Tag>;
         }
       }
-    },
+    }
   ];
 
   useEffect(() => {
-    async function fetchData () {
-      setLoading(true)
-      const userInfo = JSON.parse(localStorage.getItem('user'))
+    async function fetchData() {
+      setLoading(true);
+      const userInfo = JSON.parse(localStorage.getItem('user'));
 
-      const result = await transactionService.getTransByUser(userInfo.username)
+      const result = await transactionService.getTransByUser(userInfo.username);
 
-      if(result && result.success) {
-        let data = result.data
+      if (result && result.success) {
+        let data = result.data;
         data = data.map(item => {
-          item.ThoiGian = moment(item.ThoiGian).format('hh:mm:ss DD/MM/YYYY')
-          return item
-        })
-        setData(data)
-        setLoading(false)
+          item.ThoiGian = moment(item.ThoiGian).format('hh:mm:ss DD/MM/YYYY');
+          return item;
+        });
+        setData(data);
+        setLoading(false);
       }
     }
 
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
 
   return (
     <Table
@@ -102,7 +102,7 @@ const TransHistory = props => {
         onChange: () => {}
       }}
     />
-  )
-}
+  );
+};
 
 export default TransHistory;

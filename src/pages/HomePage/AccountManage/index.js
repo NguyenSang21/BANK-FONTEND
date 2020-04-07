@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Form, Button, Tag } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
+import { Table, Tag } from 'antd';
 import { userService } from '../../../services';
 
 function AccountManage(props) {
   const [data, setData] = useState([]);
-  const [isLoading, setLoading] = useState(false)
+  const [isLoading, setLoading] = useState(false);
   const columns = [
     {
       title: 'Số tài khoản',
@@ -25,7 +24,6 @@ function AccountManage(props) {
       width: '15%',
       editable: true,
       render: (text, record) => {
-        console.log(record)
         switch (record.Loai) {
           case 'TT':
             return <Tag color="blue">Thanh toán</Tag>;
@@ -40,7 +38,7 @@ function AccountManage(props) {
       width: '15%',
       editable: true,
       render: (text, record) => {
-        return <Tag color="yellow">VNĐ</Tag>
+        return <Tag color="yellow">VNĐ</Tag>;
       }
     },
     {
@@ -49,44 +47,43 @@ function AccountManage(props) {
       width: '25%',
       editable: true,
       render: (text, record) => {
-        console.log(record)
         switch (record.TinhTrang) {
           case 'BinhThuong':
             return <Tag color="green">Bình Thường</Tag>;
           case 'TK':
             return <Tag color="green">Tiết kiệm</Tag>;
-          default :
+          default:
             return <Tag color="green">Bình thường</Tag>;
         }
       }
-    },
+    }
   ];
 
   useEffect(() => {
-    async function fetchData () {
-      setLoading(true)
-      const result = await userService.getAccountList()
+    async function fetchData() {
+      setLoading(true);
+      const result = await userService.getAccountList();
 
-      if(result && result.success) {
-        setData(result.data)
-        setLoading(false)
+      if (result && result.success) {
+        setData(result.data);
+        setLoading(false);
       }
     }
 
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
 
   return (
-      <Table
-        loading={isLoading}
-        bordered
-        dataSource={data}
-        columns={columns}
-        rowClassName="editable-row"
-        pagination={{
-          onChange: () => {}
-        }}
-      />
+    <Table
+      loading={isLoading}
+      bordered
+      dataSource={data}
+      columns={columns}
+      rowClassName="editable-row"
+      pagination={{
+        onChange: () => {}
+      }}
+    />
   );
 }
 

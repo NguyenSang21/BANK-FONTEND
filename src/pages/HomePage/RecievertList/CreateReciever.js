@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Modal, InputNumber, Spin } from 'antd';
+import { Form, Input, Modal, InputNumber, Spin, Select } from 'antd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { notificationActions } from '../../../actions/notification.action';
-import { userService } from '../../../services';
+import { recieverService } from '../../../services/reciever.service';
+import { bankService } from '../../../services/bank.service';
+
+const { Option } = Select;
 
 const layout = {
   labelCol: {
@@ -14,7 +17,7 @@ const layout = {
   }
 };
 
-const CreateUser = props => {
+const CreateReciever = props => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -23,16 +26,31 @@ const CreateUser = props => {
     setVisible(props.open);
   }, [props.open]);
 
+  const [bankList, setBankList] = useState([]);
+  useEffect(() => {
+    async function getBankList() {
+      const result = await bankService.getBankList()
+      if(result && result.success) {
+        setBankList(result.data)
+      }
+    }
+    getBankList()
+  }, []);
+
   const handleSubmit = async () => {
     setLoading(true); // start loading
     try {
-      const values = await form.validateFields();
+      let values = await form.validateFields();
+      const userInfo = JSON.parse(localStorage.getItem('user'));
+      values.Username_IN = userInfo.username;
       console.log('Success:', values);
-      const result = await userService.create(values);
+      const result = await recieverService.createReciver(values);
       console.log('Result=:', result);
       if (result && result.success) {
+        form.resetFields();
         props.notify_success('Tạo thành công!');
         props.handleClose();
+        props.reload();
       }
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
@@ -47,7 +65,7 @@ const CreateUser = props => {
   return (
     <Modal
       maskClosable={false}
-      title="Tạo tài khoản mới"
+      title="Tạo biệt danh"
       visible={visible}
       onOk={() => handleSubmit()}
       okText="Tạo mới"
@@ -57,67 +75,47 @@ const CreateUser = props => {
       <Spin spinning={loading}>
         <Form {...layout} form={form} onFinishFailed={onFinishFailed}>
           <Form.Item
-            name="username"
-            label="Tên đăng nhập:"
+            name="ID_TaiKhoan_TTTK_B_IN"
+            label="Số tài khoản:"
             rules={[
               {
                 required: true,
-                message: 'Nhập vào tên đăng nhập!'
+                message: 'Nhập vào số tài khoản!'
               }
             ]}
           >
-            <Input placeholder="Nhập vào tên đăng nhập!" />
+            <Input placeholder="Nhập vào số tài khoản!" />
           </Form.Item>
           <Form.Item
-            name="password"
-            label="Mật khẩu:"
+            label="Biệt danh:"
+            name="BietDanh_IN"
             rules={[
               {
                 required: true,
-                message: 'Nhập vào mật khẩu!'
+                message: 'Nhập vào biệt danh!'
               }
             ]}
           >
-            <Input.Password placeholder="Nhập vào mật khẩu!" />
+            <Input placeholder="Nhập vào biệt danh!" />
           </Form.Item>
           <Form.Item
-            label="Họ và tên:"
-            name="name"
+            name="TenNganHang_IN"
+            label="Ngân hàng"
             rules={[
               {
                 required: true,
-                message: 'Nhập vào họ và tên!'
+                message: 'Vui lòng chọn ngân hàng!'
               }
             ]}
+            hasFeedback
           >
-            <Input placeholder="Nhập vào họ và tên!" />
-          </Form.Item>
-          <Form.Item
-            name="gmail"
-            label="Email:"
-            rules={[
+            <Select placeholder="Vui lòng chọn ngân hàng">
               {
-                required: true,
-                message: 'Nhập vào email!'
+                bankList.map(item => {
+                return <Option value={item.TenNganHang}>{item.TenNganHang}</Option>
+                })
               }
-            ]}
-          >
-            <Input placeholder="Nhập vào mail!" />
-          </Form.Item>
-          <Form.Item
-            name="sdt"
-            label="Số điện thoại:"
-            rules={[
-              {
-                required: true,
-                message: 'Nhập vào số điện thoại!'
-              }
-            ]}
-          >
-            <InputNumber
-              style={{ width: '100%' }}
-              placeholder="Nhập vào số điện thoại!"
-            />
+            </Select>
           </Form.Item>
         </Form>
       </Spin>
@@ -125,7 +123,7 @@ const CreateUser = props => {
   );
 };
 
-CreateUser.propTypes = {
+CreateReciever.propTypes = {
   open: PropTypes.bool,
   handleClose: PropTypes.func
 };
@@ -135,4 +133,4 @@ const actionCreators = {
   notify_failure: notificationActions.failure
 };
 
-export default connect(null, actionCreators)(CreateUser);
+export default connect(null, actionCreators)(CreateReciever);

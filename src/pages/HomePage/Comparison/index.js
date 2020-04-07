@@ -9,7 +9,7 @@ const Comparison = props => {
       dataIndex: 'ID_GiaoDich',
       width: '10%',
       editable: true,
-      fixed: 'left',
+      fixed: 'left'
     },
     {
       title: 'Tài khoản A',
@@ -81,30 +81,31 @@ const Comparison = props => {
   ];
 
   const [data, setData] = useState([]);
-  const [isLoading, setLoading] = useState(false)
+  const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
-      setLoading(true)
-      const result = await transactionService.getAll()
-      console.log("DATA=", result)
-      
+      setLoading(true);
+      const result = await transactionService.getAll();
+      console.log('DATA=', result);
+
       if (result && result.success) {
-        setData(result.data)
-        setLoading(false)
+        setData(result.data);
+        setLoading(false);
       }
     }
 
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
 
   return (
     <Table
       loading={isLoading}
       columns={columns}
       dataSource={data}
-      scroll={{ x: 1500 }} />
-  )
-}
+      scroll={{ x: 1500 }}
+    />
+  );
+};
 
 export default Comparison;

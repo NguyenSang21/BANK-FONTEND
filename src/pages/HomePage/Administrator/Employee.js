@@ -55,21 +55,21 @@ const Employee = props => {
   ];
 
   const [data, setData] = useState([]);
-  const [isLoading, setLoading] = useState(false)
+  const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
-    async function fetchData () {
-      setLoading(true)
-      const result = await employeeService.getAll()
-      
-      if(result && result.success) {
-        setData(result.data)
-        setLoading(false)
+    async function fetchData() {
+      setLoading(true);
+      const result = await employeeService.getAll();
+
+      if (result && result.success) {
+        setData(result.data);
+        setLoading(false);
       }
     }
 
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
 
   return (
     <>
@@ -83,10 +83,7 @@ const Employee = props => {
               />
             </Col>
             <Col span={12}>
-              <Radio.Group
-                onChange={() => { }}
-                value={1}
-              >
+              <Radio.Group onChange={() => {}} value={1}>
                 <Radio value={1}>Số tài khoản</Radio>
                 <Radio value={2}>Email</Radio>
                 <Radio value={3}>Số điện thoại</Radio>
@@ -107,7 +104,7 @@ const Employee = props => {
         }}
       />
     </>
-  )
-}
+  );
+};
 
 export default Employee;

@@ -21,6 +21,7 @@ import {
   ControlOutlined,
   SyncOutlined
 } from '@ant-design/icons';
+import RecieverList from './pages/HomePage/RecievertList';
 
 const routes = [
   {
@@ -35,6 +36,14 @@ const routes = [
         layout: '/home',
         name: 'Danh sách tài khoản',
         component: <AccountManage />
+      },
+      {
+        path: '/reviever-list',
+        exact: true,
+        icon: <SolutionOutlined />,
+        layout: '/home',
+        name: 'Danh sách người nhận',
+        component: <RecieverList />
       },
       {
         path: '/internal-trans',

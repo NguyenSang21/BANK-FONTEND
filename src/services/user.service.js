@@ -6,7 +6,7 @@ export const userService = {
   changePass,
   getAccountList,
   getListClient,
-  getAccountByType,
+  getAccountByType
 };
 
 /**
@@ -41,7 +41,7 @@ async function create(data) {
     }
   }
 
-  return resultData
+  return resultData;
 }
 
 async function getListClient() {
@@ -61,7 +61,7 @@ async function getListClient() {
     }
   }
 
-  return resultData
+  return resultData;
 }
 
 async function changePass(data) {
@@ -69,17 +69,17 @@ async function changePass(data) {
     path: '/auth/change/password',
     method: 'post',
     data
-  })
-  return result
+  });
+  return result;
 }
 
 async function getAccountList() {
-  const userInfo = JSON.parse(localStorage.getItem('user'))
-    
+  const userInfo = JSON.parse(localStorage.getItem('user'));
+
   const result = await fetchData({
     path: `/user/all/${userInfo.username}`,
     method: 'get'
-  })
+  });
 
   // check expire token
   if (result && result.status === 403) {
@@ -92,7 +92,7 @@ async function getAccountList() {
     }
   }
 
-  return result
+  return result;
 }
 
 async function getAccountByType(username, type) {
@@ -112,5 +112,5 @@ async function getAccountByType(username, type) {
     }
   }
 
-  return resultData
+  return resultData;
 }

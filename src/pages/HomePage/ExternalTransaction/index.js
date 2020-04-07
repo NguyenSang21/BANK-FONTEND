@@ -23,14 +23,14 @@ const ExternalTransaction = props => {
           >
             <div>
               <label>Tài khoản nguồn:</label>
-                &nbsp;
-                <span>12312314</span>
+              &nbsp;
+              <span>12312314</span>
             </div>
             <br />
             <div>
               <label>Số dư khả dụng:</label>
-                &nbsp;
-                <span>120.000.000 VNĐ</span>
+              &nbsp;
+              <span>120.000.000 VNĐ</span>
             </div>
             <br />
             <br />
@@ -48,10 +48,9 @@ const ExternalTransaction = props => {
               {...formItemLayout}
               name="selectBanking"
               label="Ngân hàng:"
-              rules={[
-                { required: true, message: 'Vui lòng chọn phí!' }
-              ]}
-              hasFeedback>
+              rules={[{ required: true, message: 'Vui lòng chọn phí!' }]}
+              hasFeedback
+            >
               <Select placeholder="Vui lòng chọn phí">
                 <Option value="china">China Banking</Option>
                 <Option value="usa">Japan Banking</Option>
@@ -61,11 +60,14 @@ const ExternalTransaction = props => {
             <Form.Item
               {...formItemLayout}
               name="accountNumber"
-              rules={[{
-                required: true,
-                message: 'Vui lòng nhập số tài khoản!'
-              }]}
-              label="Số tài khoản:">
+              rules={[
+                {
+                  required: true,
+                  message: 'Vui lòng nhập số tài khoản!'
+                }
+              ]}
+              label="Số tài khoản:"
+            >
               <InputNumber
                 style={{ width: '100%' }}
                 min={1}
@@ -82,7 +84,8 @@ const ExternalTransaction = props => {
                   message: 'Vui lòng nhập số tài khoản!'
                 }
               ]}
-              label="Người hưởng:">
+              label="Người hưởng:"
+            >
               <Input
                 style={{ width: '100%' }}
                 placeholder="Vui lòng nhập tên người hưởng!"
@@ -106,7 +109,8 @@ const ExternalTransaction = props => {
               message: 'Vui lòng nhập số tiền'
             }
           ]}
-          label="Số tiền chuyển:">
+          label="Số tiền chuyển:"
+        >
           <InputNumber
             style={{ width: '100%' }}
             min={1}
@@ -124,7 +128,8 @@ const ExternalTransaction = props => {
             }
           ]}
           label="Nội dung chuyển tiền"
-          hasFeedback>
+          hasFeedback
+        >
           <TextArea rows={4} />
         </Form.Item>
         <Form.Item
@@ -132,7 +137,8 @@ const ExternalTransaction = props => {
           name="amountType"
           label="Phí chuyển tiền"
           rules={[{ required: true, message: 'Vui lòng chọn phí!' }]}
-          hasFeedback>
+          hasFeedback
+        >
           <Select placeholder="Vui lòng chọn phí">
             <Option value="china">Người chuyển trả</Option>
             <Option value="usa">Người hưởng trả</Option>
@@ -145,10 +151,10 @@ const ExternalTransaction = props => {
           className="login-form-button"
         >
           Chuyển tiền
-          </Button>
+        </Button>
       </Card>
     </Form>
-  )
-}
+  );
+};
 
 export default ExternalTransaction;
