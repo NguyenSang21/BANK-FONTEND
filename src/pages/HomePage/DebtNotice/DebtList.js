@@ -32,13 +32,15 @@ const DebtList = props => {
           case 'Nhan':
             return <Tag color="green">Nhận tiền</Tag>;
           case 'Doi':
-            return <Tag color="red">Đòi tiền</Tag>;
+            return <Tag color="yellow">Đòi tiền</Tag>;
           case 'TraNo':
             return <Tag color="yellow">Trả nợ</Tag>;
           case 'DaNhan':
             return <Tag color="green">Đã trã</Tag>;
           case 'DangDoi':
             return <Tag color="yellow">Đang đòi</Tag>;
+          case 'No':
+            return <Tag color="red">Nợ</Tag>;
         }
       }
     },
@@ -49,19 +51,37 @@ const DebtList = props => {
       editable: true
     },
     {
+      title: 'Loại giao dịch',
+      dataIndex: 'LoaiGiaoDich',
+      width: '15%',
+      editable: true,
+      render: (text, record) => {
+        switch (record.TinhTrang) {
+          case 'DangNo':
+            return <Tag color="red">Chưa thanh toán</Tag>;
+          case 'DangDoi':
+            return <Tag color="yellow">Chưa thanh toán</Tag>;
+        }
+      }
+    },
+    {
       title: 'Actions',
       dataIndex: 'actions',
       width: '20%',
       editable: true,
-      render: () => (
-        <Button
-          onClick={e => {
-            console.log(e.target);
-          }}
-        >
-          Hủy Nhắc Nợ
+      render: (text, record) => {
+
+        if (record.LoaiGiaoDich === 'Doi' && record.TinhTrang === 'DangDoi') {
+          return <Button
+            onClick={e => {
+              console.log(e.target);
+            }}
+          >
+            Hủy Nhắc Nợ
         </Button>
-      )
+        }
+        return null
+      }
     }
   ];
 
@@ -73,9 +93,12 @@ const DebtList = props => {
       const result = await debtService.getDebtList(userInfo.username);
 
       if (result && result.success) {
-        let data = result.data;
-        data = data.map(item => {
-          item.ThoiGian = moment(item.ThoiGian).format('hh:mm:ss DD/MM/YYYY');
+        const data = []
+        result.data.map(item => {
+          if (item.LoaiGiaoDich === 'No' || item.LoaiGiaoDich === 'Doi') {
+            item.ThoiGian = moment(item.ThoiGian).format('hh:mm:ss DD/MM/YYYY')
+            data.push(item)
+          }
           return item;
         });
         setData(data);
@@ -94,7 +117,7 @@ const DebtList = props => {
       columns={columns}
       rowClassName="editable-row"
       pagination={{
-        onChange: () => {}
+        onChange: () => { }
       }}
     />
   );

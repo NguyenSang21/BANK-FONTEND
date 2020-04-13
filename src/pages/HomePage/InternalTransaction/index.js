@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Select, Card, Input, InputNumber, Button, Col, Row, Spin, AutoComplete } from 'antd';
 import { userService, transactionService, clientService } from '../../../services';
 import { notificationActions } from '../../../actions/notification.action';

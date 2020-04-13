@@ -34,13 +34,9 @@ const TransHistory = props => {
       render: (text, record) => {
         switch (record.LoaiGiaoDich) {
           case 'Gui':
-            return <Tag color="yellow">Gửi tiền</Tag>;
+            return <Tag color="blue">Gửi tiền</Tag>;
           case 'Nhan':
             return <Tag color="green">Nhận tiền</Tag>;
-          case 'Doi':
-            return <Tag color="red">Đòi tiền</Tag>;
-          case 'TraNo':
-            return <Tag color="yellow">Trả nợ</Tag>;
         }
       }
     },
@@ -61,10 +57,6 @@ const TransHistory = props => {
             return <Tag color="blue">Đã gửi</Tag>;
           case 'DaNhan':
             return <Tag color="green">Đã nhận</Tag>;
-          case 'DangDoi':
-            return <Tag color="yellow">Đang đòi</Tag>;
-          case 'DaNhan':
-            return <Tag color="green">Đã nhận</Tag>;
         }
       }
     }
@@ -78,9 +70,12 @@ const TransHistory = props => {
       const result = await transactionService.getTransByUser(userInfo.username);
 
       if (result && result.success) {
-        let data = result.data;
-        data = data.map(item => {
-          item.ThoiGian = moment(item.ThoiGian).format('hh:mm:ss DD/MM/YYYY');
+        const data = [];
+        result.data.map(item => {
+          if(item.LoaiGiaoDich === 'Nhan' || item.LoaiGiaoDich === 'Gui') {
+            item.ThoiGian = moment(item.ThoiGian).format('hh:mm:ss DD/MM/YYYY');
+            data.push(item)
+          }
           return item;
         });
         setData(data);

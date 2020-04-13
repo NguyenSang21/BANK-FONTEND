@@ -4,6 +4,7 @@ export const transactionService = {
   getAll,
   getTransByUser,
   internalTrans,
+  externalTrans,
   getOTP
 };
 
@@ -40,6 +41,28 @@ async function internalTrans(data) {
     if (result) {
       return await fetchData({
         path: '/trans/internal',
+        method: 'post',
+        data
+      });
+    }
+  }
+
+  return resultData;
+}
+
+async function externalTrans(data) {
+  const resultData = await fetchData({
+    path: '/trans/bcc/internal',
+    method: 'post',
+    data
+  });
+
+  // check expire token
+  if (resultData.status === 403) {
+    const result = await refreshToken();
+    if (result) {
+      return await fetchData({
+        path: '/trans/bcc/internal',
         method: 'post',
         data
       });
