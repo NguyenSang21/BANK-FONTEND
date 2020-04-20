@@ -8,7 +8,19 @@ import { NotificationOutlined } from '@ant-design/icons';
 
 const { Header, Content } = Layout;
 
+
 class HomePage extends Component {
+  constructor(props) {
+    super(props)
+    this.menu = (
+      <Menu>
+        <Menu.Item key="0">
+          <a onClick={() => this.handleLogout()} href="#">Đăng xuất</a>
+        </Menu.Item>
+      </Menu>
+    );
+  }
+
   getRoutes = routes => {
     return routes.map(item => {
       return item.items.map((item, idx) => {
@@ -22,6 +34,16 @@ class HomePage extends Component {
       });
     });
   };
+
+  handleOnclick = (e) => {
+    e.preventDefault()
+  }
+
+  handleLogout= () => {
+    console.log('logout')
+    localStorage.removeItem('user')
+    window.location.reload()
+  }
 
   render() {
     return (
@@ -56,10 +78,11 @@ class HomePage extends Component {
               <Badge dot>
                 <NotificationOutlined />
               </Badge>
-              <Dropdown>
+              <Dropdown overlay={this.menu} trigger={['click']}>
                 <a
                   style={{ float: 'right', marginLeft: 10 }}
                   className="ant-dropdown-link"
+                  onClick={e => this.handleOnclick(e)}
                 >
                   <Avatar>USER</Avatar>
                 </a>
