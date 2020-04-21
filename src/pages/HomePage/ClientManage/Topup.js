@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Form, Modal, Spin, Input } from 'antd';
+import { Form, Modal, InputNumber, Spin, Input } from 'antd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { notificationActions } from '../../../actions/notification.action';
-import { transactionService } from '../../../services';
+import { transactionService, userService, employeeService } from '../../../services';
 
 const layout = {
   labelCol: {
@@ -14,29 +14,28 @@ const layout = {
   }
 };
 
-const DialogOTP = props => {
+const Topup = props => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [formDataParent, setFormDataParent] = useState([]);
 
   useEffect(() => {
-    function resetField() {
-      form.resetFields()
-    }
-    setVisible(props.open);
-    setFormDataParent(props.data)
-    resetField()
-  }, [props.open]);
+      async function fetchData(){
+        if(props.data && props.data.Username) {
+          const result = await userService.getAccountByType(props.data.Username, 'TT')
+          form.setFieldsValue({accountNumberB: result.data.length !== 0 && result.data[0].ID_TaiKhoanTTTK})
+        }
+       setVisible(props.open);
+      }
+      fetchData()
+  }, [props.data]);
 
   const handleSubmit = async () => {
     setLoading(true); // start loading
     try {
       let values = await form.validateFields();
-      formDataParent.OTP_CODE = values.OTP_CODE
-      formDataParent.transType = 'Gui'
-      console.log(formDataParent)
-      const result = await transactionService.externalTrans(formDataParent);
+      console.log(values)
+      const result = await employeeService.topup(values);
 
       if (result && result.success) {
         props.notify_success(result.message);
@@ -55,28 +54,39 @@ const DialogOTP = props => {
   return (
     <Modal
       maskClosable={false}
-      title="Xác thực OTP"
+      title="Topup"
       visible={visible}
       onOk={() => handleSubmit()}
-      okText="Nhập mã"
+      okText="Đồng ý"
       onCancel={() => props.handleClose()}
       cancelText="Hủy"
     >
-      <p style={{textAlign: "center"}}>Mã xác thực OTP đã được gửi đến email của bạn</p>
-      <p style={{textAlign: "center"}}>Vui lòng kiểm tra và nhập mã tại đây:</p>
+      <p style={{textAlign: "center"}}>Điền thông tin của khách hàng mà bạn muốn nạp:</p>
       <Spin spinning={loading}>
         <Form {...layout} form={form} onFinishFailed={onFinishFailed}>
           <Form.Item
-            name="OTP_CODE"
-            label="Mã OTP:"
+            name="accountNumberB"
+            label="Số tài khoản:"
             rules={[
               {
                 required: true,
-                message: 'Nhập vào mã OTP!'
+                message: 'Nhập vào số tài khoản!'
               }
             ]}
           >
-            <Input placeholder="Nhập vào mã OTP!" />
+            <Input disabled placeholder="Nhập vào số tài khoản!" />
+          </Form.Item>
+          <Form.Item
+            name="amount"
+            label="Số tiền:"
+            rules={[
+              {
+                required: true,
+                message: 'Nhập vào số tiền!'
+              }
+            ]}
+          >
+            <Input placeholder="Nhập vào số tiền!" />
           </Form.Item>
         </Form>
       </Spin>
@@ -84,7 +94,7 @@ const DialogOTP = props => {
   )
 }
 
-DialogOTP.propTypes = {
+Topup.propTypes = {
   open: PropTypes.bool,
   handleClose: PropTypes.func
 };
@@ -94,5 +104,5 @@ const actionCreators = {
   notify_failure: notificationActions.failure
 };
 
-export default connect(null, actionCreators)(DialogOTP);
+export default connect(null, actionCreators)(Topup);
 

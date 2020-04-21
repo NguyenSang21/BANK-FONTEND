@@ -34,9 +34,8 @@ const DialogOTP = props => {
     try {
       let values = await form.validateFields();
       formDataParent.OTP_CODE = values.OTP_CODE
-      formDataParent.transType = 'Gui'
       console.log(formDataParent)
-      const result = await transactionService.externalTrans(formDataParent);
+      const result = await transactionService.internalTrans(formDataParent);
 
       if (result && result.success) {
         props.notify_success(result.message);

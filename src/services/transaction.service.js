@@ -52,7 +52,7 @@ async function internalTrans(data) {
 
 async function externalTrans(data) {
   const resultData = await fetchData({
-    path: '/trans/bcc/internal',
+    path: '/trans/bcc/external',
     method: 'post',
     data
   });
@@ -62,7 +62,7 @@ async function externalTrans(data) {
     const result = await refreshToken();
     if (result) {
       return await fetchData({
-        path: '/trans/bcc/internal',
+        path: '/trans/bcc/external',
         method: 'post',
         data
       });

@@ -11,13 +11,15 @@ function App() {
   useEffect(() => {
     const socket = socketIOClient('http://127.0.0.1:5000');
     socket.on("DEBT_NOTICE", data => {
-      console.log("DATA_NOTICE=", data)
-      notification.warning({
-        message: 'Nhắc nợ',
-        duration: 0,
-        description:
-          `Số tài khoản: ${data.accountNumberA} đã yêu cầu bạn trả với số tiền là ${data.amount} đ với nội dung: "${data.note}".`,
-      });
+      const userInfo = JSON.parse(localStorage.getItem('user'))
+      if(data.username == userInfo.username) {
+        notification.warning({
+          message: 'Nhắc nợ',
+          duration: 0,
+          description:
+            `Số tài khoản: ${data.accountNumberA} đã yêu cầu bạn trả với số tiền là ${data.amount} đ với nội dung: "${data.note}".`,
+        });
+      }
     })
   }, [])
 

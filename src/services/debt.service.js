@@ -2,7 +2,8 @@ import { fetchData, refreshToken } from '../helpers';
 
 export const debtService = {
   create,
-  getDebtList
+  getDebtList,
+  removeDebt,
 };
 
 async function create(data) {
@@ -40,6 +41,26 @@ async function getDebtList(username) {
       return await fetchData({
         path: `/debt/${username}`,
         method: 'get'
+      });
+    }
+  }
+
+  return resultData;
+}
+
+async function removeDebt(id) {
+  const resultData = await fetchData({
+    path: `/debt/${id}`,
+    method: 'delete'
+  });
+
+  // check expire token
+  if (resultData.status === 403) {
+    const result = await refreshToken();
+    if (result) {
+      return await fetchData({
+        path: `/debt/${id}`,
+        method: 'delete'
       });
     }
   }

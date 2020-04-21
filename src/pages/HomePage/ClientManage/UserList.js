@@ -7,6 +7,8 @@ import {
   DownOutlined
 } from '@ant-design/icons';
 import { userService } from '../../../services';
+import History from './History'
+import Topup from './Topup';
 
 const layout = {
   labelCol: {
@@ -20,7 +22,25 @@ const layout = {
 const UserList = props => {
   const [form] = Form.useForm();
   const [openModal, setOpenModal] = useState(false);
+  const [openModalHistory, setOpenModalHistory] = useState(false);
+  const [formDataHistory, setFormDataHistory] = useState([]);
+  const [openModalTopup, setOpenModalTopup] = useState(false);
+  const [formDataTopup, setFormDataTopup] = useState([]);
+
   const columns = [
+    {
+      title: 'Mã KH',
+      dataIndex: 'ID_TaiKhoan',
+      width: '20%',
+      fixed: 'left',
+      editable: true
+    },
+    {
+      title: 'Username',
+      dataIndex: 'Username',
+      width: '20%',
+      editable: true
+    },
     {
       title: 'Họ tên',
       dataIndex: 'HoTen',
@@ -45,11 +65,11 @@ const UserList = props => {
       width: '20%',
       editable: true,
       render: (text, record) => {
-        switch (record.Loai) {
+        switch (record.TinhTrang) {
           case 'KichThoat':
-            return <Tag color="blue">Đã kích hoạt</Tag>;
+            return <Tag color="green">Đã kích hoạt</Tag>;
           default:
-            return <Tag color="green">Tiết kiệm</Tag>;
+            return <Tag color="yellow">null</Tag>;
         }
       }
     },
@@ -61,9 +81,7 @@ const UserList = props => {
       render: (text, record) => {
         return (
           <Button
-            onClick={() => {
-              console.log(record);
-            }}
+            onClick={() => handleViewHistory(record)}
           >
             <EyeOutlined />
             Lịch sử GD
@@ -80,9 +98,7 @@ const UserList = props => {
         return (
           <Button
             type="primary"
-            onClick={() => {
-              console.log(record);
-            }}
+            onClick={() => handleTopup(record)}
           >
             <DownOutlined />
             Nạp Tiền
@@ -108,6 +124,18 @@ const UserList = props => {
 
     fetchData();
   }, []);
+
+  const handleViewHistory = (record) => {
+    console.log(record)
+    setFormDataHistory(record)
+    setOpenModalHistory(true)
+  }
+
+  const handleTopup = (record) => {
+    console.log(record)
+    setOpenModalTopup(true)
+    setFormDataTopup(record)
+  }
 
   return (
     <div>
@@ -145,6 +173,7 @@ const UserList = props => {
       <Table
         loading={isLoading}
         bordered
+        scroll={{ x: 1500 }}
         dataSource={data}
         columns={columns}
         rowClassName="editable-row"
@@ -155,6 +184,8 @@ const UserList = props => {
         }}
       />
       <CreateUser open={openModal} handleClose={() => setOpenModal(false)} />
+      <History key={Math.random(0, 99999999)} data={formDataHistory} open={openModalHistory} handleClose={() => setOpenModalHistory(false)}/>
+      <Topup key={Math.random(0, 99999999)} data={formDataTopup} open={openModalTopup} handleClose={() => setOpenModalTopup(false)}/>
     </div>
   );
 };

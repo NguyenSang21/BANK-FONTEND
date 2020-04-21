@@ -1,8 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Tag } from 'antd';
+import { Table, Form, Row, Button, Icon, Col, Card, Input, Radio,Tag } from 'antd';
 import { transactionService } from '../../../services';
+const layout = {
+  labelCol: {
+    span: 6
+  },
+  wrapperCol: {
+    span: 14
+  }
+};
 
 const Comparison = props => {
+  const [form] = Form.useForm()
   const columns = [
     {
       title: 'Mã giao dịch',
@@ -74,7 +83,7 @@ const Comparison = props => {
           case 'DaNhan':
             return <Tag color="green">Đã nhận</Tag>;
           case 'DangDoi':
-            return <Tag color="yellow">Đang chờ</Tag>;
+            return <Tag color="yellow">Đang đòi</Tag>;
         }
       }
     }
@@ -99,12 +108,28 @@ const Comparison = props => {
   }, []);
 
   return (
-    <Table
-      loading={isLoading}
-      columns={columns}
-      dataSource={data}
-      scroll={{ x: 1500 }}
-    />
+    <>
+      <Form {...layout} form={form}>
+        <Card style={{ width: '100%', marginBottom: 10 }}>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Radio.Group onChange={() => { }} value={1}>
+                <Radio value={1}>Số tài khoản</Radio>
+                <Radio value={2}>Email</Radio>
+                <Radio value={3}>Số điện thoại</Radio>
+              </Radio.Group>
+              <Button style={{ marginLeft: 20 }}>Tìm kiếm</Button>
+            </Col>
+          </Row>
+        </Card>
+      </Form>
+      <Table
+        loading={isLoading}
+        columns={columns}
+        dataSource={data}
+        scroll={{ x: 1500 }}
+      />
+    </>
   );
 };
 

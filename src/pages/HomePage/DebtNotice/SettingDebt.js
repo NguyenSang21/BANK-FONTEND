@@ -16,6 +16,7 @@ import { notificationActions } from '../../../actions/notification.action';
 import { connect } from 'react-redux';
 
 const { TextArea } = Input;
+const { Search } = Input;
 
 const SettingDebt = props => {
   const [form] = Form.useForm();
@@ -36,6 +37,7 @@ const SettingDebt = props => {
 
     if (result && result.success) {
       values.accountNumberA = result.data[0].ID_TaiKhoanTTTK;
+      values.username = userInfo.Username
       values.payer = 'B';
 
       const result_2 = await debtService.create(values);
@@ -94,22 +96,13 @@ const SettingDebt = props => {
                   {...formItemLayout}
                   label="Số tài khoản:"
                 >
-                  <InputNumber
-                    style={{ width: '100%' }}
-                    min={1}
-                    max={20000000}
+                  <Search
                     placeholder="Nhập số tài khoản người nợ!"
+                    enterButton="Kiểm tra"
+                    size="middle"
+                    onSearch={() => checkUserInfo()}
                   />
                 </Form.Item>
-                <div style={{ marginBottom: 20 }}>
-                  <Button
-                    onClick={() => checkUserInfo()}
-                    style={{ marginLeft: 135 }}
-                    type="primary"
-                  >
-                    Kiểm tra
-                  </Button>
-                </div>
                 <Form.Item
                   name="amount"
                   {...formItemLayout}
