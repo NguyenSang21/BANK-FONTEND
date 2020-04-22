@@ -15,6 +15,7 @@ const DebtList = props => {
       title: 'Mã GD',
       dataIndex: 'ID_GiaoDich',
       width: '15%',
+      fixed: 'left',
       editable: true
     },
     {
@@ -206,6 +207,7 @@ const DebtList = props => {
       <Table
       loading={isLoading}
       bordered
+      scroll={{ x: 1500 }}
       dataSource={data}
       columns={columns}
       rowClassName="editable-row"

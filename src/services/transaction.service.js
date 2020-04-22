@@ -8,14 +8,14 @@ export const transactionService = {
   getOTP
 };
 
-async function getAll() {
+async function getAll(query) {
   const resultData = await fetchData({
-    path: '/trans',
+    path: query && `/trans?bankName=${query}` || '/trans',
     method: 'get'
   });
 
   // check expire token
-  if (resultData.status === 403) {
+  if (resultData && resultData.status === 403) {
     const result = await refreshToken();
     if (result) {
       return await fetchData({
@@ -36,7 +36,7 @@ async function internalTrans(data) {
   });
 
   // check expire token
-  if (resultData.status === 403) {
+  if (resultData && resultData.status === 403) {
     const result = await refreshToken();
     if (result) {
       return await fetchData({
@@ -58,7 +58,7 @@ async function externalTrans(data) {
   });
 
   // check expire token
-  if (resultData.status === 403) {
+  if (resultData && resultData.status === 403) {
     const result = await refreshToken();
     if (result) {
       return await fetchData({
@@ -79,7 +79,7 @@ async function getTransByUser(username) {
   });
 
   // check expire token
-  if (resultData.status === 403) {
+  if (resultData && resultData.status === 403) {
     const result = await refreshToken();
     if (result) {
       return await fetchData({
