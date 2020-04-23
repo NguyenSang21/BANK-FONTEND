@@ -6,10 +6,11 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import socketIOClient from "socket.io-client";
 import { notification } from 'antd';
+import config from './config';
 
 function App() {
   useEffect(() => {
-    const socket = socketIOClient('http://127.0.0.1:5000');
+    const socket = socketIOClient(config.apiUrl);
     socket.on("DEBT_NOTICE", data => {
       const userInfo = JSON.parse(localStorage.getItem('user'))
       if(data.username == userInfo.username) {
@@ -42,5 +43,6 @@ function App() {
     </Router>
   );
 }
+import config from './config';
 
 export default App;

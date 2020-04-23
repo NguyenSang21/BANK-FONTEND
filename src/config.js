@@ -1,5 +1,5 @@
 const config = {
-  apiUrl: 'http://localhost:5000/api/v1'
+  apiUrl: 'https://backend-bank-1.herokuapp.com/api/v1'
 };
 
 export default config;
