@@ -3,7 +3,6 @@ import { Layout, Menu, Breadcrumb, Dropdown, Badge, Avatar } from 'antd';
 import routes from '../../routes';
 import SideBar from '../../components/SideBar';
 import { Route, Switch, Redirect } from 'react-router-dom';
-import AccountList from './AccountManage';
 import { NotificationOutlined } from '@ant-design/icons';
 
 const { Header, Content } = Layout;
