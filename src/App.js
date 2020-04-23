@@ -43,6 +43,5 @@ function App() {
     </Router>
   );
 }
-import config from './config';
 
 export default App;
