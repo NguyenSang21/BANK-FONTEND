@@ -1,8 +1,9 @@
 import React, { Component, useState, useEffect } from 'react';
-import { Form, Table, Button, Tag, notification  } from 'antd';
+import { Form, Table, Button, Tag, notification } from 'antd';
 import { debtService, transactionService } from '../../../services';
 import moment from 'moment';
 import DialogOTP from './DialogOTP';
+import DialogNote from './DialogNote';
 
 const DebtList = props => {
   const [data, setData] = useState([]);
@@ -10,21 +11,26 @@ const DebtList = props => {
   const [openModal, setOpenModal] = useState(false)
   const [formData, setFormData] = useState([])
   const [reload, setReload] = useState([])
+  const [cancelDebtData, setCancelDebtData] = useState([])
+  const [openCancelDebt, setOpenCancelDebt] = useState(false)
+
   const columns = [
     {
       title: 'Mã GD',
       dataIndex: 'ID_GiaoDich',
-      width: '15%',
+      width: '10%',
       fixed: 'left',
-      editable: true
+      editable: true,
+      key: 'ID_GiaoDich',
     },
     {
       title: 'Người nhắc nợ',
       dataIndex: 'Username',
+      key: 'Username',
       width: '25%',
       editable: true,
       render: (text, record) => {
-        switch(record.LoaiGiaoDich) {
+        switch (record.LoaiGiaoDich) {
           case 'Doi':
             const userInfo = JSON.parse(localStorage.getItem('user'))
             return userInfo.username
@@ -36,10 +42,11 @@ const DebtList = props => {
     {
       title: 'Người bị nợ',
       dataIndex: 'Username',
+      key: 'Username1',
       width: '25%',
       editable: true,
       render: (text, record) => {
-        switch(record.LoaiGiaoDich) {
+        switch (record.LoaiGiaoDich) {
           case 'Doi':
             return record.Username
           case 'No':
@@ -51,28 +58,41 @@ const DebtList = props => {
     {
       title: 'Số Tiền',
       dataIndex: 'SoTien',
+      key: 'SoTien',
       width: '15%',
+      editable: true
+    },
+    {
+      title: 'Ngân hàng',
+      dataIndex: 'TenNganHang',
+      key: 'TenNganHang',
+      width: '10%',
+      editable: true,
+      render: (text, record) => {
+        return <Tag color="blue">{record.TenNganHang}</Tag>;
+      }
+    },
+    {
+      title: 'Ghi Chú',
+      dataIndex: 'GhiChu',
+      key: 'GhiChu',
+      width: '25%',
       editable: true
     },
     {
       title: 'Loại giao dịch',
       dataIndex: 'LoaiGiaoDich',
-      width: '15%',
+      key: 'LoaiGiaoDich',
+      width: '10%',
       editable: true,
       render: (text, record) => {
         switch (record.LoaiGiaoDich) {
           case 'Gui':
-            return <Tag color="yellow">Gửi tiền</Tag>;
+            return <Tag color="blue">Gửi tiền</Tag>;
           case 'Nhan':
             return <Tag color="green">Nhận tiền</Tag>;
           case 'Doi':
-            return <Tag color="green">Đòi tiền</Tag>;
-          case 'TraNo':
-            return <Tag color="yellow">Trả nợ</Tag>;
-          case 'DaNhan':
-            return <Tag color="green">Đã trã</Tag>;
-          case 'DangDoi':
-            return <Tag color="yellow">Đang đòi</Tag>;
+            return <Tag color="orange">Đòi tiền</Tag>;
           case 'No':
             return <Tag color="red">Nợ</Tag>;
         }
@@ -81,40 +101,46 @@ const DebtList = props => {
     {
       title: 'Thời gian',
       dataIndex: 'ThoiGian',
+      key: 'ThoiGian',
       width: '15%',
       editable: true
     },
     {
-      title: 'Loại giao dịch',
-      dataIndex: 'LoaiGiaoDich',
-      width: '15%',
+      title: 'Tình trạng',
+      dataIndex: 'TinhTrang',
+      key: 'TinhTrang',
+      width: '10%',
       editable: true,
       render: (text, record) => {
         switch (record.TinhTrang) {
-          case 'DangNo':
-            return <Tag color="red">Đang nợ</Tag>;
-          case 'DaTraNo':
-            return <Tag color="green">Đã trả nợ</Tag>;
           case 'DangDoi':
-            return <Tag color="red">Đang đòi</Tag>;
+            return <Tag color="yellow">Đang đòi</Tag>;
           case 'DaNhan':
             return <Tag color="green">Đã nhận</Tag>;
+          case 'HuyDoi':
+            return <Tag color="orange">Hủy đòi</Tag>;
+          case 'DaTraNo':
+            return <Tag color="green">Đã trả nợ</Tag>;
+          case 'DangNo':
+            return <Tag color="red">Đang nợ</Tag>;
+
         }
       }
     },
     {
       title: 'Actions',
       dataIndex: 'actions',
-      width: '20%',
+      key: 'actions',
+      width: '15%',
       editable: true,
       render: (text, record) => {
-        if (record.LoaiGiaoDich === 'Doi' && record.TinhTrang === 'DangDoi') {
+        if (record.TinhTrang === 'DangDoi' || record.TinhTrang === 'DangNo') {
           return <Button
             onClick={e => hanbleCancelDebt(record)}
           >
             Hủy Nhắc Nợ
         </Button>
-        } else if(record.LoaiGiaoDich === 'No' && record.TinhTrang === 'DangNo' ) {
+        } else if (record.TinhTrang === 'DangNo') {
           return <Button
             danger
             onClick={() => handlePayDebt(record)}
@@ -150,33 +176,16 @@ const DebtList = props => {
   }
 
   const hanbleCancelDebt = async (record) => {
-    console.log(record)
-    const result = await debtService.removeDebt(record.ID_GiaoDich)
+    const userInfo = JSON.parse(localStorage.getItem('user'))
 
-    if (result && result.success) {
-      notification.success({
-        message: 'Thông báo',
-        description: 'Xóa thành công!',
-      })
-      setLoading(true);
-      const userInfo = JSON.parse(localStorage.getItem('user'));
+    setCancelDebtData({
+      ID_GiaoDich: record.ID_GiaoDich,
+      Username_IN: userInfo.username
+    })
 
-      const result = await debtService.getDebtList(userInfo.username);
+    setOpenCancelDebt(true)
 
-      if (result && result.success) {
-        const data = []
-        result.data.map(item => {
-          if (item.LoaiGiaoDich === 'No' || item.LoaiGiaoDich === 'Doi') {
-            item.ThoiGian = moment(item.ThoiGian).format('hh:mm:ss DD/MM/YYYY')
-            data.push(item)
-          }
-          return item;
-        });
-        setData(data);
-        setLoading(false);
-      }
-    }
-  } 
+  }
 
   useEffect(() => {
     async function fetchData() {
@@ -205,19 +214,21 @@ const DebtList = props => {
   return (
     <>
       <Table
-      loading={isLoading}
-      bordered
-      scroll={{ x: 1500 }}
-      dataSource={data}
-      columns={columns}
-      rowClassName="editable-row"
-      pagination={{
-        onChange: () => { }
-      }}
-    />
-      <DialogOTP open={openModal} data={formData} handleClose={() => setOpenModal(false)} />
+        key="name"
+        loading={isLoading}
+        bordered
+        scroll={{ x: 1700 }}
+        dataSource={data}
+        columns={columns}
+        rowClassName="editable-row"
+        pagination={{
+          onChange: () => { }
+        }}
+      />
+      <DialogOTP reload={reload} open={openModal} data={formData} handleClose={() => setOpenModal(false)} />
+      <DialogNote reload={reload} open={openCancelDebt} data={cancelDebtData} handleClose={() => setOpenCancelDebt(false)} />
     </>
-    
+
   );
 };
 
