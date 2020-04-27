@@ -10,9 +10,11 @@ import config from './config';
 
 function App() {
   useEffect(() => {
-    const socket = socketIOClient(config.apiUrl);
+    const socket = socketIOClient(config.socketUrl);
     socket.on("DEBT_NOTICE", data => {
       const userInfo = JSON.parse(localStorage.getItem('user'))
+      console.log("LISTENING SOCKET ... ", userInfo)
+      console.log("LISTENING SOCKET ... ", data)
       if(data.username == userInfo.username) {
         notification.warning({
           message: 'Nhắc nợ',

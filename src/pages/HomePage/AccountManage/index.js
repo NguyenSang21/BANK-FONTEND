@@ -77,6 +77,7 @@ function AccountManage(props) {
     <Table
       loading={isLoading}
       bordered
+      rowKey="ID_TaiKhoanTTTK"
       dataSource={data}
       columns={columns}
       rowClassName="editable-row"

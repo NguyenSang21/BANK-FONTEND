@@ -29,10 +29,9 @@ const History = props => {
         if (result && result.success) {
           const data = [];
           result.data.map(item => {
-            if (item.LoaiGiaoDich === 'Nhan' || item.LoaiGiaoDich === 'Gui') {
-              item.ThoiGian = moment(item.ThoiGian).format('hh:mm:ss DD/MM/YYYY');
-              data.push(item)
-            }
+            item.ThoiGian = moment(item.ThoiGian).format('hh:mm:ss DD/MM/YYYY');
+            data.push(item)
+            
             return item;
           });
           setData(data);
@@ -48,19 +47,44 @@ const History = props => {
     {
       title: 'Số giao dịch',
       dataIndex: 'ID_GiaoDich',
-      width: '25%',
+      width: '15%',
+      fixed: 'left',
       editable: true
+    },
+    {
+      title: 'Số tài khoản',
+      dataIndex: 'ID_TaiKhoan_TTTK_B',
+      width: '15%',
+      editable: true
+    },
+    {
+      title: 'Tên ngân hàng',
+      dataIndex: 'TenNganHang',
+      width: '15%',
+      editable: true,
+      render: (text, record) => {
+        return <Tag color="blue">{record.TenNganHang}</Tag>
+      }
+    },
+    {
+      title: 'Số tiền',
+      dataIndex: 'SoTien',
+      width: '15%',
+      editable: true
+    },
+    {
+      title: 'Người trả phí',
+      dataIndex: 'NguoiTraPhi',
+      width: '20%',
+      editable: true,
+      render: (text, record) => {
+        return <Tag color="pink">{record.NguoiTraPhi}</Tag>;
+      }
     },
     {
       title: 'Nội dung',
       dataIndex: 'GhiChu',
       width: '25%',
-      editable: true
-    },
-    {
-      title: 'Số tiền',
-      dataIndex: 'SoTien',
-      width: '20%',
       editable: true
     },
     {
@@ -74,6 +98,14 @@ const History = props => {
             return <Tag color="blue">Gửi tiền</Tag>;
           case 'Nhan':
             return <Tag color="green">Nhận tiền</Tag>;
+          case 'Doi':
+            return <Tag color="orange">Đòi tiền</Tag>;
+          case 'No':
+            return <Tag color="red">Nợ</Tag>;
+          case 'TraNo':
+            return <Tag color="orange">Trả nợ</Tag>;
+          case 'NhanTienNo':
+            return <Tag color="green">Nhận tiền nợ</Tag>;
         }
       }
     },
@@ -86,6 +118,7 @@ const History = props => {
     {
       title: 'Trạng thái',
       dataIndex: 'TrangThai',
+      fixed: 'right',
       width: '15%',
       editable: true,
       render: (text, record) => {
@@ -94,6 +127,18 @@ const History = props => {
             return <Tag color="blue">Đã gửi</Tag>;
           case 'DaNhan':
             return <Tag color="green">Đã nhận</Tag>;
+          case 'DangDoi':
+            return <Tag color="yellow">Đang đòi</Tag>;
+          case 'DaNhan':
+            return <Tag color="green">Đã nhận</Tag>;
+          case 'HuyDoi':
+            return <Tag color="orange">Hủy đòi</Tag>;
+          case 'DaTraNo':
+            return <Tag color="green">Đã trả nợ</Tag>;
+          case 'DangNo':
+            return <Tag color="yellow">Đang nợ</Tag>;
+            case 'NhanTienNo':
+              return <Tag color="green">Nhận tiền nợ</Tag>;
         }
       }
     }
@@ -101,7 +146,7 @@ const History = props => {
 
   return (
     <Modal
-      width={900}
+      width={1000}
       maskClosable={false}
       title="Lịch sử giao dịch"
       visible={visible}
@@ -110,8 +155,10 @@ const History = props => {
       cancelText="Đóng"
     >
       <Table
+        scroll={{ x: 1000 }}
         loading={isLoading}
         bordered
+        rowKey="ID_GiaoDich"
         dataSource={data}
         columns={columns}
         rowClassName="editable-row"

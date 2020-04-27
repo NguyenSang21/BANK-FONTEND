@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { notificationActions } from '../../../actions/notification.action';
 import { debtService } from '../../../services';
+import { recieverService } from '../../../services/reciever.service';
 
 const layout = {
   labelCol: {
@@ -14,7 +15,7 @@ const layout = {
   }
 };
 
-const DialogNote = props => {
+const UpdateReciever = props => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -27,25 +28,34 @@ const DialogNote = props => {
     setVisible(props.open);
     setFormDataParent(props.data)
     resetField()
+    form.setFieldsValue({BietDanh_IN: props.data.BietDanh})
   }, [props.open]);
 
   const handleSubmit = async () => {
     setLoading(true); // start loading
     try {
+      const userInfo = JSON.parse(localStorage.getItem('user'))
       let values = await form.validateFields();
-      values.Username_IN = formDataParent.Username_IN
       console.log(values)
 
-      const result = await debtService.removeDebt(formDataParent.ID_GiaoDich, values)
+      const data = {
+        BietDanh_IN: values.BietDanh_IN,
+        ID_TaiKhoan_TTTK_B_IN: formDataParent.ID_TaiKhoan_TTTK_B,
+        TenNganHang_IN: formDataParent.TenNganHang
+      }
+      const result = await recieverService.updateReciver(userInfo.username,data)
 
       if(result && result.success) {
         notification.success({
           message: 'Thông báo',
-          description: 'Hủy nhắc thành công!',
+          description: 'Sửa biệt danh thành công!',
         })
       }
 
-      props.handleClose() // close
+      props.handleClose()
+      props.reload()
+
+      // props.handleClose() // close
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
@@ -61,7 +71,7 @@ const DialogNote = props => {
   return (
     <Modal
       maskClosable={false}
-      title="Thêm ghi chú"
+      title="Sửa biệt danh"
       visible={visible}
       onOk={() => handleSubmit()}
       okText="Đồng ý"
@@ -72,16 +82,16 @@ const DialogNote = props => {
       <Spin spinning={loading}>
         <Form {...layout} form={form} onFinishFailed={onFinishFailed}>
           <Form.Item
-            name="GhiChu_IN"
-            label="Ghi chú:"
+            name="BietDanh_IN"
+            label="Biệt danh:"
             rules={[
               {
                 required: true,
-                message: 'Nhập vào ghi chú!'
+                message: 'Nhập vào biệt danh!'
               }
             ]}
           >
-            <Input placeholder="Nhập vào ghi chú!" />
+            <Input placeholder="Nhập vào biệt danh!" />
           </Form.Item>
         </Form>
       </Spin>
@@ -89,9 +99,10 @@ const DialogNote = props => {
   )
 }
 
-DialogNote.propTypes = {
+UpdateReciever.propTypes = {
   open: PropTypes.bool,
-  handleClose: PropTypes.func
+  handleClose: PropTypes.func,
+  reload: PropTypes.func
 };
 
 const actionCreators = {
@@ -99,5 +110,5 @@ const actionCreators = {
   notify_failure: notificationActions.failure
 };
 
-export default connect(null, actionCreators)(DialogNote);
+export default connect(null, actionCreators)(UpdateReciever);
 

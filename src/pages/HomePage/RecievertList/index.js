@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Form, Row, Button, Col, Card, Input, Radio, Tag } from 'antd';
+import { Table, Form, Row, Button, Col, Card, Tag } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { recieverService } from '../../../services/reciever.service';
 import CreateReciever from './CreateReciever';
+import UpdateReciever from './UpdateReciever';
 
 const layout = {
   labelCol: {
@@ -16,6 +17,9 @@ const layout = {
 const RecieverList = props => {
   const [form] = Form.useForm();
   const [openModal, setOpenModal] = useState(false);
+  const [updateData, setUpdateData] = useState([]);
+  const [openModalUpdate, setOpenModalUpdate] = useState(false);
+
   const columns = [
     {
       title: 'Số tài khoản',
@@ -37,6 +41,19 @@ const RecieverList = props => {
       render: (text, record) => {
         return <Tag color="green">{record.BietDanh}</Tag>;
       }
+    },
+    {
+      title: 'Actions',
+      dataIndex: 'action',
+      width: '15%',
+      editable: true,
+      render: (text, record) => {
+        return <Button
+        type="primary"
+          onClick={() => handleUpdate(record)}>
+          Sửa đổi
+    </Button>
+      }
     }
   ];
 
@@ -46,7 +63,14 @@ const RecieverList = props => {
 
   useEffect(() => {
     async function fetchData() {
-      const userInfo = JSON.parse(localStorage.getItem('user'));
+      initData()
+    }
+
+    fetchData();
+  }, [reload]);
+
+  const initData = async () => {
+    const userInfo = JSON.parse(localStorage.getItem('user'));
       setLoading(true);
       const result = await recieverService.getReciverList(userInfo.username);
       console.log('DATA=', result);
@@ -54,10 +78,13 @@ const RecieverList = props => {
         setData(result.data);
         setLoading(false);
       }
-    }
+  }
 
-    fetchData();
-  }, [reload]);
+  const handleUpdate = (record) => {
+    console.log(record)
+    setOpenModalUpdate(true)
+    setUpdateData(record)
+  }
 
   return (
     <>
@@ -88,7 +115,13 @@ const RecieverList = props => {
       <CreateReciever
         open={openModal}
         handleClose={() => setOpenModal(false)}
-        reload={() => setReload(true)}
+        reload={() => initData()}
+      />
+      <UpdateReciever
+        data={updateData}
+        open={openModalUpdate}
+        handleClose={() => setOpenModalUpdate(false)}
+        reload={() => initData()}
       />
     </>
   );

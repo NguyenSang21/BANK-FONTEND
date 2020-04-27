@@ -15,6 +15,7 @@ const InternalTransaction = props => {
   const [openModal, setOpenModal] = useState(false)
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState([])
+  const [options, setOptions] = useState([])
 
   const formItemLayout = {
     labelCol: { span: 6 },
@@ -34,17 +35,23 @@ const InternalTransaction = props => {
     getUserInfo()
   }, [openModal])
 
-  const [recieverList, setRecieverList] = useState([])
   useEffect(() => {
     async function fetchData() {
       const userInfo = JSON.parse(localStorage.getItem('user'));
       const result = await recieverService.getReciverList(userInfo.username);
       console.log('DATA=', result);
       if (result && result.success) {
-        setRecieverList(result.data);
+        const temp = []
+        result.data.map(item => {
+          temp.push({
+            label: item.BietDanh,
+            value: item.ID_TaiKhoan_TTTK_B + '',
+            key: Math.random(0,999999)
+          })
+        })
+        setOptions(temp)
       }
     }
-
     fetchData();
   }, []);
 
@@ -84,14 +91,7 @@ const InternalTransaction = props => {
     return null
   }
 
-  const options = []
-
-  recieverList.map(it => {
-    options.push({
-      label: it.BietDanh,
-      value: it.ID_TaiKhoan_TTTK_B
-    })
-  });
+  console.log(options)
 
   return (
     <Spin spinning={loading}>

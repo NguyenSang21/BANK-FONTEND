@@ -22,6 +22,7 @@ import {
   SyncOutlined
 } from '@ant-design/icons';
 import RecieverList from './pages/HomePage/RecievertList';
+import Profile from './pages/HomePage/Profile';
 
 const routes = [
   {
@@ -149,7 +150,7 @@ const routes = [
         exact: true,
         icon: <SettingOutlined />,
         layout: '/home',
-        name: 'Cấu hình',
+        name: 'Đổi mật khẩu',
         component: <Setting />
       }
     ]

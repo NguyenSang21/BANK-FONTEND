@@ -11,8 +11,45 @@ const TransHistory = props => {
     {
       title: 'Số giao dịch',
       dataIndex: 'ID_GiaoDich',
-      width: '25%',
+      width: '10%',
+      fixed: 'left',
       editable: true
+    },
+    {
+      title: 'Tài khoản người nhận',
+      dataIndex: 'ID_TaiKhoan_TTTK_B',
+      width: '10%',
+      editable: true
+    },
+    {
+      title: 'Tài khoản người nhận',
+      dataIndex: 'ID_TaiKhoan_TTTK_B',
+      width: '10%',
+      editable: true
+    },
+    {
+      title: 'Tên ngân hàng',
+      dataIndex: 'TenNganHang',
+      width: '10%',
+      editable: true,
+      render: (text, record) => {
+        return <Tag color="blue">{record.TenNganHang}</Tag>
+      }
+    },
+    {
+      title: 'Số tiền',
+      dataIndex: 'SoTien',
+      width: '10%',
+      editable: true
+    },
+    {
+      title: 'Người trả phí',
+      dataIndex: 'NguoiTraPhi',
+      width: '10%',
+      editable: true,
+      render: (text, record) => {
+        return <Tag color="pink">{record.NguoiTraPhi}</Tag>;
+      }
     },
     {
       title: 'Nội dung',
@@ -21,15 +58,9 @@ const TransHistory = props => {
       editable: true
     },
     {
-      title: 'Số tiền',
-      dataIndex: 'SoTien',
-      width: '20%',
-      editable: true
-    },
-    {
       title: 'Loại giao dịch',
       dataIndex: 'LoaiGiaoDich',
-      width: '15%',
+      width: '10%',
       editable: true,
       render: (text, record) => {
         switch (record.LoaiGiaoDich) {
@@ -37,6 +68,14 @@ const TransHistory = props => {
             return <Tag color="blue">Gửi tiền</Tag>;
           case 'Nhan':
             return <Tag color="green">Nhận tiền</Tag>;
+          case 'Doi':
+            return <Tag color="orange">Đòi tiền</Tag>;
+          case 'No':
+            return <Tag color="red">Nợ</Tag>;
+          case 'TraNo':
+            return <Tag color="orange">Trả nợ</Tag>;
+          case 'NhanTienNo':
+            return <Tag color="green">Nhận tiền nợ</Tag>;
         }
       }
     },
@@ -49,7 +88,8 @@ const TransHistory = props => {
     {
       title: 'Trạng thái',
       dataIndex: 'TrangThai',
-      width: '15%',
+      fixed: 'right',
+      width: '10%',
       editable: true,
       render: (text, record) => {
         switch (record.TinhTrang) {
@@ -57,6 +97,20 @@ const TransHistory = props => {
             return <Tag color="blue">Đã gửi</Tag>;
           case 'DaNhan':
             return <Tag color="green">Đã nhận</Tag>;
+          case 'DangDoi':
+            return <Tag color="yellow">Đang đòi</Tag>;
+          case 'DaNhan':
+            return <Tag color="green">Đã nhận</Tag>;
+          case 'HuyDoi':
+            return <Tag color="orange">Hủy đòi</Tag>;
+          case 'DaTraNo':
+            return <Tag color="green">Đã trả nợ</Tag>;
+          case 'DangNo':
+            return <Tag color="yellow">Đang nợ</Tag>;
+          case 'DaNhanTienNo':
+            return <Tag color="green">Đã Nhận tiền nợ</Tag>;
+          case 'DaTra':
+            return <Tag color="green">Đã trả</Tag>;
         }
       }
     }
@@ -72,10 +126,9 @@ const TransHistory = props => {
       if (result && result.success) {
         const data = [];
         result.data.map(item => {
-          if(item.LoaiGiaoDich === 'Nhan' || item.LoaiGiaoDich === 'Gui') {
-            item.ThoiGian = moment(item.ThoiGian).format('hh:mm:ss DD/MM/YYYY');
-            data.push(item)
-          }
+          item.ThoiGian = moment(item.ThoiGian).format('hh:mm:ss DD/MM/YYYY');
+          data.push(item)
+          
           return item;
         });
         setData(data);
@@ -88,13 +141,14 @@ const TransHistory = props => {
 
   return (
     <Table
+      scroll={{ x: 1500 }}
       loading={isLoading}
       bordered
       dataSource={data}
       columns={columns}
       rowClassName="editable-row"
       pagination={{
-        onChange: () => {}
+        onChange: () => { }
       }}
     />
   );

@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Form, Modal, InputNumber, Spin, Input } from 'antd';
+import { Form, Modal, InputNumber, Spin, Input, Select } from 'antd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { notificationActions } from '../../../actions/notification.action';
 import { transactionService, userService, employeeService } from '../../../services';
+
+const {Option} = Select
 
 const layout = {
   labelCol: {
@@ -18,12 +20,15 @@ const Topup = props => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
-
+  const [accountList, setAccountList] = useState([])
+  
   useEffect(() => {
       async function fetchData(){
         if(props.data && props.data.Username) {
-          const result = await userService.getAccountByType(props.data.Username, 'TT')
-          form.setFieldsValue({accountNumberB: result.data.length !== 0 && result.data[0].ID_TaiKhoanTTTK})
+          const result = await userService.getAccountByType(props.data.Username, 'all')
+          if(result && result.success) {
+            setAccountList(result.data)
+          }
         }
        setVisible(props.open);
       }
@@ -40,6 +45,7 @@ const Topup = props => {
       if (result && result.success) {
         props.notify_success(result.message);
         props.handleClose()
+        props.reload()
       }
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
@@ -74,7 +80,13 @@ const Topup = props => {
               }
             ]}
           >
-            <Input disabled placeholder="Nhập vào số tài khoản!" />
+            <Select placeholder="Chọn số tài khoản">
+              {
+                accountList.map(item => {
+                  return <Option key={item.ID_TaiKhoanTTTK} value={item.ID_TaiKhoanTTTK}>{`${item.ID_TaiKhoanTTTK} (${item.Loai === 'TT' ? 'Thanh toán' : 'Tiết kiệm'})`}</Option>
+                })
+              }
+            </Select>
           </Form.Item>
           <Form.Item
             name="amount"
@@ -96,7 +108,8 @@ const Topup = props => {
 
 Topup.propTypes = {
   open: PropTypes.bool,
-  handleClose: PropTypes.func
+  handleClose: PropTypes.func,
+  reload: PropTypes.func
 };
 
 const actionCreators = {

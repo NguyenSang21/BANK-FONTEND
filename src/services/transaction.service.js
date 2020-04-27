@@ -8,9 +8,9 @@ export const transactionService = {
   getOTP
 };
 
-async function getAll(query) {
+async function getAll(bankA, bankB) {
   const resultData = await fetchData({
-    path: query && `/trans?bankName=${query}` || '/trans',
+    path: `/trans?bankA=${bankA}&bankB=${bankB}`,
     method: 'get'
   });
 

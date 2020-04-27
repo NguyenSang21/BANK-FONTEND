@@ -44,8 +44,6 @@ const SettingDebt = props => {
 
       if (result_2 && result_2.success) {
         props.notify_success(result_2.message);
-      } else {
-        props.notify_failure(result_2.message);
       }
     }
     setLoading(false);

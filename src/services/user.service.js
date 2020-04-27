@@ -2,11 +2,14 @@ import { fetchData, refreshToken } from '../helpers';
 
 export const userService = {
   login,
+  getInfo,
   create,
   changePass,
   getAccountList,
   getListClient,
-  getAccountByType
+  getAccountByType,
+  sendOTP,
+  resetPassword,
 };
 
 /**
@@ -108,6 +111,67 @@ async function getAccountByType(username, type) {
       return await fetchData({
         path: `/user/${type}/${username}`,
         method: 'get'
+      });
+    }
+  }
+
+  return resultData;
+}
+
+async function getInfo(username) {
+  const resultData = await fetchData({
+    path: `/user/${username}`,
+    method: 'get'
+  });
+
+  // check expire token
+  if (resultData && resultData.status === 403) {
+    const result = await refreshToken();
+    if (result) {
+      return await fetchData({
+        path: `/user/${username}`,
+        method: 'get'
+      });
+    }
+  }
+
+  return resultData;
+}
+
+async function sendOTP(username) {
+  const resultData = await fetchData({
+    path: `/auth/service/otp/${username}`,
+    method: 'get'
+  });
+
+  // check expire token
+  if (resultData && resultData.status === 403) {
+    const result = await refreshToken();
+    if (result) {
+      return await fetchData({
+        path: `/auth/service/otp/${username}`,
+        method: 'get'
+      });
+    }
+  }
+
+  return resultData;
+}
+
+async function resetPassword(data) {
+  const resultData = await fetchData({
+    path: `/auth/reset`,
+    method: 'put',
+    data
+  });
+
+  // check expire token
+  if (resultData && resultData.status === 403) {
+    const result = await refreshToken();
+    if (result) {
+      return await fetchData({
+        path: `/auth/reset`,
+        method: 'put'
       });
     }
   }

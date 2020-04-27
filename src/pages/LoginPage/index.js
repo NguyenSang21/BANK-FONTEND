@@ -4,6 +4,8 @@ import { message } from 'antd';
 import { userService } from '../../services';
 import { Redirect } from 'react-router-dom';
 import { UserOutlined } from '@ant-design/icons';
+import ReCAPTCHA from "react-google-recaptcha";
+import ForgetPassword from '../HomePage/Profile/ForgetPassword';
 
 const layout = {
   labelCol: {
@@ -15,8 +17,8 @@ const layout = {
 };
 const tailLayout = {
   wrapperCol: {
-    offset: 8,
-    span: 16
+    offset: 6,
+    span: 18
   }
 };
 
@@ -24,6 +26,8 @@ const LoginPage = props => {
   const [form] = Form.useForm();
   const [isLogin, setLogin] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [formData, setFormData] = useState([]);
 
   const onFinish = async values => {
     setLoading(true);
@@ -39,6 +43,10 @@ const LoginPage = props => {
     }
 
     setLoading(false);
+  };
+
+  const grecaptchaObject = window.recaptchaOptions = {
+    useRecaptchaNet: true,
   };
 
   const onFinishFailed = errorInfo => {
@@ -65,7 +73,7 @@ const LoginPage = props => {
           style={{
             width: 350,
             textAlign: 'center',
-            background: '#3b6271',
+            background: '#20676b',
             padding: 20,
             borderRadius: 5
           }}
@@ -98,11 +106,15 @@ const LoginPage = props => {
           >
             <Input.Password />
           </Form.Item>
-          <Form.Item {...tailLayout} valuePropName="checked">
-            <Checkbox style={{ color: 'white' }}>Nhớ mật khẩu</Checkbox>
+          <Form.Item>
+            <ReCAPTCHA
+              sitekey="6LcWfO4UAAAAAMskAeoaxNmajmXCVKe7ehWHGtKI"
+              onChange={() => { }}
+              grecaptcha={grecaptchaObject}
+            />,
           </Form.Item>
-
           <Form.Item {...tailLayout}>
+            <span><a style={{marginRight: 5}} href="#" onClick={() => {setOpenModal(true)}}>Quên mật khẩu ?</a></span>
             <Button type="primary" htmlType="submit">
               Đăng nhập
             </Button>
@@ -112,6 +124,7 @@ const LoginPage = props => {
           <Redirect to={{ pathname: '/home' }} />
         ) : null}
       </Spin>
+      <ForgetPassword key={Math.random(1, 9999999)} open={openModal} data={formData} handleClose={() => setOpenModal(false)} />
     </div>
   );
 };

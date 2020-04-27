@@ -31,9 +31,12 @@ const UserList = props => {
     {
       title: 'Mã KH',
       dataIndex: 'ID_TaiKhoan',
-      width: '20%',
+      width: '10%',
       fixed: 'left',
-      editable: true
+      editable: true,
+      render: (text, record) => {
+        return <Tag color="blue">{record.ID_TaiKhoan}</Tag>
+      }
     },
     {
       title: 'Username',
@@ -44,7 +47,7 @@ const UserList = props => {
     {
       title: 'Họ tên',
       dataIndex: 'HoTen',
-      width: '20%',
+      width: '15%',
       editable: true
     },
     {
@@ -56,13 +59,13 @@ const UserList = props => {
     {
       title: 'Số điện thoại',
       dataIndex: 'DienThoai',
-      width: '20%',
+      width: '15%',
       editable: true
     },
     {
       title: 'Tình trạng',
       dataIndex: 'TinhTrang',
-      width: '20%',
+      width: '15%',
       editable: true,
       render: (text, record) => {
         switch (record.TinhTrang) {
@@ -74,9 +77,63 @@ const UserList = props => {
       }
     },
     {
+      title: 'Số lượng TK(Thanh toán)',
+      dataIndex: 'SLTKGiaoDich',
+      width: '13%',
+      editable: true
+    },
+    {
+      title: 'Số lượng TK(Tiết kiệm)',
+      dataIndex: 'SLTKTietKiem',
+      width: '13%',
+      editable: true
+    },
+    {
+      title: 'Tổng tiền(Thanh toán)',
+      dataIndex: 'TongTienTT',
+      width: '13%',
+      editable: true
+    },
+    {
+      title: 'Tổng tiền(Tiết kiệm)',
+      dataIndex: 'TongTienTK',
+      width: '13%',
+      editable: true,
+      render: (text, record) => {
+        if (record.TongTienTK === null)
+          return <>0</>
+        else
+          return <>{record.TongTienTK}</>
+      }
+    },
+    {
+      title: 'Số lượng GD(Gủi)',
+      dataIndex: 'SLGui',
+      width: '13%',
+      editable: true
+    },
+    {
+      title: 'Số lượng GD(Nhận)',
+      dataIndex: 'SLNhan',
+      width: '13%',
+      editable: true
+    },
+    {
+      title: 'Số lượng nợ',
+      dataIndex: 'SLNo',
+      width: '13%',
+      editable: true
+    },
+    {
+      title: 'Số lượng trả nợ',
+      dataIndex: 'SLTraNo',
+      width: '13%',
+      editable: true
+    },
+    {
       title: 'Action 1',
       dataIndex: 'detail',
-      width: '20%',
+      width: '15%',
       editable: true,
       render: (text, record) => {
         return (
@@ -92,7 +149,7 @@ const UserList = props => {
     {
       title: 'Action 2',
       dataIndex: 'napTien',
-      width: '20%',
+      width: '15%',
       editable: true,
       render: (text, record) => {
         return (
@@ -113,17 +170,21 @@ const UserList = props => {
 
   useEffect(() => {
     async function fetchData() {
-      setLoading(true);
-      const result = await userService.getListClient();
-      console.log('DATA=', result);
-      if (result && result.success) {
-        setData(result.data);
-        setLoading(false);
-      }
+      initData()
     }
 
     fetchData();
   }, []);
+
+  const initData = async () => {
+    setLoading(true)
+    const result = await userService.getListClient();
+    console.log('DATA=', result);
+    if (result && result.success) {
+      setData(result.data);
+      setLoading(false);
+    }
+  }
 
   const handleViewHistory = (record) => {
     console.log(record)
@@ -173,7 +234,7 @@ const UserList = props => {
       <Table
         loading={isLoading}
         bordered
-        scroll={{ x: 1500 }}
+        scroll={{ x: 2500 }}
         dataSource={data}
         columns={columns}
         rowClassName="editable-row"
@@ -184,8 +245,8 @@ const UserList = props => {
         }}
       />
       <CreateUser open={openModal} handleClose={() => setOpenModal(false)} />
-      <History key={Math.random(0, 99999999)} data={formDataHistory} open={openModalHistory} handleClose={() => setOpenModalHistory(false)}/>
-      <Topup key={Math.random(0, 99999999)} data={formDataTopup} open={openModalTopup} handleClose={() => setOpenModalTopup(false)}/>
+      <History key={Math.random(0, 99999999)} data={formDataHistory} open={openModalHistory} handleClose={() => setOpenModalHistory(false)} />
+      <Topup reload={() => initData()} key={Math.random(0, 99999999)} data={formDataTopup} open={openModalTopup} handleClose={() => setOpenModalTopup(false)} />
     </div>
   );
 };

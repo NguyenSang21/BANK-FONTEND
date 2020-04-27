@@ -50,7 +50,8 @@ const Setting = props => {
     const userInfo = JSON.parse(localStorage.getItem('user'));
     const result = await userService.changePass({
       username: userInfo.username,
-      password: values.newPassword
+      password: values.newPassword,
+      oldPassword: values.oldPassword,
     });
 
     if (result && result.success) {

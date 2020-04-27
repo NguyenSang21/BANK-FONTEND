@@ -4,10 +4,10 @@ import { transactionService } from '../../../services';
 import { bankService } from '../../../services/bank.service';
 const layout = {
   labelCol: {
-    span: 3
+    span: 16
   },
   wrapperCol: {
-    span: 14
+    span: 12
   }
 };
 
@@ -28,20 +28,23 @@ const Comparison = props => {
     {
       title: 'Tài khoản A',
       dataIndex: 'ID_TaiKhoan_TTTK_A',
-      width: '10%',
+      width: '15%',
       editable: true
     },
     {
       title: 'Họ tên A',
       dataIndex: 'Username_A',
-      width: '10%',
+      width: '20%',
       editable: true
     },
     {
       title: 'Tên ngân hàng A',
       dataIndex: 'TenNganHang_A',
-      width: '10%',
-      editable: true
+      width: '15%',
+      editable: true,
+      render: (text, record) => {
+        return <Tag color="blue">{record.TenNganHang_A}</Tag>
+      }
     },
     {
       title: 'Tài khoản B',
@@ -52,39 +55,16 @@ const Comparison = props => {
     {
       title: 'Họ tên B',
       dataIndex: 'Username_B',
-      width: '10%',
-      editable: true
-    },
-    {
-      title: 'Tài khoản B',
-      dataIndex: 'ID_NganHangLienKet_B',
-      width: '10%',
+      width: '20%',
       editable: true
     },
     {
       title: 'Tên ngân hàng B',
       dataIndex: 'TenNganHang_B',
       width: '10%',
-      editable: true
-    },
-    {
-      title: 'Loại giao dịch',
-      dataIndex: 'LoaiGiaoDich',
-      width: '15%',
       editable: true,
       render: (text, record) => {
-        switch (record.LoaiGiaoDich) {
-          case 'Gui':
-            return <Tag color="blue">Gửi tiền</Tag>;
-          case 'Nhan':
-            return <Tag color="green">Nhận tiền</Tag>;
-          case 'Doi':
-            return <Tag color="yellow">Đòi tiền</Tag>;
-          case 'TraNo':
-            return <Tag color="yellow">Trả nợ</Tag>;
-          case 'No':
-            return <Tag color="red">Nợ</Tag>;
-        }
+        return <Tag color="blue">{record.TenNganHang_B}</Tag>
       }
     },
     {
@@ -97,42 +77,78 @@ const Comparison = props => {
       title: 'Người trả phí',
       dataIndex: 'NguoiTraPhi',
       width: '10%',
+      editable: true,
+      render: (text, record) => {
+        return <Tag color="pink">{record.NguoiTraPhi}</Tag>;
+      }
+    },
+    {
+      title: 'Nội dung',
+      dataIndex: 'GhiChu',
+      width: '25%',
       editable: true
     },
     {
-      title: 'Ghi chú',
-      dataIndex: 'GhiChu',
+      title: 'Loại giao dịch',
+      dataIndex: 'LoaiGiaoDich',
       width: '10%',
-      editable: true
+      editable: true,
+      render: (text, record) => {
+        switch (record.LoaiGiaoDich) {
+          case 'Gui':
+            return <Tag color="blue">Gửi tiền</Tag>;
+          case 'Nhan':
+            return <Tag color="green">Nhận tiền</Tag>;
+          case 'Doi':
+            return <Tag color="orange">Đòi tiền</Tag>;
+          case 'No':
+            return <Tag color="red">Nợ</Tag>;
+          case 'TraNo':
+            return <Tag color="orange">Trả nợ</Tag>;
+          case 'NhanTienNo':
+            return <Tag color="green">Nhận tiền nợ</Tag>;
+        }
+      }
     },
     {
       title: 'Thời gian',
       dataIndex: 'ThoiGian',
-      width: '10%',
+      width: '15%',
       editable: true
     },
     {
-      title: 'Tình trạng',
-      dataIndex: 'TinhTrang',
-      width: '10%',
+      title: 'Trạng thái',
+      dataIndex: 'TrangThai',
       fixed: 'right',
+      width: '10%',
       editable: true,
       render: (text, record) => {
         switch (record.TinhTrang) {
           case 'DaGui':
             return <Tag color="blue">Đã gửi</Tag>;
-          case 'DaTra':
-            return <Tag color="green">Đã trả</Tag>;
           case 'DaNhan':
             return <Tag color="green">Đã nhận</Tag>;
           case 'DangDoi':
             return <Tag color="yellow">Đang đòi</Tag>;
+          case 'DaNhan':
+            return <Tag color="green">Đã nhận</Tag>;
+          case 'HuyDoi':
+            return <Tag color="orange">Hủy đòi</Tag>;
+          case 'DaTraNo':
+            return <Tag color="green">Đã trả nợ</Tag>;
+          case 'DaTra':
+            return <Tag color="green">Đã trả</Tag>;
+          case 'DangNo':
+            return <Tag color="yellow">Đang nợ</Tag>;
+          case 'DaNhanTienNo':
+            return <Tag color="green">Đã Nhận tiền nợ</Tag>;
         }
       }
     }
   ];
 
-  const [search, setSearch] = useState('')
+  const [nhGui, setNhGui] = useState('')
+  const [nhNhan, setNhNhan] = useState('')
   const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(false);
 
@@ -162,15 +178,18 @@ const Comparison = props => {
     getBankList()
   }, []);
 
-  const handleChangeSelected = (value) => {
+  const handleChangeSelected = (type, value) => {
     console.log(value)
-    setSearch(value)
+    if(type === 'Gui') {
+      setNhGui(value)
+    } else if(type === 'Nhan') {
+      setNhNhan(value)
+    }
   }
 
   const fetchDataByQuery = async () => {
     setLoading(true);
-    const query = search
-    const result = await transactionService.getAll(query);
+    const result = await transactionService.getAll(nhGui, nhNhan);
     console.log('DATA=', result);
 
     if (result && result.success) {
@@ -179,44 +198,46 @@ const Comparison = props => {
     }
   }
 
-  const handleSearch = () => {
+  const onFinishSearch = values => {
+    console.log('Received values from form: ', values);
     fetchDataByQuery()
-  }
+  };
 
   return (
     <>
-      <Form {...layout} form={form}>
-        <Card style={{ width: '100%', marginBottom: 10 }}>
-          <Row gutter={16}>
-            <Col span={16}>
-              <Form.Item label="Ngân hàng">
-                <Row gutter={16}>
-                  <Col span={12}>
-                  <Select onChange={(e) => handleChangeSelected(e)} placeholder="Chọn ngân hàng">
-                  <Option value="">Xem tất cả</Option>
-                  {
-                    bankList.map(item => {
-                      return <Option value={item.TenNganHang}>{item.TenNganHang}</Option>
-                    })
-                  }
-                </Select>
-                  </Col>
-                  <Col span={12}>
-                  <Button onClick={() => handleSearch()} style={{ marginLeft: 20 }}>Tìm kiếm</Button>
-
-                  </Col>
-                </Row>
-                
-              </Form.Item>
-            </Col>
-          </Row>
-        </Card>
-      </Form>
+      <Card style={{ width: '100%', marginBottom: 10 }}>
+        <Form layout="inline" form={form} onFinish={onFinishSearch}>
+          <Form.Item label="Ngân hàng gửi">
+            <Select  onChange={(e) => handleChangeSelected('Gui',e)} placeholder="Chọn ngân hàng">
+              <Option value=''></Option>
+              {
+                bankList.map(item => {
+                  return <Option key={item.ID_NganHangLienKet} value={item.TenNganHang}>{item.TenNganHang}</Option>
+                })
+              }
+            </Select>
+          </Form.Item>
+          <Form.Item label="Ngân hàng nhận">
+            <Select onChange={(e) => handleChangeSelected('Nhan', e)} placeholder="Chọn ngân hàng">
+              <Option value=''></Option>
+              {
+                bankList.map(item => {
+                  return <Option key={item.ID_NganHangLienKet+item.TenNganHang}  value={item.TenNganHang}>{item.TenNganHang}</Option>
+                })
+              }
+            </Select>
+          </Form.Item>
+          <Form.Item>
+            <Button type='primary' htmlType="submit" style={{ marginLeft: 20 }}>Tìm kiếm</Button>
+          </Form.Item>
+        </Form>
+      </Card>
       <Table
         loading={isLoading}
         columns={columns}
         dataSource={data}
-        scroll={{ x: 1500 }}
+        scroll={{ x: 2000 }}
+        rowKey="ID_GiaoDich"
       />
     </>
   );

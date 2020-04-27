@@ -12,7 +12,7 @@ async function getAll() {
   });
 
   // check expire token
-  if (resultData.status === 403) {
+  if (resultData && resultData.status === 403) {
     const result = await refreshToken();
     if (result) {
       return await fetchData({

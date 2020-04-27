@@ -87,10 +87,10 @@ const DebtList = props => {
       editable: true,
       render: (text, record) => {
         switch (record.LoaiGiaoDich) {
-          case 'Gui':
-            return <Tag color="blue">Gửi tiền</Tag>;
-          case 'Nhan':
-            return <Tag color="green">Nhận tiền</Tag>;
+          case 'TraNo':
+            return <Tag color="orange">Trả nợ</Tag>;
+          case 'NhanTienNo':
+            return <Tag color="green">Nhận tiền nợ</Tag>;
           case 'Doi':
             return <Tag color="orange">Đòi tiền</Tag>;
           case 'No':
@@ -131,16 +131,10 @@ const DebtList = props => {
       title: 'Actions',
       dataIndex: 'actions',
       key: 'actions',
-      width: '15%',
+      width: '10%',
       editable: true,
       render: (text, record) => {
-        if (record.TinhTrang === 'DangDoi' || record.TinhTrang === 'DangNo') {
-          return <Button
-            onClick={e => hanbleCancelDebt(record)}
-          >
-            Hủy Nhắc Nợ
-        </Button>
-        } else if (record.TinhTrang === 'DangNo') {
+        if (record.TinhTrang === 'DangNo') {
           return <Button
             danger
             onClick={() => handlePayDebt(record)}
@@ -150,86 +144,103 @@ const DebtList = props => {
         }
         return null
       }
+    },
+    {
+      title: 'Actions 2',
+      dataIndex: 'actions',
+      key: 'actions',
+      width: '15%',
+      editable: true,
+      render: (text, record) => {
+        if (record.TinhTrang === 'DangDoi' || record.TinhTrang === 'DangNo') {
+          return <Button
+            onClick={e => hanbleCancelDebt(record)}
+          >
+            Hủy Nhắc Nợ
+        </Button>
+        }
+        return null
+      }
     }
   ];
 
-  const handlePayDebt = async (values) => {
-    const userInfo = JSON.parse(localStorage.getItem('user'))
-    const formData = {
-      accountNumberA: values.TTbangTK,
-      accountNumberB: values.ID_TaiKhoan_TTTK_B,
-      amount: values.SoTien,
-      note: 'Tra nợ nhé',
-      payer: 'A',
-      username: userInfo.username,
-      transType: 'TraNo',
-      ID_TraNo: values.ID_GiaoDich
-    }
-    console.log(formData)
+const handlePayDebt = async (values) => {
+  const userInfo = JSON.parse(localStorage.getItem('user'))
+  const formData = {
+    accountNumberA: values.TTbangTK,
+    accountNumberB: values.ID_TaiKhoan_TTTK_B,
+    amount: values.SoTien,
+    note: 'Tra nợ nhé',
+    payer: 'A',
+    username: userInfo.username,
+    transType: 'TraNo',
+    ID_TraNo: values.ID_GiaoDich
+  }
+  console.log(formData)
 
-    const result = await transactionService.getOTP(userInfo.username)
+  const result = await transactionService.getOTP(userInfo.username)
+
+  if (result && result.success) {
+    setFormData(formData)
+    setOpenModal(true)
+  }
+}
+
+const hanbleCancelDebt = async (record) => {
+  const userInfo = JSON.parse(localStorage.getItem('user'))
+
+  setCancelDebtData({
+    ID_GiaoDich: record.ID_GiaoDich,
+    Username_IN: userInfo.username
+  })
+
+  setOpenCancelDebt(true)
+
+}
+
+useEffect(() => {
+  async function fetchData() {
+    setLoading(true);
+    const userInfo = JSON.parse(localStorage.getItem('user'));
+
+    const result = await debtService.getDebtList(userInfo.username);
 
     if (result && result.success) {
-      setFormData(formData)
-      setOpenModal(true)
+      const data = []
+      result.data.map(item => {
+        if (item.LoaiGiaoDich === 'No' || item.LoaiGiaoDich === 'Doi') {
+          item.ThoiGian = moment(item.ThoiGian).format('hh:mm:ss DD/MM/YYYY')
+          data.push(item)
+        }
+        return item;
+      });
+      setData(data);
+      setLoading(false);
     }
   }
 
-  const hanbleCancelDebt = async (record) => {
-    const userInfo = JSON.parse(localStorage.getItem('user'))
+  fetchData();
+}, [reload]);
 
-    setCancelDebtData({
-      ID_GiaoDich: record.ID_GiaoDich,
-      Username_IN: userInfo.username
-    })
+return (
+  <>
+    <Table
+      key="name"
+      loading={isLoading}
+      bordered
+      scroll={{ x: 1700 }}
+      dataSource={data}
+      columns={columns}
+      rowClassName="editable-row"
+      pagination={{
+        onChange: () => { }
+      }}
+    />
+    <DialogOTP reload={reload} open={openModal} data={formData} handleClose={() => setOpenModal(false)} />
+    <DialogNote reload={reload} open={openCancelDebt} data={cancelDebtData} handleClose={() => setOpenCancelDebt(false)} />
+  </>
 
-    setOpenCancelDebt(true)
-
-  }
-
-  useEffect(() => {
-    async function fetchData() {
-      setLoading(true);
-      const userInfo = JSON.parse(localStorage.getItem('user'));
-
-      const result = await debtService.getDebtList(userInfo.username);
-
-      if (result && result.success) {
-        const data = []
-        result.data.map(item => {
-          if (item.LoaiGiaoDich === 'No' || item.LoaiGiaoDich === 'Doi') {
-            item.ThoiGian = moment(item.ThoiGian).format('hh:mm:ss DD/MM/YYYY')
-            data.push(item)
-          }
-          return item;
-        });
-        setData(data);
-        setLoading(false);
-      }
-    }
-
-    fetchData();
-  }, [reload]);
-
-  return (
-    <>
-      <Table
-        key="name"
-        loading={isLoading}
-        bordered
-        scroll={{ x: 1700 }}
-        dataSource={data}
-        columns={columns}
-        rowClassName="editable-row"
-        pagination={{
-          onChange: () => { }
-        }}
-      />
-      <DialogOTP reload={reload} open={openModal} data={formData} handleClose={() => setOpenModal(false)} />
-      <DialogNote reload={reload} open={openCancelDebt} data={cancelDebtData} handleClose={() => setOpenCancelDebt(false)} />
-    </>
-
-  );
+);
 };
 
 export default DebtList;

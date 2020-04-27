@@ -19,6 +19,7 @@ const DialogOTP = props => {
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
   const [formDataParent, setFormDataParent] = useState([]);
+  let idInterval = 0
 
   useEffect(() => {
     function resetField() {
@@ -26,14 +27,51 @@ const DialogOTP = props => {
     }
     setVisible(props.open);
     setFormDataParent(props.data)
-    resetField()
+    return resetField()
   }, [props.open]);
+
+  useEffect(() => {
+    let display = document.querySelector('#count_down')
+    console.log(display)
+    if(display) {
+      idInterval = startTimer(60*5, display)
+      console.log(idInterval)
+    }
+
+    if(!props.open) {
+      clearInterval(idInterval)
+    }
+  
+    return () => {
+      console.log("CLEAR =", idInterval)
+      clearInterval(idInterval)
+    }
+  });
+
+  const startTimer = (duration, display) => {
+    let timer = duration, minutes, seconds;
+    return setInterval(function () {
+
+      minutes = parseInt(timer / 60, 10);
+      seconds = parseInt(timer % 60, 10);
+
+      minutes = minutes < 10 ? '0' + minutes : minutes;
+      seconds = seconds < 10 ? '0' + seconds : seconds;
+
+      display.textContent = `Thời gian còn lại: ${minutes} : ${seconds}`;
+
+      if (--timer < 0) {
+        clearInterval(idInterval)
+      }
+    }, 1000);
+  }
 
   const handleSubmit = async () => {
     setLoading(true); // start loading
     try {
       let values = await form.validateFields();
       formDataParent.OTP_CODE = values.OTP_CODE
+      formDataParent.transType = 'Gui'
       console.log(formDataParent)
       const result = await transactionService.internalTrans(formDataParent);
 
@@ -44,12 +82,15 @@ const DialogOTP = props => {
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
+    clearInterval(idInterval)
     setLoading(false); // end loading
   };
 
   const onFinishFailed = errorInfo => {
     console.log('Failed: ', errorInfo);
   };
+
+
 
   return (
     <Modal
@@ -58,10 +99,15 @@ const DialogOTP = props => {
       visible={visible}
       onOk={() => handleSubmit()}
       okText="Nhập mã"
-      onCancel={() => props.handleClose()}
+      onCancel={() => {
+        console.log(idInterval)
+        clearInterval(idInterval)
+        props.handleClose()
+      }}
       cancelText="Hủy"
     >
       <p style={{textAlign: "center"}}>Mã xác thực OTP đã được gửi đến email của bạn</p>
+      <p id="count_down" style={{textAlign: "center"}}></p>
       <p style={{textAlign: "center"}}>Vui lòng kiểm tra và nhập mã tại đây:</p>
       <Spin spinning={loading}>
         <Form {...layout} form={form} onFinishFailed={onFinishFailed}>
