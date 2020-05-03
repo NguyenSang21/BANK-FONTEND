@@ -1,8 +1,8 @@
 import { fetchData, refreshToken } from '../helpers';
 
 export const employeeService = {
-  getAll, 
-  topup,
+  getAll,
+  topup
 };
 
 async function getAll() {
@@ -23,7 +23,7 @@ async function getAll() {
   }
 
   return resultData;
-} 
+}
 
 async function topup(data) {
   const resultData = await fetchData({

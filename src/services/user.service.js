@@ -9,7 +9,7 @@ export const userService = {
   getListClient,
   getAccountByType,
   sendOTP,
-  resetPassword,
+  resetPassword
 };
 
 /**

@@ -3,7 +3,7 @@ import { fetchData, refreshToken } from '../helpers';
 export const debtService = {
   create,
   getDebtList,
-  removeDebt,
+  removeDebt
 };
 
 async function create(data) {

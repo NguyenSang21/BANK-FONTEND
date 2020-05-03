@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { Form, Modal, Spin, Input, Table, Tag } from 'antd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { transactionService } from '../../../services';
 import { notificationActions } from '../../../actions/notification.action';
-import moment from 'moment'
+import moment from 'moment';
 
 const layout = {
   labelCol: {
@@ -24,14 +24,16 @@ const History = props => {
     async function fetchData() {
       if (props.data.Username) {
         setLoading(true);
-        const result = await transactionService.getTransByUser(props.data.Username);
-        console.log(props.data.Username)
+        const result = await transactionService.getTransByUser(
+          props.data.Username
+        );
+        console.log(props.data.Username);
         if (result && result.success) {
           const data = [];
           result.data.map(item => {
             item.ThoiGian = moment(item.ThoiGian).format('hh:mm:ss DD/MM/YYYY');
-            data.push(item)
-            
+            data.push(item);
+
             return item;
           });
           setData(data);
@@ -63,7 +65,7 @@ const History = props => {
       width: '15%',
       editable: true,
       render: (text, record) => {
-        return <Tag color="blue">{record.TenNganHang}</Tag>
+        return <Tag color="blue">{record.TenNganHang}</Tag>;
       }
     },
     {
@@ -137,8 +139,8 @@ const History = props => {
             return <Tag color="green">Đã trả nợ</Tag>;
           case 'DangNo':
             return <Tag color="yellow">Đang nợ</Tag>;
-            case 'NhanTienNo':
-              return <Tag color="green">Nhận tiền nợ</Tag>;
+          case 'NhanTienNo':
+            return <Tag color="green">Nhận tiền nợ</Tag>;
         }
       }
     }
@@ -163,12 +165,12 @@ const History = props => {
         columns={columns}
         rowClassName="editable-row"
         pagination={{
-          onChange: () => { }
+          onChange: () => {}
         }}
       />
     </Modal>
-  )
-}
+  );
+};
 
 History.propTypes = {
   data: PropTypes.object,
@@ -182,4 +184,3 @@ const actionCreators = {
 };
 
 export default connect(null, actionCreators)(History);
-

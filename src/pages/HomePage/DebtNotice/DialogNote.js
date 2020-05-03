@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { Form, Modal, Spin, Input, notification } from 'antd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -22,36 +22,38 @@ const DialogNote = props => {
 
   useEffect(() => {
     function resetField() {
-      form.resetFields()
+      form.resetFields();
     }
     setVisible(props.open);
-    setFormDataParent(props.data)
-    resetField()
+    setFormDataParent(props.data);
+    resetField();
   }, [props.open]);
 
   const handleSubmit = async () => {
     setLoading(true); // start loading
     try {
       let values = await form.validateFields();
-      values.Username_IN = formDataParent.Username_IN
-      console.log(values)
+      values.Username_IN = formDataParent.Username_IN;
+      console.log(values);
 
-      const result = await debtService.removeDebt(formDataParent.ID_GiaoDich, values)
+      const result = await debtService.removeDebt(
+        formDataParent.ID_GiaoDich,
+        values
+      );
 
-      if(result && result.success) {
+      if (result && result.success) {
         notification.success({
           message: 'Thông báo',
-          description: 'Hủy nhắc thành công!',
-        })
+          description: 'Hủy nhắc thành công!'
+        });
       }
 
-      props.handleClose() // close
+      props.handleClose(); // close
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
 
     setLoading(false); // end loading
-    
   };
 
   const onFinishFailed = errorInfo => {
@@ -68,7 +70,7 @@ const DialogNote = props => {
       onCancel={() => props.handleClose()}
       cancelText="Hủy"
     >
-      <p style={{textAlign: "center"}}>Thêm vào ghi chú của bạn phía dưới:</p>
+      <p style={{ textAlign: 'center' }}>Thêm vào ghi chú của bạn phía dưới:</p>
       <Spin spinning={loading}>
         <Form {...layout} form={form} onFinishFailed={onFinishFailed}>
           <Form.Item
@@ -86,8 +88,8 @@ const DialogNote = props => {
         </Form>
       </Spin>
     </Modal>
-  )
-}
+  );
+};
 
 DialogNote.propTypes = {
   open: PropTypes.bool,
@@ -100,4 +102,3 @@ const actionCreators = {
 };
 
 export default connect(null, actionCreators)(DialogNote);
-

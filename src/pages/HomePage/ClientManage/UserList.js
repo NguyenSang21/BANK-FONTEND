@@ -7,7 +7,7 @@ import {
   DownOutlined
 } from '@ant-design/icons';
 import { userService } from '../../../services';
-import History from './History'
+import History from './History';
 import Topup from './Topup';
 
 const layout = {
@@ -35,7 +35,7 @@ const UserList = props => {
       fixed: 'left',
       editable: true,
       render: (text, record) => {
-        return <Tag color="blue">{record.ID_TaiKhoan}</Tag>
+        return <Tag color="blue">{record.ID_TaiKhoan}</Tag>;
       }
     },
     {
@@ -100,10 +100,8 @@ const UserList = props => {
       width: '13%',
       editable: true,
       render: (text, record) => {
-        if (record.TongTienTK === null)
-          return <>0</>
-        else
-          return <>{record.TongTienTK}</>
+        if (record.TongTienTK === null) return <>0</>;
+        else return <>{record.TongTienTK}</>;
       }
     },
     {
@@ -137,9 +135,7 @@ const UserList = props => {
       editable: true,
       render: (text, record) => {
         return (
-          <Button
-            onClick={() => handleViewHistory(record)}
-          >
+          <Button onClick={() => handleViewHistory(record)}>
             <EyeOutlined />
             Lịch sử GD
           </Button>
@@ -153,10 +149,7 @@ const UserList = props => {
       editable: true,
       render: (text, record) => {
         return (
-          <Button
-            type="primary"
-            onClick={() => handleTopup(record)}
-          >
+          <Button type="primary" onClick={() => handleTopup(record)}>
             <DownOutlined />
             Nạp Tiền
           </Button>
@@ -170,33 +163,33 @@ const UserList = props => {
 
   useEffect(() => {
     async function fetchData() {
-      initData()
+      initData();
     }
 
     fetchData();
   }, []);
 
   const initData = async () => {
-    setLoading(true)
+    setLoading(true);
     const result = await userService.getListClient();
     console.log('DATA=', result);
     if (result && result.success) {
       setData(result.data);
       setLoading(false);
     }
-  }
+  };
 
-  const handleViewHistory = (record) => {
-    console.log(record)
-    setFormDataHistory(record)
-    setOpenModalHistory(true)
-  }
+  const handleViewHistory = record => {
+    console.log(record);
+    setFormDataHistory(record);
+    setOpenModalHistory(true);
+  };
 
-  const handleTopup = (record) => {
-    console.log(record)
-    setOpenModalTopup(true)
-    setFormDataTopup(record)
-  }
+  const handleTopup = record => {
+    console.log(record);
+    setOpenModalTopup(true);
+    setFormDataTopup(record);
+  };
 
   return (
     <div>
@@ -245,8 +238,19 @@ const UserList = props => {
         }}
       />
       <CreateUser open={openModal} handleClose={() => setOpenModal(false)} />
-      <History key={Math.random(0, 99999999)} data={formDataHistory} open={openModalHistory} handleClose={() => setOpenModalHistory(false)} />
-      <Topup reload={() => initData()} key={Math.random(0, 99999999)} data={formDataTopup} open={openModalTopup} handleClose={() => setOpenModalTopup(false)} />
+      <History
+        key={Math.random(0, 99999999)}
+        data={formDataHistory}
+        open={openModalHistory}
+        handleClose={() => setOpenModalHistory(false)}
+      />
+      <Topup
+        reload={() => initData()}
+        key={Math.random(0, 99999999)}
+        data={formDataTopup}
+        open={openModalTopup}
+        handleClose={() => setOpenModalTopup(false)}
+      />
     </div>
   );
 };

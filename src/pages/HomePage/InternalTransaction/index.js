@@ -1,8 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Select, Card, Input, InputNumber, Button, Col, Row, Spin, AutoComplete } from 'antd';
-import { userService, transactionService, clientService } from '../../../services';
+import {
+  Form,
+  Select,
+  Card,
+  Input,
+  InputNumber,
+  Button,
+  Col,
+  Row,
+  Spin,
+  AutoComplete
+} from 'antd';
+import {
+  userService,
+  transactionService,
+  clientService
+} from '../../../services';
 import { notificationActions } from '../../../actions/notification.action';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 import DialogOTP from './DialogOTP';
 import { recieverService } from '../../../services/reciever.service';
 
@@ -10,12 +25,12 @@ const { Option } = Select;
 const { TextArea } = Input;
 
 const InternalTransaction = props => {
-  const [form] = Form.useForm()
-  const [userInfo, setUserInfo] = useState({})
-  const [openModal, setOpenModal] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [formData, setFormData] = useState([])
-  const [options, setOptions] = useState([])
+  const [form] = Form.useForm();
+  const [userInfo, setUserInfo] = useState({});
+  const [openModal, setOpenModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState([]);
+  const [options, setOptions] = useState([]);
 
   const formItemLayout = {
     labelCol: { span: 6 },
@@ -24,16 +39,19 @@ const InternalTransaction = props => {
 
   useEffect(() => {
     async function getUserInfo() {
-      const userDetail = JSON.parse(localStorage.getItem("user"))
-      const result = await userService.getAccountByType(userDetail.username, 'TT')
+      const userDetail = JSON.parse(localStorage.getItem('user'));
+      const result = await userService.getAccountByType(
+        userDetail.username,
+        'TT'
+      );
 
       if (result && result.success) {
-        setUserInfo(result.data[0])
+        setUserInfo(result.data[0]);
       }
     }
 
-    getUserInfo()
-  }, [openModal])
+    getUserInfo();
+  }, [openModal]);
 
   useEffect(() => {
     async function fetchData() {
@@ -41,64 +59,60 @@ const InternalTransaction = props => {
       const result = await recieverService.getReciverList(userInfo.username);
       console.log('DATA=', result);
       if (result && result.success) {
-        const temp = []
+        const temp = [];
         result.data.map(item => {
           temp.push({
             label: item.BietDanh,
             value: item.ID_TaiKhoan_TTTK_B + '',
-            key: Math.random(0,999999)
-          })
-        })
-        setOptions(temp)
+            key: Math.random(0, 999999)
+          });
+        });
+        setOptions(temp);
       }
     }
     fetchData();
   }, []);
 
   const onFinish = async values => {
-    setLoading(true)
+    setLoading(true);
 
-    const userDetail = JSON.parse(localStorage.getItem("user"))
-    values.accountNumberA = userInfo.ID_TaiKhoanTTTK
-    values.username = userDetail.username
+    const userDetail = JSON.parse(localStorage.getItem('user'));
+    values.accountNumberA = userInfo.ID_TaiKhoanTTTK;
+    values.username = userDetail.username;
 
-    const result = await transactionService.getOTP(userDetail.username)
+    const result = await transactionService.getOTP(userDetail.username);
 
     if (result && result.success) {
-      setFormData(values)
-      setOpenModal(true)
-      setLoading(false)
+      setFormData(values);
+      setOpenModal(true);
+      setLoading(false);
     }
-
   };
 
   const onFinishFailed = errorInfo => {
     console.log('Failed:', errorInfo);
   };
 
-  const handleChangeAutoComplete = async (e) => {
-    if(e) {
-      const username = await getUserByAcountNumber(e)
-      form.setFieldsValue({nameB: username})
+  const handleChangeAutoComplete = async e => {
+    if (e) {
+      const username = await getUserByAcountNumber(e);
+      form.setFieldsValue({ nameB: username });
     }
-  }
+  };
 
-  const getUserByAcountNumber = async (id) => {
-    const result = await clientService.getInfoByTK(id)
-    if(result && result.success) {
-      return result.data[0] && result.data[0].HoTen || ''
+  const getUserByAcountNumber = async id => {
+    const result = await clientService.getInfoByTK(id);
+    if (result && result.success) {
+      return (result.data[0] && result.data[0].HoTen) || '';
     }
-    return null
-  }
+    return null;
+  };
 
-  console.log(options)
+  console.log(options);
 
   return (
     <Spin spinning={loading}>
-      <Form
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        form={form}>
+      <Form onFinish={onFinish} onFinishFailed={onFinishFailed} form={form}>
         <Row gutter={16}>
           <Col span={12}>
             <Card
@@ -137,9 +151,10 @@ const InternalTransaction = props => {
                 ]}
                 {...formItemLayout}
                 name="accountNumberB"
-                label="Số tài khoản:">
+                label="Số tài khoản:"
+              >
                 <AutoComplete
-                  onChange={(e) => handleChangeAutoComplete(e)}
+                  onChange={e => handleChangeAutoComplete(e)}
                   placeholder="Nhập vào STK hoặc chọn người nhận!"
                   options={options}
                 />
@@ -153,7 +168,8 @@ const InternalTransaction = props => {
                     message: 'Vui lòng nhập tên người hưởng!'
                   }
                 ]}
-                label="Người hưởng:">
+                label="Người hưởng:"
+              >
                 <Input
                   style={{ width: '100%' }}
                   placeholder="Vui lòng nhập tên người hưởng!"
@@ -177,7 +193,8 @@ const InternalTransaction = props => {
                 message: 'Vui lòng nhập số tiền'
               }
             ]}
-            label="Số tiền chuyển:">
+            label="Số tiền chuyển:"
+          >
             <InputNumber
               style={{ width: '100%' }}
               min={1}
@@ -195,7 +212,8 @@ const InternalTransaction = props => {
               }
             ]}
             label="Nội dung chuyển tiền"
-            hasFeedback>
+            hasFeedback
+          >
             <TextArea rows={4} />
           </Form.Item>
           <Form.Item
@@ -208,7 +226,8 @@ const InternalTransaction = props => {
                 message: 'Vui lòng chọn phí chuyển!'
               }
             ]}
-            hasFeedback>
+            hasFeedback
+          >
             <Select placeholder="Vui lòng chọn phí">
               <Option value="A">Người chuyển trả</Option>
               <Option value="B">Người hưởng trả</Option>
@@ -224,10 +243,14 @@ const InternalTransaction = props => {
           </Button>
         </Card>
       </Form>
-      <DialogOTP open={openModal} data={formData} handleClose={() => setOpenModal(false)} />
+      <DialogOTP
+        open={openModal}
+        data={formData}
+        handleClose={() => setOpenModal(false)}
+      />
     </Spin>
-  )
-}
+  );
+};
 
 const actionCreators = {
   notify_success: notificationActions.success,

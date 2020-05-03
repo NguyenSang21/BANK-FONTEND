@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { Form, Modal, Spin, Input } from 'antd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -22,25 +22,25 @@ const DialogOTP = props => {
 
   useEffect(() => {
     function resetField() {
-      form.resetFields()
+      form.resetFields();
     }
     setVisible(props.open);
-    setFormDataParent(props.data)
-    resetField()
+    setFormDataParent(props.data);
+    resetField();
   }, [props.open]);
 
   const handleSubmit = async () => {
     setLoading(true); // start loading
     try {
       let values = await form.validateFields();
-      formDataParent.OTP_CODE = values.OTP_CODE
-      formDataParent.transType = 'Gui'
-      console.log(formDataParent)
+      formDataParent.OTP_CODE = values.OTP_CODE;
+      formDataParent.transType = 'Gui';
+      console.log(formDataParent);
       const result = await transactionService.externalTrans(formDataParent);
 
       if (result && result.success) {
         props.notify_success(result.message);
-        props.handleClose()
+        props.handleClose();
       }
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
@@ -62,8 +62,12 @@ const DialogOTP = props => {
       onCancel={() => props.handleClose()}
       cancelText="Hủy"
     >
-      <p style={{textAlign: "center"}}>Mã xác thực OTP đã được gửi đến email của bạn</p>
-      <p style={{textAlign: "center"}}>Vui lòng kiểm tra và nhập mã tại đây:</p>
+      <p style={{ textAlign: 'center' }}>
+        Mã xác thực OTP đã được gửi đến email của bạn
+      </p>
+      <p style={{ textAlign: 'center' }}>
+        Vui lòng kiểm tra và nhập mã tại đây:
+      </p>
       <Spin spinning={loading}>
         <Form {...layout} form={form} onFinishFailed={onFinishFailed}>
           <Form.Item
@@ -81,8 +85,8 @@ const DialogOTP = props => {
         </Form>
       </Spin>
     </Modal>
-  )
-}
+  );
+};
 
 DialogOTP.propTypes = {
   open: PropTypes.bool,
@@ -95,4 +99,3 @@ const actionCreators = {
 };
 
 export default connect(null, actionCreators)(DialogOTP);
-

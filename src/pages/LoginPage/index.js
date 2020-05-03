@@ -4,7 +4,7 @@ import { message } from 'antd';
 import { userService } from '../../services';
 import { Redirect } from 'react-router-dom';
 import { UserOutlined } from '@ant-design/icons';
-import ReCAPTCHA from "react-google-recaptcha";
+import ReCAPTCHA from 'react-google-recaptcha';
 import ForgetPassword from '../HomePage/Profile/ForgetPassword';
 
 const layout = {
@@ -45,9 +45,9 @@ const LoginPage = props => {
     setLoading(false);
   };
 
-  const grecaptchaObject = window.recaptchaOptions = {
-    useRecaptchaNet: true,
-  };
+  const grecaptchaObject = (window.recaptchaOptions = {
+    useRecaptchaNet: true
+  });
 
   const onFinishFailed = errorInfo => {
     console.log('Failed:', errorInfo);
@@ -109,12 +109,23 @@ const LoginPage = props => {
           <Form.Item>
             <ReCAPTCHA
               sitekey="6LcWfO4UAAAAAMskAeoaxNmajmXCVKe7ehWHGtKI"
-              onChange={() => { }}
+              onChange={() => {}}
               grecaptcha={grecaptchaObject}
-            />,
+            />
+            ,
           </Form.Item>
           <Form.Item {...tailLayout}>
-            <span><a style={{marginRight: 5}} href="#" onClick={() => {setOpenModal(true)}}>Quên mật khẩu ?</a></span>
+            <span>
+              <a
+                style={{ marginRight: 5 }}
+                href="#"
+                onClick={() => {
+                  setOpenModal(true);
+                }}
+              >
+                Quên mật khẩu ?
+              </a>
+            </span>
             <Button type="primary" htmlType="submit">
               Đăng nhập
             </Button>
@@ -124,7 +135,12 @@ const LoginPage = props => {
           <Redirect to={{ pathname: '/home' }} />
         ) : null}
       </Spin>
-      <ForgetPassword key={Math.random(1, 9999999)} open={openModal} data={formData} handleClose={() => setOpenModal(false)} />
+      <ForgetPassword
+        key={Math.random(1, 9999999)}
+        open={openModal}
+        data={formData}
+        handleClose={() => setOpenModal(false)}
+      />
     </div>
   );
 };

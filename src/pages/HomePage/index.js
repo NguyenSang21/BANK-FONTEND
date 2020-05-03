@@ -1,5 +1,16 @@
 import React, { Component } from 'react';
-import { Layout, Menu, Breadcrumb, Dropdown, Badge, Avatar, Drawer, Row, Col, Divider } from 'antd';
+import {
+  Layout,
+  Menu,
+  Breadcrumb,
+  Dropdown,
+  Badge,
+  Avatar,
+  Drawer,
+  Row,
+  Col,
+  Divider
+} from 'antd';
 import routes from '../../routes';
 import SideBar from '../../components/SideBar';
 import { Route, Switch, Redirect } from 'react-router-dom';
@@ -12,7 +23,7 @@ const pStyle = {
   fontSize: 16,
   lineHeight: '24px',
   display: 'block',
-  marginBottom: 16,
+  marginBottom: 16
 };
 
 const DescriptionItem = ({ title, content }) => (
@@ -21,14 +32,14 @@ const DescriptionItem = ({ title, content }) => (
     style={{
       fontSize: 14,
       lineHeight: '22px',
-      marginBottom: 7,
+      marginBottom: 7
     }}
   >
     <p
       className="site-description-item-profile-p"
       style={{
         marginRight: 8,
-        display: 'inline-block',
+        display: 'inline-block'
       }}
     >
       {title}:
@@ -38,29 +49,33 @@ const DescriptionItem = ({ title, content }) => (
 );
 class HomePage extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       visible: false,
       infoData: []
-    }
+    };
     this.menu = (
       <Menu>
         <Menu.Item key="0">
-          <a onClick={() => this.showDrawer()} href="#">Thông tin cá nhân</a>
+          <a onClick={() => this.showDrawer()} href="#">
+            Thông tin cá nhân
+          </a>
         </Menu.Item>
         <Menu.Item key="1">
-          <a onClick={() => this.handleLogout()} href="#">Đăng xuất</a>
+          <a onClick={() => this.handleLogout()} href="#">
+            Đăng xuất
+          </a>
         </Menu.Item>
       </Menu>
     );
   }
 
   async componentWillMount() {
-    const userInfo = JSON.parse(localStorage.getItem('user'))
-    const result = await userService.getInfo(userInfo.username)
-    console.log(result)
+    const userInfo = JSON.parse(localStorage.getItem('user'));
+    const result = await userService.getInfo(userInfo.username);
+    console.log(result);
     if (result && result.success) {
-      this.setState({ infoData: result.data })
+      this.setState({ infoData: result.data });
     }
   }
 
@@ -78,30 +93,30 @@ class HomePage extends Component {
     });
   };
 
-  handleOnclick = (e) => {
-    e.preventDefault()
-  }
+  handleOnclick = e => {
+    e.preventDefault();
+  };
 
   handleLogout = () => {
-    console.log('logout')
-    localStorage.removeItem('user')
-    window.location.reload()
-  }
+    console.log('logout');
+    localStorage.removeItem('user');
+    window.location.reload();
+  };
 
   showDrawer = () => {
     this.setState({
-      visible: true,
+      visible: true
     });
   };
 
   onClose = () => {
     this.setState({
-      visible: false,
+      visible: false
     });
   };
 
   render() {
-    const data = this.state.infoData
+    const data = this.state.infoData;
     return (
       <Layout>
         <Header style={{ background: '#24292e' }}>
@@ -140,7 +155,7 @@ class HomePage extends Component {
                   className="ant-dropdown-link"
                   onClick={e => this.handleOnclick(e)}
                 >
-                  <Avatar src="https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png"/>
+                  <Avatar src="https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png" />
                 </a>
               </Dropdown>
             </div>
@@ -175,7 +190,10 @@ class HomePage extends Component {
           onClose={this.onClose}
           visible={this.state.visible}
         >
-          <p className="site-description-item-profile-p" style={{ ...pStyle, marginBottom: 24 }}>
+          <p
+            className="site-description-item-profile-p"
+            style={{ ...pStyle, marginBottom: 24 }}
+          >
             Thông tin cá nhân
           </p>
           <p className="site-description-item-profile-p" style={pStyle}>
@@ -183,10 +201,16 @@ class HomePage extends Component {
           </p>
           <Row>
             <Col span={12}>
-              <DescriptionItem title="Mã khách hàng" content={data.length !== 0 && data.ID_TaiKhoan} />
+              <DescriptionItem
+                title="Mã khách hàng"
+                content={data.length !== 0 && data.ID_TaiKhoan}
+              />
             </Col>
             <Col span={12}>
-              <DescriptionItem title="Họ tên" content={data.length !== 0 && data.HoTen} />
+              <DescriptionItem
+                title="Họ tên"
+                content={data.length !== 0 && data.HoTen}
+              />
             </Col>
           </Row>
           <Row>
@@ -197,7 +221,10 @@ class HomePage extends Component {
               />
             </Col>
             <Col span={12}>
-              <DescriptionItem title="Điện thoại" content={data.length !== 0 && data.DienThoai} />
+              <DescriptionItem
+                title="Điện thoại"
+                content={data.length !== 0 && data.DienThoai}
+              />
             </Col>
           </Row>
           <Row>
@@ -205,7 +232,10 @@ class HomePage extends Component {
               <DescriptionItem title="Ngày sinh" content="February 2,1900" />
             </Col>
             <Col span={12}>
-              <DescriptionItem title="Địa chỉ" content="32 Cách Mạng Tháng 8, Quận Tân Bình, HCM" />
+              <DescriptionItem
+                title="Địa chỉ"
+                content="32 Cách Mạng Tháng 8, Quận Tân Bình, HCM"
+              />
             </Col>
           </Row>
         </Drawer>

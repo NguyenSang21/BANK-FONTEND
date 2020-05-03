@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Select, Card, Input, InputNumber, Button, Col, Row, Spin } from 'antd';
+import {
+  Form,
+  Select,
+  Card,
+  Input,
+  InputNumber,
+  Button,
+  Col,
+  Row,
+  Spin
+} from 'antd';
 import { userService, transactionService } from '../../../services';
 import { bankService } from '../../../services/bank.service';
 import DialogOTP from './DialogOTP';
@@ -9,50 +19,52 @@ const { TextArea } = Input;
 
 const ExternalTransaction = props => {
   const [form] = Form.useForm();
-  const [userInfo, setUserInfo] = useState({})
-  const [openModal, setOpenModal] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [formData, setFormData] = useState([])
+  const [userInfo, setUserInfo] = useState({});
+  const [openModal, setOpenModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState([]);
 
   useEffect(() => {
     async function getUserInfo() {
-      const userDetail = JSON.parse(localStorage.getItem("user"))
-      const result = await userService.getAccountByType(userDetail.username, 'TT')
+      const userDetail = JSON.parse(localStorage.getItem('user'));
+      const result = await userService.getAccountByType(
+        userDetail.username,
+        'TT'
+      );
 
       if (result && result.success) {
-        setUserInfo(result.data[0])
+        setUserInfo(result.data[0]);
       }
     }
 
-    getUserInfo()
-  }, [])
+    getUserInfo();
+  }, []);
 
   const [bankList, setBankList] = useState([]);
   useEffect(() => {
     async function getBankList() {
-      const result = await bankService.getBankList()
+      const result = await bankService.getBankList();
       if (result && result.success) {
-        setBankList(result.data)
+        setBankList(result.data);
       }
     }
-    getBankList()
+    getBankList();
   }, []);
 
   const onFinish = async values => {
-    setLoading(true)
+    setLoading(true);
 
-    const userDetail = JSON.parse(localStorage.getItem("user"))
-    values.accountNumberA = userInfo.ID_TaiKhoanTTTK
-    values.username = userDetail.username
+    const userDetail = JSON.parse(localStorage.getItem('user'));
+    values.accountNumberA = userInfo.ID_TaiKhoanTTTK;
+    values.username = userDetail.username;
 
-    const result = await transactionService.getOTP(userDetail.username)
+    const result = await transactionService.getOTP(userDetail.username);
 
     if (result && result.success) {
-      setFormData(values)
-      setOpenModal(true)
-      setLoading(false)
+      setFormData(values);
+      setOpenModal(true);
+      setLoading(false);
     }
-
   };
 
   const onFinishFailed = errorInfo => {
@@ -66,10 +78,7 @@ const ExternalTransaction = props => {
 
   return (
     <Spin spinning={loading}>
-      <Form
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        form={form}>
+      <Form onFinish={onFinish} onFinishFailed={onFinishFailed} form={form}>
         <Row gutter={16}>
           <Col span={12}>
             <Card
@@ -79,14 +88,14 @@ const ExternalTransaction = props => {
             >
               <div>
                 <label>Tài khoản nguồn:</label>
-              &nbsp;
-              <span>{userInfo && userInfo.ID_TaiKhoanTTTK}</span>
+                &nbsp;
+                <span>{userInfo && userInfo.ID_TaiKhoanTTTK}</span>
               </div>
               <br />
               <div>
                 <label>Số dư khả dụng:</label>
-              &nbsp;
-              <span>{userInfo && userInfo.SoDu} VNĐ</span>
+                &nbsp;
+                <span>{userInfo && userInfo.SoDu} VNĐ</span>
               </div>
               <br />
               <br />
@@ -108,11 +117,13 @@ const ExternalTransaction = props => {
                 hasFeedback
               >
                 <Select placeholder="Vui lòng chọn ngân hàng">
-                  {
-                    bankList.map(item => {
-                      return <Option value={item.TenNganHang}>{item.TenNganHang}</Option>
-                    })
-                  }
+                  {bankList.map(item => {
+                    return (
+                      <Option value={item.TenNganHang}>
+                        {item.TenNganHang}
+                      </Option>
+                    );
+                  })}
                 </Select>
               </Form.Item>
               <Form.Item
@@ -209,9 +220,13 @@ const ExternalTransaction = props => {
             className="login-form-button"
           >
             Chuyển tiền
-        </Button>
+          </Button>
         </Card>
-        <DialogOTP open={openModal} data={formData} handleClose={() => setOpenModal(false)} />
+        <DialogOTP
+          open={openModal}
+          data={formData}
+          handleClose={() => setOpenModal(false)}
+        />
       </Form>
     </Spin>
   );

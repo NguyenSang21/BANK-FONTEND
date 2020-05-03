@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { Form, Modal, Spin, Input, notification, message } from 'antd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -19,48 +19,45 @@ const DialogNote = props => {
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
   const [formDataParent, setFormDataParent] = useState([]);
-  const [sendOTP, setSendOTP] = useState(false)
+  const [sendOTP, setSendOTP] = useState(false);
 
   useEffect(() => {
     function resetField() {
-      form.resetFields()
+      form.resetFields();
     }
     setVisible(props.open);
-    setFormDataParent(props.data)
-    resetField()
+    setFormDataParent(props.data);
+    resetField();
   }, [props.open]);
 
   const handleSubmit = async () => {
     setLoading(true); // start loading
     try {
       let values = await form.validateFields();
-      console.log(values)
+      console.log(values);
       if (!sendOTP) {
-        const sendOTP = await userService.sendOTP(values.username)
+        const sendOTP = await userService.sendOTP(values.username);
         if (sendOTP && sendOTP.success) {
-          setSendOTP(true)
-          message.success('Gửi OTP thành công!')
+          setSendOTP(true);
+          message.success('Gửi OTP thành công!');
         }
       } else {
-        const result = await userService.resetPassword(values)
+        const result = await userService.resetPassword(values);
 
-        if(result && result.success) {
+        if (result && result.success) {
           notification.success({
             message: 'Thông báo',
             description: 'Đổi mật khẩu thành công!',
             duration: 5000
-          })
-          props.handleClose() // close
+          });
+          props.handleClose(); // close
         }
       }
-      
-
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);
     }
 
     setLoading(false); // end loading
-
   };
 
   const onFinishFailed = errorInfo => {
@@ -77,8 +74,12 @@ const DialogNote = props => {
       onCancel={() => props.handleClose()}
       cancelText="Hủy"
     >
-      <p style={{ textAlign: "center" }}>Một mã xác thực sẽ được gủi đến mail của bạn</p>
-      <p style={{ textAlign: "center" }}>Vui lòng làm theo các bước bên dưới:</p>
+      <p style={{ textAlign: 'center' }}>
+        Một mã xác thực sẽ được gủi đến mail của bạn
+      </p>
+      <p style={{ textAlign: 'center' }}>
+        Vui lòng làm theo các bước bên dưới:
+      </p>
       <Spin spinning={loading}>
         <Form {...layout} form={form} onFinishFailed={onFinishFailed}>
           <Form.Item
@@ -93,39 +94,39 @@ const DialogNote = props => {
           >
             <Input placeholder="Nhập vào tài khoản!" />
           </Form.Item>
-          {
-            sendOTP ? <>
-            <Form.Item
-                  name="newPassword"
-                  label="Mật khẩu mới:"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Nhập mật khẩu mới!'
-                    }
-                  ]}
-                >
-                  <Input.Password placeholder="Nhập vào mật khẩu mới!" />
-                </Form.Item>
-                <Form.Item
-                  name="OTP"
-                  label="Ghi chú:"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Nhập vào OTP!'
-                    }
-                  ]}
-                >
-                  <Input placeholder="Nhập vào OTP!" />
-                </Form.Item>
-            </> : null
-          }
+          {sendOTP ? (
+            <>
+              <Form.Item
+                name="newPassword"
+                label="Mật khẩu mới:"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Nhập mật khẩu mới!'
+                  }
+                ]}
+              >
+                <Input.Password placeholder="Nhập vào mật khẩu mới!" />
+              </Form.Item>
+              <Form.Item
+                name="OTP"
+                label="Ghi chú:"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Nhập vào OTP!'
+                  }
+                ]}
+              >
+                <Input placeholder="Nhập vào OTP!" />
+              </Form.Item>
+            </>
+          ) : null}
         </Form>
       </Spin>
     </Modal>
-  )
-}
+  );
+};
 
 DialogNote.propTypes = {
   open: PropTypes.bool,
@@ -138,4 +139,3 @@ const actionCreators = {
 };
 
 export default connect(null, actionCreators)(DialogNote);
-

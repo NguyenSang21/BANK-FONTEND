@@ -37,7 +37,7 @@ const SettingDebt = props => {
 
     if (result && result.success) {
       values.accountNumberA = result.data[0].ID_TaiKhoanTTTK;
-      values.username = userInfo.Username
+      values.username = userInfo.Username;
       values.payer = 'B';
 
       const result_2 = await debtService.create(values);

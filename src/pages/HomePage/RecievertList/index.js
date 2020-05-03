@@ -48,11 +48,11 @@ const RecieverList = props => {
       width: '15%',
       editable: true,
       render: (text, record) => {
-        return <Button
-        type="primary"
-          onClick={() => handleUpdate(record)}>
-          Sửa đổi
-    </Button>
+        return (
+          <Button type="primary" onClick={() => handleUpdate(record)}>
+            Sửa đổi
+          </Button>
+        );
       }
     }
   ];
@@ -63,7 +63,7 @@ const RecieverList = props => {
 
   useEffect(() => {
     async function fetchData() {
-      initData()
+      initData();
     }
 
     fetchData();
@@ -71,20 +71,20 @@ const RecieverList = props => {
 
   const initData = async () => {
     const userInfo = JSON.parse(localStorage.getItem('user'));
-      setLoading(true);
-      const result = await recieverService.getReciverList(userInfo.username);
-      console.log('DATA=', result);
-      if (result && result.success) {
-        setData(result.data);
-        setLoading(false);
-      }
-  }
+    setLoading(true);
+    const result = await recieverService.getReciverList(userInfo.username);
+    console.log('DATA=', result);
+    if (result && result.success) {
+      setData(result.data);
+      setLoading(false);
+    }
+  };
 
-  const handleUpdate = (record) => {
-    console.log(record)
-    setOpenModalUpdate(true)
-    setUpdateData(record)
-  }
+  const handleUpdate = record => {
+    console.log(record);
+    setOpenModalUpdate(true);
+    setUpdateData(record);
+  };
 
   return (
     <>

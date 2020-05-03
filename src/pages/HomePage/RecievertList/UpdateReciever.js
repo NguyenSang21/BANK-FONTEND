@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { Form, Modal, Spin, Input, notification } from 'antd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -23,37 +23,40 @@ const UpdateReciever = props => {
 
   useEffect(() => {
     function resetField() {
-      form.resetFields()
+      form.resetFields();
     }
     setVisible(props.open);
-    setFormDataParent(props.data)
-    resetField()
-    form.setFieldsValue({BietDanh_IN: props.data.BietDanh})
+    setFormDataParent(props.data);
+    resetField();
+    form.setFieldsValue({ BietDanh_IN: props.data.BietDanh });
   }, [props.open]);
 
   const handleSubmit = async () => {
     setLoading(true); // start loading
     try {
-      const userInfo = JSON.parse(localStorage.getItem('user'))
+      const userInfo = JSON.parse(localStorage.getItem('user'));
       let values = await form.validateFields();
-      console.log(values)
+      console.log(values);
 
       const data = {
         BietDanh_IN: values.BietDanh_IN,
         ID_TaiKhoan_TTTK_B_IN: formDataParent.ID_TaiKhoan_TTTK_B,
         TenNganHang_IN: formDataParent.TenNganHang
-      }
-      const result = await recieverService.updateReciver(userInfo.username,data)
+      };
+      const result = await recieverService.updateReciver(
+        userInfo.username,
+        data
+      );
 
-      if(result && result.success) {
+      if (result && result.success) {
         notification.success({
           message: 'Thông báo',
-          description: 'Sửa biệt danh thành công!',
-        })
+          description: 'Sửa biệt danh thành công!'
+        });
       }
 
-      props.handleClose()
-      props.reload()
+      props.handleClose();
+      props.reload();
 
       // props.handleClose() // close
     } catch (errorInfo) {
@@ -61,7 +64,6 @@ const UpdateReciever = props => {
     }
 
     setLoading(false); // end loading
-    
   };
 
   const onFinishFailed = errorInfo => {
@@ -78,7 +80,7 @@ const UpdateReciever = props => {
       onCancel={() => props.handleClose()}
       cancelText="Hủy"
     >
-      <p style={{textAlign: "center"}}>Thêm vào ghi chú của bạn phía dưới:</p>
+      <p style={{ textAlign: 'center' }}>Thêm vào ghi chú của bạn phía dưới:</p>
       <Spin spinning={loading}>
         <Form {...layout} form={form} onFinishFailed={onFinishFailed}>
           <Form.Item
@@ -96,8 +98,8 @@ const UpdateReciever = props => {
         </Form>
       </Spin>
     </Modal>
-  )
-}
+  );
+};
 
 UpdateReciever.propTypes = {
   open: PropTypes.bool,
@@ -111,4 +113,3 @@ const actionCreators = {
 };
 
 export default connect(null, actionCreators)(UpdateReciever);
-

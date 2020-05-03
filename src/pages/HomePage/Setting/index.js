@@ -51,7 +51,7 @@ const Setting = props => {
     const result = await userService.changePass({
       username: userInfo.username,
       password: values.newPassword,
-      oldPassword: values.oldPassword,
+      oldPassword: values.oldPassword
     });
 
     if (result && result.success) {

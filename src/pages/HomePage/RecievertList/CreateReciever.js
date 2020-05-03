@@ -29,12 +29,12 @@ const CreateReciever = props => {
   const [bankList, setBankList] = useState([]);
   useEffect(() => {
     async function getBankList() {
-      const result = await bankService.getBankList()
-      if(result && result.success) {
-        setBankList(result.data)
+      const result = await bankService.getBankList();
+      if (result && result.success) {
+        setBankList(result.data);
       }
     }
-    getBankList()
+    getBankList();
   }, []);
 
   const handleSubmit = async () => {
@@ -110,11 +110,11 @@ const CreateReciever = props => {
             hasFeedback
           >
             <Select placeholder="Vui lòng chọn ngân hàng">
-              {
-                bankList.map(item => {
-                return <Option value={item.TenNganHang}>{item.TenNganHang}</Option>
-                })
-              }
+              {bankList.map(item => {
+                return (
+                  <Option value={item.TenNganHang}>{item.TenNganHang}</Option>
+                );
+              })}
             </Select>
           </Form.Item>
         </Form>

@@ -16,13 +16,7 @@ const TransHistory = props => {
       editable: true
     },
     {
-      title: 'Tài khoản người nhận',
-      dataIndex: 'ID_TaiKhoan_TTTK_B',
-      width: '10%',
-      editable: true
-    },
-    {
-      title: 'Tài khoản người nhận',
+      title: 'STK người nhận',
       dataIndex: 'ID_TaiKhoan_TTTK_B',
       width: '10%',
       editable: true
@@ -33,7 +27,7 @@ const TransHistory = props => {
       width: '10%',
       editable: true,
       render: (text, record) => {
-        return <Tag color="blue">{record.TenNganHang}</Tag>
+        return <Tag color="blue">{record.TenNganHang}</Tag>;
       }
     },
     {
@@ -127,8 +121,8 @@ const TransHistory = props => {
         const data = [];
         result.data.map(item => {
           item.ThoiGian = moment(item.ThoiGian).format('hh:mm:ss DD/MM/YYYY');
-          data.push(item)
-          
+          data.push(item);
+
           return item;
         });
         setData(data);
@@ -143,12 +137,13 @@ const TransHistory = props => {
     <Table
       scroll={{ x: 1500 }}
       loading={isLoading}
+      rowKey="ID_GiaoDich"
       bordered
       dataSource={data}
       columns={columns}
       rowClassName="editable-row"
       pagination={{
-        onChange: () => { }
+        onChange: () => {}
       }}
     />
   );

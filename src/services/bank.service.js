@@ -18,7 +18,7 @@ async function getBankList() {
         path: '/bank',
         method: 'get'
       });
-    } 
+    }
   }
 
   return resultData;

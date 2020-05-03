@@ -1,5 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Form, Row, Button, Icon, Col, Card, Input, Radio, Tag, Select } from 'antd';
+import {
+  Table,
+  Form,
+  Row,
+  Button,
+  Icon,
+  Col,
+  Card,
+  Input,
+  Radio,
+  Tag,
+  Select
+} from 'antd';
 import { transactionService } from '../../../services';
 import { bankService } from '../../../services/bank.service';
 const layout = {
@@ -13,9 +25,8 @@ const layout = {
 
 const { Option } = Select;
 
-
 const Comparison = props => {
-  const [form] = Form.useForm()
+  const [form] = Form.useForm();
 
   const columns = [
     {
@@ -43,7 +54,7 @@ const Comparison = props => {
       width: '15%',
       editable: true,
       render: (text, record) => {
-        return <Tag color="blue">{record.TenNganHang_A}</Tag>
+        return <Tag color="blue">{record.TenNganHang_A}</Tag>;
       }
     },
     {
@@ -64,7 +75,7 @@ const Comparison = props => {
       width: '10%',
       editable: true,
       render: (text, record) => {
-        return <Tag color="blue">{record.TenNganHang_B}</Tag>
+        return <Tag color="blue">{record.TenNganHang_B}</Tag>;
       }
     },
     {
@@ -147,8 +158,8 @@ const Comparison = props => {
     }
   ];
 
-  const [nhGui, setNhGui] = useState('')
-  const [nhNhan, setNhNhan] = useState('')
+  const [nhGui, setNhGui] = useState('');
+  const [nhNhan, setNhNhan] = useState('');
   const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(false);
 
@@ -170,22 +181,22 @@ const Comparison = props => {
   const [bankList, setBankList] = useState([]);
   useEffect(() => {
     async function getBankList() {
-      const result = await bankService.getBankList()
+      const result = await bankService.getBankList();
       if (result && result.success) {
-        setBankList(result.data)
+        setBankList(result.data);
       }
     }
-    getBankList()
+    getBankList();
   }, []);
 
   const handleChangeSelected = (type, value) => {
-    console.log(value)
-    if(type === 'Gui') {
-      setNhGui(value)
-    } else if(type === 'Nhan') {
-      setNhNhan(value)
+    console.log(value);
+    if (type === 'Gui') {
+      setNhGui(value);
+    } else if (type === 'Nhan') {
+      setNhNhan(value);
     }
-  }
+  };
 
   const fetchDataByQuery = async () => {
     setLoading(true);
@@ -196,11 +207,11 @@ const Comparison = props => {
       setData(result.data);
       setLoading(false);
     }
-  }
+  };
 
   const onFinishSearch = values => {
     console.log('Received values from form: ', values);
-    fetchDataByQuery()
+    fetchDataByQuery();
   };
 
   return (
@@ -208,27 +219,45 @@ const Comparison = props => {
       <Card style={{ width: '100%', marginBottom: 10 }}>
         <Form layout="inline" form={form} onFinish={onFinishSearch}>
           <Form.Item label="Ngân hàng gửi">
-            <Select  onChange={(e) => handleChangeSelected('Gui',e)} placeholder="Chọn ngân hàng">
-              <Option value=''></Option>
-              {
-                bankList.map(item => {
-                  return <Option key={item.ID_NganHangLienKet} value={item.TenNganHang}>{item.TenNganHang}</Option>
-                })
-              }
+            <Select
+              onChange={e => handleChangeSelected('Gui', e)}
+              placeholder="Chọn ngân hàng"
+            >
+              <Option value=""></Option>
+              {bankList.map(item => {
+                return (
+                  <Option
+                    key={item.ID_NganHangLienKet}
+                    value={item.TenNganHang}
+                  >
+                    {item.TenNganHang}
+                  </Option>
+                );
+              })}
             </Select>
           </Form.Item>
           <Form.Item label="Ngân hàng nhận">
-            <Select onChange={(e) => handleChangeSelected('Nhan', e)} placeholder="Chọn ngân hàng">
-              <Option value=''></Option>
-              {
-                bankList.map(item => {
-                  return <Option key={item.ID_NganHangLienKet+item.TenNganHang}  value={item.TenNganHang}>{item.TenNganHang}</Option>
-                })
-              }
+            <Select
+              onChange={e => handleChangeSelected('Nhan', e)}
+              placeholder="Chọn ngân hàng"
+            >
+              <Option value=""></Option>
+              {bankList.map(item => {
+                return (
+                  <Option
+                    key={item.ID_NganHangLienKet + item.TenNganHang}
+                    value={item.TenNganHang}
+                  >
+                    {item.TenNganHang}
+                  </Option>
+                );
+              })}
             </Select>
           </Form.Item>
           <Form.Item>
-            <Button type='primary' htmlType="submit" style={{ marginLeft: 20 }}>Tìm kiếm</Button>
+            <Button type="primary" htmlType="submit" style={{ marginLeft: 20 }}>
+              Tìm kiếm
+            </Button>
           </Form.Item>
         </Form>
       </Card>
