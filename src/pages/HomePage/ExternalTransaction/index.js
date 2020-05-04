@@ -8,11 +8,13 @@ import {
   Button,
   Col,
   Row,
-  Spin
+  Spin,
+  AutoComplete
 } from 'antd';
-import { userService, transactionService } from '../../../services';
+import { userService, transactionService, clientService } from '../../../services';
 import { bankService } from '../../../services/bank.service';
 import DialogOTP from './DialogOTP';
+import { recieverService } from '../../../services/reciever.service';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -41,7 +43,25 @@ const ExternalTransaction = props => {
   }, []);
 
   const [bankList, setBankList] = useState([]);
+  const [options, setOptions] = useState([])
   useEffect(() => {
+    async function getBietDanh() {
+      const userInfo = JSON.parse(localStorage.getItem('user'));
+      const result = await recieverService.getReciverList(userInfo.username);
+      console.log('DATA=', result);
+      if (result && result.success) {
+        const temp = [];
+        result.data.map(item => {
+          temp.push({
+            label: item.BietDanh,
+            value: item.ID_TaiKhoan_TTTK_B + '',
+            key: Math.random(0, 999999)
+          });
+        });
+        setOptions(temp);
+      }
+    }
+    getBietDanh();
     async function getBankList() {
       const result = await bankService.getBankList();
       if (result && result.success) {
@@ -69,6 +89,23 @@ const ExternalTransaction = props => {
 
   const onFinishFailed = errorInfo => {
     console.log('Failed:', errorInfo);
+  };
+
+  const handleChangeAutoComplete = async e => {
+    if (e) {
+      const userInfo = await getUserByAcountNumber(e);
+      console.log("USERNAME==", userInfo.username)
+      form.setFieldsValue({ nameB: userInfo.HoTen })
+      form.setFieldsValue({ bankNameB: userInfo.TenNganHang})
+    }
+  };
+
+  const getUserByAcountNumber = async id => {
+    const result = await clientService.getInfoByTK(id);
+    if (result && result.success) {
+      return result.data[0] || '';
+    }
+    return {};
   };
 
   const formItemLayout = {
@@ -137,20 +174,19 @@ const ExternalTransaction = props => {
                 ]}
                 label="Số tài khoản:"
               >
-                <InputNumber
-                  style={{ width: '100%' }}
-                  min={1}
-                  max={20000000}
-                  placeholder="Vui lòng nhập số tài khoản!"
+                <AutoComplete
+                  onChange={e => handleChangeAutoComplete(e)}
+                  placeholder="Nhập vào STK hoặc chọn người nhận!"
+                  options={options}
                 />
               </Form.Item>
               <Form.Item
                 {...formItemLayout}
-                name="recipientName"
+                name="nameB"
                 rules={[
                   {
                     required: true,
-                    message: 'Vui lòng nhập số tài khoản!'
+                    message: 'Vui lòng nhập tên người hưởng!'
                   }
                 ]}
                 label="Người hưởng:"
