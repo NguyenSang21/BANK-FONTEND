@@ -39,7 +39,7 @@ const Comparison = props => {
     {
       title: 'Tài khoản A',
       dataIndex: 'ID_TaiKhoan_TTTK_A',
-      width: '15%',
+      width: '10%',
       editable: true
     },
     {
@@ -128,6 +128,12 @@ const Comparison = props => {
       editable: true
     },
     {
+      title: 'Chữ ký',
+      dataIndex: 'Key_Auth',
+      width: '30%',
+      editable: true
+    },
+    {
       title: 'Trạng thái',
       dataIndex: 'TrangThai',
       fixed: 'right',
@@ -166,7 +172,7 @@ const Comparison = props => {
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
-      const result = await transactionService.getAll();
+      const result = await transactionService.getAll('', '');
       console.log('DATA=', result);
 
       if (result && result.success) {
@@ -265,7 +271,7 @@ const Comparison = props => {
         loading={isLoading}
         columns={columns}
         dataSource={data}
-        scroll={{ x: 2000 }}
+        scroll={{ x: 2500 }}
         rowKey="ID_GiaoDich"
       />
     </>
