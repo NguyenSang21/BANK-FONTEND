@@ -60,6 +60,15 @@ const History = props => {
       editable: true
     },
     {
+      title: 'Biệt Danh',
+      dataIndex: 'BietDanh',
+      width: '15%',
+      editable: true,
+      render: (text, record) => {
+        return <Tag color="blue">{record.BietDanh}</Tag>;
+      }
+    },
+    {
       title: 'Tên ngân hàng',
       dataIndex: 'TenNganHang',
       width: '15%',

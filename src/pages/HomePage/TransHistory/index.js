@@ -22,10 +22,17 @@ const TransHistory = props => {
       editable: true
     },
     {
+      title: 'Biệt Danh',
+      dataIndex: 'BietDanh',
+      width: '10%',
+      render: (text, record) => {
+        return <Tag color="blue">{record.BietDanh}</Tag>;
+      }
+    },
+    {
       title: 'Tên ngân hàng',
       dataIndex: 'TenNganHang',
       width: '10%',
-      editable: true,
       render: (text, record) => {
         return <Tag color="blue">{record.TenNganHang}</Tag>;
       }
@@ -135,7 +142,7 @@ const TransHistory = props => {
 
   return (
     <Table
-      scroll={{ x: 1500 }}
+      scroll={{ x: 2000 }}
       loading={isLoading}
       rowKey="ID_GiaoDich"
       bordered

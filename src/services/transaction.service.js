@@ -19,7 +19,7 @@ async function getAll(bankA, bankB) {
     const result = await refreshToken();
     if (result) {
       return await fetchData({
-        path: '/trans',
+        path: `/trans?bankA=${bankA}&bankB=${bankB}`,
         method: 'get'
       });
     }

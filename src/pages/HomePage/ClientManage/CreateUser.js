@@ -114,7 +114,7 @@ const CreateUser = props => {
               }
             ]}
           >
-            <InputNumber
+            <Input
               style={{ width: '100%' }}
               placeholder="Nhập vào số điện thoại!"
             />
