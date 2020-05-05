@@ -6,6 +6,7 @@ import { Redirect } from 'react-router-dom';
 import { UserOutlined } from '@ant-design/icons';
 import ReCAPTCHA from 'react-google-recaptcha';
 import ForgetPassword from '../HomePage/Profile/ForgetPassword';
+const recaptchaRef = React.createRef();
 
 const layout = {
   labelCol: {
@@ -30,7 +31,13 @@ const LoginPage = props => {
   const [formData, setFormData] = useState([]);
 
   const onFinish = async values => {
-    setLoading(true);
+    setLoading(true)
+    const recaptchaValue = recaptchaRef.current.getValue();
+    if(!recaptchaValue) {
+      message.error("Vui lòng check vào xác thực CAPTCHA")
+      setLoading(false)
+      return
+    }
     const result = await userService.login({
       username: values.username,
       password: values.password
@@ -52,6 +59,10 @@ const LoginPage = props => {
   const onFinishFailed = errorInfo => {
     console.log('Failed:', errorInfo);
   };
+
+  const onChangeReCap = (value)  => {
+    console.log(value)
+  }
 
   return (
     <div
@@ -108,8 +119,9 @@ const LoginPage = props => {
           </Form.Item>
           <Form.Item>
             <ReCAPTCHA
+              ref={recaptchaRef}
               sitekey="6LcWfO4UAAAAAMskAeoaxNmajmXCVKe7ehWHGtKI"
-              onChange={() => {}}
+              onChange={(e) => onChangeReCap(e)}
               grecaptcha={grecaptchaObject}
             />
             ,
