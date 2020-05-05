@@ -4,6 +4,7 @@ import { debtService, transactionService } from '../../../services';
 import moment from 'moment';
 import DialogOTP from './DialogOTP';
 import DialogNote from './DialogNote';
+import shortid from 'shortid';
 
 const DebtList = props => {
   const [data, setData] = useState([]);
@@ -207,13 +208,10 @@ const DebtList = props => {
       if (result && result.success) {
         const data = [];
         result.data.map(item => {
-          if (
-            item.LoaiGiaoDich === 'No' ||
-            item.LoaiGiaoDich === 'Doi' ||
-            item.LoaiGiaoDich === 'NhanTienNo' ||
-            item.LoaiGiaoDich === 'TraNo' ||
-            item.LoaiGiaoDich === 'NhanTienNo'
-          ) {
+          if (item.LoaiGiaoDich === 'No' || 
+           item.LoaiGiaoDich === 'Doi' ||
+           item.LoaiGiaoDich === 'NhanTienNo' ||
+          item.LoaiGiaoDich === 'TraNo' || item.LoaiGiaoDich === 'NhanTienNo') {
             item.ThoiGian = moment(item.ThoiGian).format('hh:mm:ss DD/MM/YYYY');
             data.push(item);
           }
@@ -233,7 +231,7 @@ const DebtList = props => {
         key="name"
         loading={isLoading}
         bordered
-        rowKey="ID_GiaoDich"
+        rowKey={shortid}
         scroll={{ x: 2200 }}
         dataSource={data}
         columns={columns}
