@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { transactionService } from '../../../services';
 import { notificationActions } from '../../../actions/notification.action';
 import moment from 'moment';
+import shortid from 'shortid';
 
 const layout = {
   labelCol: {
@@ -169,7 +170,7 @@ const History = props => {
         scroll={{ x: 1000 }}
         loading={isLoading}
         bordered
-        rowKey="ID_GiaoDich"
+        rowKey={shortid}
         dataSource={data}
         columns={columns}
         rowClassName="editable-row"
@@ -182,7 +183,7 @@ const History = props => {
 };
 
 History.propTypes = {
-  data: PropTypes.object,
+  data: PropTypes.array,
   open: PropTypes.bool,
   handleClose: PropTypes.func
 };

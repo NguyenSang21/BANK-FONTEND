@@ -33,6 +33,7 @@ const CreateUser = props => {
       if (result && result.success) {
         props.notify_success('Tạo thành công!');
         props.handleClose();
+        setVisible(false);
       }
     } catch (errorInfo) {
       console.log('Failed:', errorInfo);

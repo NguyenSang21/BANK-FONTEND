@@ -2,6 +2,7 @@ import React, { Component, useState, useEffect } from 'react';
 import { Table, Input, InputNumber, Form, Button, Icon, Tag } from 'antd';
 import { transactionService } from '../../../services';
 import moment from 'moment';
+import shortid from 'shortid';
 
 const TransHistory = props => {
   const [data, setData] = useState([]);
@@ -144,7 +145,7 @@ const TransHistory = props => {
     <Table
       scroll={{ x: 2000 }}
       loading={isLoading}
-      rowKey="ID_GiaoDich"
+      rowKey={shortid}
       bordered
       dataSource={data}
       columns={columns}

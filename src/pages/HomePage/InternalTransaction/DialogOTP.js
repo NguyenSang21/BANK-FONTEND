@@ -32,10 +32,8 @@ const DialogOTP = props => {
 
   useEffect(() => {
     let display = document.querySelector('#count_down');
-    console.log(display);
     if (display) {
       idInterval = startTimer(60 * 5, display);
-      console.log(idInterval);
     }
 
     if (!props.open) {
@@ -43,7 +41,6 @@ const DialogOTP = props => {
     }
 
     return () => {
-      console.log('CLEAR =', idInterval);
       clearInterval(idInterval);
     };
   });
@@ -73,7 +70,7 @@ const DialogOTP = props => {
       let values = await form.validateFields();
       formDataParent.OTP_CODE = values.OTP_CODE;
       formDataParent.transType = 'Gui';
-      console.log(formDataParent);
+
       const result = await transactionService.internalTrans(formDataParent);
 
       if (result && result.success) {

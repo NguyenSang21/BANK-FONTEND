@@ -4,6 +4,7 @@ import { PlusCircleOutlined } from '@ant-design/icons';
 import { recieverService } from '../../../services/reciever.service';
 import CreateReciever from './CreateReciever';
 import UpdateReciever from './UpdateReciever';
+import shortid from 'shortid';
 
 const layout = {
   labelCol: {
@@ -103,6 +104,7 @@ const RecieverList = props => {
       <Table
         loading={isLoading}
         bordered
+        rowKey={shortid}
         dataSource={data}
         columns={columns}
         rowClassName="editable-row"

@@ -2,6 +2,7 @@ import React, { Component, useState, useEffect } from 'react';
 import { Table, Form, Row, Button, Icon, Col, Card, Input, Radio } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { employeeService } from '../../../services';
+import shortid from 'shortid';
 
 const layout = {
   labelCol: {
@@ -96,6 +97,7 @@ const Employee = props => {
       <Table
         loading={isLoading}
         bordered
+        rowKey={shortid}
         dataSource={data}
         columns={columns}
         rowClassName="editable-row"

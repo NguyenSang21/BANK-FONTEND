@@ -14,6 +14,7 @@ import {
 } from 'antd';
 import { transactionService } from '../../../services';
 import { bankService } from '../../../services/bank.service';
+import shortid from 'shortid';
 const layout = {
   labelCol: {
     span: 16
@@ -272,7 +273,7 @@ const Comparison = props => {
         columns={columns}
         dataSource={data}
         scroll={{ x: 2500 }}
-        rowKey="ID_GiaoDich"
+        rowKey={shortid}
       />
     </>
   );

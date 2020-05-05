@@ -11,10 +11,15 @@ import {
   Spin,
   AutoComplete
 } from 'antd';
-import { userService, transactionService, clientService } from '../../../services';
+import {
+  userService,
+  transactionService,
+  clientService
+} from '../../../services';
 import { bankService } from '../../../services/bank.service';
 import DialogOTP from './DialogOTP';
 import { recieverService } from '../../../services/reciever.service';
+import shortid from 'shortid';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -43,7 +48,7 @@ const ExternalTransaction = props => {
   }, []);
 
   const [bankList, setBankList] = useState([]);
-  const [options, setOptions] = useState([])
+  const [options, setOptions] = useState([]);
   useEffect(() => {
     async function getBietDanh() {
       const userInfo = JSON.parse(localStorage.getItem('user'));
@@ -94,9 +99,9 @@ const ExternalTransaction = props => {
   const handleChangeAutoComplete = async e => {
     if (e) {
       const userInfo = await getUserByAcountNumber(e);
-      console.log("USERNAME==", userInfo.username)
-      form.setFieldsValue({ nameB: userInfo.HoTen })
-      form.setFieldsValue({ bankNameB: userInfo.TenNganHang})
+      console.log('USERNAME==', userInfo.username);
+      form.setFieldsValue({ nameB: userInfo.HoTen });
+      form.setFieldsValue({ bankNameB: userInfo.TenNganHang });
     }
   };
 
@@ -156,7 +161,7 @@ const ExternalTransaction = props => {
                 <Select placeholder="Vui lòng chọn ngân hàng">
                   {bankList.map(item => {
                     return (
-                      <Option value={item.TenNganHang}>
+                      <Option key={shortid()} value={item.TenNganHang}>
                         {item.TenNganHang}
                       </Option>
                     );

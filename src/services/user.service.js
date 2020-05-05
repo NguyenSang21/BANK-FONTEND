@@ -33,16 +33,16 @@ async function create(data) {
   });
 
   // check expire token
-  // if (resultData && resultData.status === 403) {
-  //   const result = await refreshToken();
-  //   if (result) {
-  //     return await fetchData({
-  //       path: '/client',
-  //       method: 'post',
-  //       data
-  //     });
-  //   }
-  // }
+  if (resultData && resultData.status === 403) {
+    const result = await refreshToken();
+    if (result) {
+      return await fetchData({
+        path: '/user',
+        method: 'post',
+        data
+      });
+    }
+  }
 
   return resultData;
 }

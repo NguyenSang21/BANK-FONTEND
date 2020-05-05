@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { notificationActions } from '../../../actions/notification.action';
 import { recieverService } from '../../../services/reciever.service';
 import { bankService } from '../../../services/bank.service';
+const shortid = require('shortid');
 
 const { Option } = Select;
 

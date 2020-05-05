@@ -1,6 +1,7 @@
 import React from 'react';
 import { Table, Input, InputNumber, Form, Button, Icon } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
+import shortid from 'shortid';
 
 const data = [];
 for (let i = 0; i < 5; i++) {
@@ -147,6 +148,7 @@ class EditableTable extends React.Component {
           dataSource={this.state.data}
           columns={columns}
           rowClassName="editable-row"
+          rowKey={shortid}
           pagination={{
             onChange: this.cancel
           }}

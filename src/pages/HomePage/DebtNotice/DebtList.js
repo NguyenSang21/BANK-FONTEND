@@ -207,10 +207,13 @@ const DebtList = props => {
       if (result && result.success) {
         const data = [];
         result.data.map(item => {
-          if (item.LoaiGiaoDich === 'No' || 
-           item.LoaiGiaoDich === 'Doi' ||
-           item.LoaiGiaoDich === 'NhanTienNo' ||
-          item.LoaiGiaoDich === 'TraNo' || item.LoaiGiaoDich === 'NhanTienNo') {
+          if (
+            item.LoaiGiaoDich === 'No' ||
+            item.LoaiGiaoDich === 'Doi' ||
+            item.LoaiGiaoDich === 'NhanTienNo' ||
+            item.LoaiGiaoDich === 'TraNo' ||
+            item.LoaiGiaoDich === 'NhanTienNo'
+          ) {
             item.ThoiGian = moment(item.ThoiGian).format('hh:mm:ss DD/MM/YYYY');
             data.push(item);
           }

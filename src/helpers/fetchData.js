@@ -18,7 +18,8 @@ export const fetchData = ({ path, method, data, params }, type) => {
   if (type === 'REFRESH_TOKEN') {
     ACCESS_HEADERS = {
       'Content-Type': 'application/json',
-      'x-refresh-token': userInfo.refreshToken || ''
+      'x-refresh-token': userInfo.refreshToken || '',
+      username: userInfo.username
     };
   } else {
     ACCESS_HEADERS = {
@@ -51,10 +52,10 @@ export const fetchData = ({ path, method, data, params }, type) => {
 
         switch (statusCode) {
           case 403: // expire token
-            const rfToken = await refreshToken(); // get new token
-            if (rfToken) {
-              fetchData({ path, method, data, params });
-            }
+            // const rfToken = await refreshToken(); // get new token
+            // if (rfToken) {
+            //   await fetchData({ path, method, data, params });
+            // }
             break;
           case 401: // Unauthorized
             // nothing to do

@@ -9,6 +9,7 @@ import {
 import { userService } from '../../../services';
 import History from './History';
 import Topup from './Topup';
+import shortid from 'shortid';
 
 const layout = {
   labelCol: {
@@ -230,6 +231,7 @@ const UserList = props => {
         scroll={{ x: 2500 }}
         dataSource={data}
         columns={columns}
+        rowKey={shortid}
         rowClassName="editable-row"
         pagination={{
           onChange: () => {

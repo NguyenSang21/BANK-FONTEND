@@ -92,10 +92,11 @@ async function getTransByUser(username) {
   return resultData;
 }
 
-async function getOTP(username) {
+async function getOTP(username, data) {
   const resultData = await fetchData({
     path: `/trans/otp/${username}`,
-    method: 'get'
+    method: 'post',
+    data
   });
 
   // check expire token
@@ -104,7 +105,8 @@ async function getOTP(username) {
     if (result) {
       return await fetchData({
         path: `/trans/otp/${username}`,
-        method: 'get'
+        method: 'post',
+        data
       });
     }
   }

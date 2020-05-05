@@ -57,7 +57,7 @@ const InternalTransaction = props => {
     async function fetchData() {
       const userInfo = JSON.parse(localStorage.getItem('user'));
       const result = await recieverService.getReciverList(userInfo.username);
-      console.log('DATA=', result);
+
       if (result && result.success) {
         const temp = [];
         result.data.map(item => {
@@ -77,10 +77,10 @@ const InternalTransaction = props => {
     setLoading(true);
 
     const userDetail = JSON.parse(localStorage.getItem('user'));
-    values.accountNumberA = userInfo.ID_TaiKhoanTTTK;
+    values.accountNumberA = userInfo.ID_TaiKhoanTTTK + '';
     values.username = userDetail.username;
 
-    const result = await transactionService.getOTP(userDetail.username);
+    const result = await transactionService.getOTP(userDetail.username, values);
 
     if (result && result.success) {
       setFormData(values);
@@ -107,8 +107,6 @@ const InternalTransaction = props => {
     }
     return null;
   };
-
-  console.log(options);
 
   return (
     <Spin spinning={loading}>
