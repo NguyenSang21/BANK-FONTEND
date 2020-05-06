@@ -31,6 +31,7 @@ const InternalTransaction = props => {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState([]);
   const [options, setOptions] = useState([]);
+  const [stk, setSTK] = useState(0);
 
   const formItemLayout = {
     labelCol: { span: 6 },
@@ -95,10 +96,14 @@ const InternalTransaction = props => {
 
   const handleChangeAutoComplete = async e => {
     if (e) {
-      const username = await getUserByAcountNumber(e);
-      form.setFieldsValue({ nameB: username });
+      setSTK(e)
     }
   };
+
+  const checkSTK = async () => {
+    const username = await getUserByAcountNumber(stk);
+    form.setFieldsValue({ nameB: username });
+  }
 
   const getUserByAcountNumber = async id => {
     const result = await clientService.getInfoByTK(id);
@@ -156,6 +161,7 @@ const InternalTransaction = props => {
                   placeholder="Nhập vào STK hoặc chọn người nhận!"
                   options={options}
                 />
+                <Button style={{marginTop: 10}} onClick={() => checkSTK()} type="default">Kiểm tra</Button>
               </Form.Item>
               <Form.Item
                 {...formItemLayout}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Layout, Menu } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, Router } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 const { SubMenu } = Menu;
@@ -16,6 +16,50 @@ const SideBar = props => {
   }, [props.location.pathname]);
 
   const { routes } = props || [];
+
+  const mapRule = (router) => {
+    
+    const matchRoute = []
+    const userInfo = JSON.parse(localStorage.getItem('user'))
+
+    const appsMenu = router.find(item => item.subMenu === 'appsMenu')
+    const settingMenu = router.find(item => item.subMenu === 'settingMenu')
+    
+    const debtMenu = router.find(item => item.subMenu === 'debtMenu')
+    const userManageMenu = router.find(item => item.subMenu === 'userManageMenu')
+
+    const adminMenu = router.find(item => item.subMenu === 'adminMenu')
+    const comparisonMenu = router.find(item => item.subMenu === 'comparisonMenu')
+
+    console.log(userInfo.Loai)
+
+    switch(userInfo.Loai) {
+      case 'KH':
+        matchRoute.push(appsMenu)
+        matchRoute.push(settingMenu)
+        break
+      case 'AD':
+        matchRoute.push(appsMenu)
+        matchRoute[0].items = [matchRoute[0].items[0]]
+        matchRoute.push(adminMenu)
+        matchRoute.push(settingMenu)
+        matchRoute.push(comparisonMenu)
+        break
+      case 'NV':
+        matchRoute.push(appsMenu)
+        matchRoute[0].items = [matchRoute[0].items[0]]
+        matchRoute.push(userManageMenu)
+        matchRoute.push(settingMenu)
+        break
+    }
+    return matchRoute
+
+  }
+
+  const mapRuleRoute = mapRule(routes)
+
+  console.log("ROUTES=", mapRuleRoute)
+
   return (
     <Sider
       theme="light"
@@ -30,7 +74,7 @@ const SideBar = props => {
         defaultOpenKeys={['sub1', 'sub2', 'sub3', 'sub4', 'sub5', 'sub6']}
         style={{ height: '100%', borderRight: 0 }}
       >
-        {routes.map((item, idx) => {
+        {mapRuleRoute.map((item, idx) => {
           return (
             <SubMenu
               key={`sub${idx + 1}`}
