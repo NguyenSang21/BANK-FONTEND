@@ -35,7 +35,12 @@ const InternalTransaction = props => {
 
   const formItemLayout = {
     labelCol: { span: 6 },
-    wrapperCol: { span: 14 }
+    wrapperCol: { span: 13 }
+  };
+
+  const formItemLayout2 = {
+    labelCol: { span: 7 },
+    wrapperCol: { span: 16 }
   };
 
   useEffect(() => {
@@ -145,24 +150,31 @@ const InternalTransaction = props => {
               title="THÔNG TIN NGƯỜI HƯỞNG"
               style={{ width: '100%' }}
             >
-              <Form.Item
-                rules={[
-                  {
-                    required: true,
-                    message: 'Vui lòng nhập số tài khoản!'
-                  }
-                ]}
-                {...formItemLayout}
-                name="accountNumberB"
-                label="Số tài khoản:"
-              >
-                <AutoComplete
-                  onChange={e => handleChangeAutoComplete(e)}
-                  placeholder="Nhập vào STK hoặc chọn người nhận!"
-                  options={options}
-                />
-                <Button style={{marginTop: 10}} onClick={() => checkSTK()} type="default">Kiểm tra</Button>
-              </Form.Item>
+              <Row>
+                <Col span={20}>
+                  <Form.Item
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Vui lòng nhập số tài khoản!'
+                    }
+                  ]}
+                  {...formItemLayout2}
+                  name="accountNumberB"
+                  label="Số tài khoản:"
+                >
+                  <AutoComplete
+                    onChange={e => handleChangeAutoComplete(e)}
+                    placeholder="Nhập vào STK hoặc chọn người nhận!"
+                    options={options}
+                  />
+                </Form.Item>
+                </Col>
+                <Col span={4}>
+                  <Button onClick={() => checkSTK()} type="primary">Kiểm tra</Button>
+                </Col>
+              </Row>
+              
               <Form.Item
                 {...formItemLayout}
                 name="nameB"

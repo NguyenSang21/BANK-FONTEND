@@ -37,6 +37,7 @@ const SideBar = props => {
       case 'KH':
         matchRoute.push(appsMenu)
         matchRoute.push(settingMenu)
+        matchRoute.push(debtMenu)
         break
       case 'AD':
         matchRoute.push(appsMenu)
