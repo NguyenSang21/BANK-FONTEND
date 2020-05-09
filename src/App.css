@@ -69,3 +69,12 @@ a {
 .header {
   background: #3b6271;
 }
+
+
+#root > div > div > div > form > div:nth-child(3) > div.ant-col.ant-col-8.ant-form-item-label > label {
+  color: white;
+}
+
+#root > div > div > div > form > div:nth-child(2) > div.ant-col.ant-col-8.ant-form-item-label > label {
+  color: white;
+}
