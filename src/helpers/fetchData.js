@@ -52,10 +52,6 @@ export const fetchData = ({ path, method, data, params }, type) => {
 
         switch (statusCode) {
           case 403: // expire token
-            // const rfToken = await refreshToken(); // get new token
-            // if (rfToken) {
-            //   await fetchData({ path, method, data, params });
-            // }
             break;
           case 401: // Unauthorized
             // nothing to do

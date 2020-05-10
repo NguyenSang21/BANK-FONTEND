@@ -11,11 +11,12 @@ import config from './config';
 function App() {
   useEffect(() => {
     const socket = socketIOClient(config.socketUrl);
+    
+
     socket.on('DEBT_NOTICE', data => {
       const userInfo = JSON.parse(localStorage.getItem('user'));
-      console.log('LISTENING SOCKET ... ', userInfo);
-      console.log('LISTENING SOCKET ... ', data);
-      if (data.username == userInfo.username) {
+      console.log('LISTENING SOCKET ... ');
+      if (data.username === userInfo.username) {
         notification.warning({
           message: 'Nhắc nợ',
           duration: 0,
@@ -23,6 +24,17 @@ function App() {
         });
       }
     });
+
+    socket.on('INTERNAL_TRANS', data => {
+      const userInfo = JSON.parse(localStorage.getItem('user'));
+      console.log('LISTENING SOCKET ... ');
+      if (data.usernameB === userInfo.username) {
+        notification.success({
+          message: 'Thông báo',
+          description: `Số tài khoản: ${data.accountNumberA} đã chuyển tiền cho bạn với số tiền là ${data.amount} đ với nội dung: "${data.note}".`
+        })
+      }
+    })
   }, []);
 
   return (

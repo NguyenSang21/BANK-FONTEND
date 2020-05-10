@@ -124,7 +124,6 @@ const LoginPage = props => {
               onChange={(e) => onChangeReCap(e)}
               grecaptcha={grecaptchaObject}
             />
-            ,
           </Form.Item>
           <Form.Item {...tailLayout}>
             <span>

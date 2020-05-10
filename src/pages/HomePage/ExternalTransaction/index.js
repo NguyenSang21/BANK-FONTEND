@@ -20,6 +20,7 @@ import { bankService } from '../../../services/bank.service';
 import DialogOTP from './DialogOTP';
 import { recieverService } from '../../../services/reciever.service';
 import shortid from 'shortid';
+import { externalService } from '../../../services/external.service';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -30,6 +31,7 @@ const ExternalTransaction = props => {
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState([]);
+  const [recipient, setRecipient] = useState({});
 
   useEffect(() => {
     async function getUserInfo() {
@@ -47,13 +49,12 @@ const ExternalTransaction = props => {
     getUserInfo();
   }, []);
 
-  const [bankList, setBankList] = useState([]);
   const [options, setOptions] = useState([]);
   useEffect(() => {
     async function getBietDanh() {
       const userInfo = JSON.parse(localStorage.getItem('user'));
       const result = await recieverService.getReciverList(userInfo.username);
-      console.log('DATA=', result);
+
       if (result && result.success) {
         const temp = [];
         result.data.map(item => {
@@ -67,6 +68,10 @@ const ExternalTransaction = props => {
       }
     }
     getBietDanh();
+  }, []);
+
+  const [bankList, setBankList] = useState([]);
+  useEffect(() => {
     async function getBankList() {
       const result = await bankService.getBankList();
       if (result && result.success) {
@@ -99,7 +104,7 @@ const ExternalTransaction = props => {
   const handleChangeAutoComplete = async e => {
     if (e) {
       const userInfo = await getUserByAcountNumber(e);
-      console.log('USERNAME==', userInfo.username);
+
       form.setFieldsValue({ nameB: userInfo.HoTen });
       form.setFieldsValue({ bankNameB: userInfo.TenNganHang });
     }
@@ -113,7 +118,25 @@ const ExternalTransaction = props => {
     return {};
   };
 
+  const getInfoRecipient = async () => {
+    const bankName = form.getFieldValue('bankNameB')
+    const stk = form.getFieldValue('accountNumber')
+    const bank = await bankService.getBankByAgentCode(bankName)
+
+    const getInfo = await externalService.getRecipientInfo(bankName, {"SoTK": stk.toString()},
+     bank && bank.data && bank.data.Key_Auth)
+    
+    setRecipient(getInfo)
+    console.log(getInfo)
+
+  }
+
   const formItemLayout = {
+    labelCol: { span: 10 },
+    wrapperCol: { span: 14 }
+  };
+
+  const formItemLayout2 = {
     labelCol: { span: 6 },
     wrapperCol: { span: 14 }
   };
@@ -122,7 +145,7 @@ const ExternalTransaction = props => {
     <Spin spinning={loading}>
       <Form onFinish={onFinish} onFinishFailed={onFinishFailed} form={form}>
         <Row gutter={16}>
-          <Col span={12}>
+          <Col span={8}>
             <Card
               headStyle={{ background: '#fafafa' }}
               title="THÔNG TIN NGƯỜI CHUYỂN"
@@ -145,10 +168,10 @@ const ExternalTransaction = props => {
               <br />
             </Card>
           </Col>
-          <Col span={12}>
+          <Col span={8}>
             <Card
               headStyle={{ background: '#fafafa' }}
-              title="THÔNG TIN NGƯỜI HƯỞNG"
+              title="TÙY CHỈNH"
               style={{ width: '100%' }}
             >
               <Form.Item
@@ -180,27 +203,35 @@ const ExternalTransaction = props => {
                 label="Số tài khoản:"
               >
                 <AutoComplete
-                  onChange={e => handleChangeAutoComplete(e)}
+                  // onChange={e => handleChangeAutoComplete(e)}
                   placeholder="Nhập vào STK hoặc chọn người nhận!"
                   options={options}
                 />
               </Form.Item>
-              <Form.Item
-                {...formItemLayout}
-                name="nameB"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Vui lòng nhập tên người hưởng!'
-                  }
-                ]}
-                label="Người hưởng:"
-              >
-                <Input
-                  style={{ width: '100%' }}
-                  placeholder="Vui lòng nhập tên người hưởng!"
-                />
-              </Form.Item>
+              <Button onClick={() => getInfoRecipient()} style={{float: 'right'}} type="primary">Kiểm tra</Button>
+            </Card>
+          </Col>
+          <Col span={8}>
+            <Card
+              headStyle={{ background: '#fafafa' }}
+              title="THÔNG TIN NGƯỜI NHẬN"
+              style={{ width: '100%' }}
+            >
+              <div>
+                <label>Tên khách hàng:</label>
+                &nbsp;
+                <span>{recipient && recipient.TenKH}</span>
+              </div>
+              <br />
+              <div>
+                <label>Số điện thoại:</label>
+                &nbsp;
+                <span>{recipient && recipient.SoDienThoai}</span>
+              </div>
+              <br />
+              <br />
+              <br />
+              <br />
             </Card>
           </Col>
         </Row>
@@ -211,7 +242,7 @@ const ExternalTransaction = props => {
           style={{ width: '100%' }}
         >
           <Form.Item
-            {...formItemLayout}
+            {...formItemLayout2}
             name="amount"
             rules={[
               {
@@ -229,7 +260,7 @@ const ExternalTransaction = props => {
             />
           </Form.Item>
           <Form.Item
-            {...formItemLayout}
+            {...formItemLayout2}
             name="content"
             rules={[
               {
@@ -243,7 +274,7 @@ const ExternalTransaction = props => {
             <TextArea rows={4} />
           </Form.Item>
           <Form.Item
-            {...formItemLayout}
+            {...formItemLayout2}
             name="amountType"
             label="Phí chuyển tiền"
             rules={[{ required: true, message: 'Vui lòng chọn phí!' }]}

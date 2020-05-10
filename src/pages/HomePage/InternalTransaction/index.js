@@ -32,6 +32,7 @@ const InternalTransaction = props => {
   const [formData, setFormData] = useState([]);
   const [options, setOptions] = useState([]);
   const [stk, setSTK] = useState(0);
+  const [infoB, setInfoB] = useState({});
 
   const formItemLayout = {
     labelCol: { span: 6 },
@@ -85,6 +86,7 @@ const InternalTransaction = props => {
     const userDetail = JSON.parse(localStorage.getItem('user'));
     values.accountNumberA = userInfo.ID_TaiKhoanTTTK + '';
     values.username = userDetail.username;
+    values.usernameB = infoB.Username;
 
     const result = await transactionService.getOTP(userDetail.username, values);
 
@@ -106,14 +108,15 @@ const InternalTransaction = props => {
   };
 
   const checkSTK = async () => {
-    const username = await getUserByAcountNumber(stk);
-    form.setFieldsValue({ nameB: username });
+    const info = await getUserByAcountNumber(stk);
+    setInfoB(info)
+    form.setFieldsValue({ nameB: info && info.HoTen });
   }
 
   const getUserByAcountNumber = async id => {
     const result = await clientService.getInfoByTK(id);
     if (result && result.success) {
-      return (result.data[0] && result.data[0].HoTen) || '';
+      return (result.data[0] && result.data[0]) || '';
     }
     return null;
   };

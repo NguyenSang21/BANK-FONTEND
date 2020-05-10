@@ -39,10 +39,13 @@ const TransHistory = props => {
       }
     },
     {
-      title: 'Số tiền',
+      title: 'Số tiền (VNĐ)',
       dataIndex: 'SoTien',
       width: '10%',
-      editable: true
+      editable: true,
+      render: (text, record) => {
+        return record.SoTien.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+      }
     },
     {
       title: 'Người trả phí',
