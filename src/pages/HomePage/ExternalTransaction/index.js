@@ -88,13 +88,14 @@ const ExternalTransaction = props => {
     values.accountNumberA = userInfo.ID_TaiKhoanTTTK;
     values.username = userDetail.username;
 
-    const result = await transactionService.getOTP(userDetail.username);
+    console.log(values)
+    //const result = await transactionService.getOTP(userDetail.username);
 
-    if (result && result.success) {
-      setFormData(values);
-      setOpenModal(true);
-      setLoading(false);
-    }
+    // if (result && result.success) {
+    //   setFormData(values);
+    //   setOpenModal(true);
+    //   setLoading(false);
+    // }
   };
 
   const onFinishFailed = errorInfo => {
@@ -120,14 +121,14 @@ const ExternalTransaction = props => {
 
   const getInfoRecipient = async () => {
     const bankName = form.getFieldValue('bankNameB')
-    const stk = form.getFieldValue('accountNumber')
+    const stk = form.getFieldValue('accountNumberB')
+    console.log(stk)
     const bank = await bankService.getBankByAgentCode(bankName)
 
-    const getInfo = await externalService.getRecipientInfo(bankName, {"SoTK": stk.toString()},
+    const getInfo = await externalService.getRecipientInfo(bankName, {"SoTK": stk},
      bank && bank.data && bank.data.Key_Auth)
-    
-    setRecipient(getInfo)
     console.log(getInfo)
+    setRecipient(getInfo)
 
   }
 
@@ -193,7 +194,7 @@ const ExternalTransaction = props => {
               </Form.Item>
               <Form.Item
                 {...formItemLayout}
-                name="accountNumber"
+                name="accountNumberB"
                 rules={[
                   {
                     required: true,
@@ -261,7 +262,7 @@ const ExternalTransaction = props => {
           </Form.Item>
           <Form.Item
             {...formItemLayout2}
-            name="content"
+            name="note"
             rules={[
               {
                 required: true,
@@ -275,14 +276,14 @@ const ExternalTransaction = props => {
           </Form.Item>
           <Form.Item
             {...formItemLayout2}
-            name="amountType"
+            name="payer"
             label="Phí chuyển tiền"
             rules={[{ required: true, message: 'Vui lòng chọn phí!' }]}
             hasFeedback
           >
             <Select placeholder="Vui lòng chọn phí">
-              <Option value="china">Người chuyển trả</Option>
-              <Option value="usa">Người hưởng trả</Option>
+              <Option value="A">Người chuyển trả</Option>
+              <Option value="B">Người hưởng trả</Option>
             </Select>
           </Form.Item>
           <Button

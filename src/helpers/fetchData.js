@@ -9,7 +9,7 @@ import { message } from 'antd';
  * @param {Object} Object.path
  * @param type
  */
-export const fetchData = ({ path, method, data, params }, type) => {
+export const fetchData = ({ path, method, data, params, ext_headers }, type) => {
   // get current token
   const userInfo = JSON.parse(localStorage.getItem('user')) || {};
   // headers
@@ -28,6 +28,10 @@ export const fetchData = ({ path, method, data, params }, type) => {
     };
   }
 
+  if (ext_headers) {
+    ACCESS_HEADERS = { ...ACCESS_HEADERS, ...ext_headers}
+  }
+
   const requestOptions = {
     method: method,
     url: `${config.apiUrl}${path}${matchParams(params || {})}`,
@@ -40,7 +44,9 @@ export const fetchData = ({ path, method, data, params }, type) => {
       if (res.status !== 200 && res.status !== 201) {
         throw new Error('Error');
       } else {
-        console.log(res.data);
+        if (res.data.result_code > 600) {
+          message.error(res.data.result_message)
+        }
         return res.data;
       }
     })
