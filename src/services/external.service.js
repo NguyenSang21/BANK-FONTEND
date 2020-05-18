@@ -7,7 +7,8 @@ import { fetchData, refreshToken } from '../helpers';
 const sha512 = require('js-sha512').sha512;
 
 export const externalService = {
-  getRecipientInfo
+  getRecipientInfo,
+  cashin
 }
 
 async function getRecipientInfo(bankName, bodyData, agentSecretKey) {
@@ -42,6 +43,27 @@ async function getRecipientInfo(bankName, bodyData, agentSecretKey) {
           agent_code: bankName,
           api_signature: signature
         },
+        data: bodyData
+      });
+    }
+  }
+  return resultData
+}
+
+async function cashin(bodyData) {
+  const resultData = await fetchData({
+    path: `/service/cashin`,
+    method: 'post',
+    data: bodyData
+  });
+
+  // check expire token
+  if (resultData && resultData.status === 403) {
+    const result = await refreshToken();
+    if (result) {
+      return await fetchData({
+        path: `/service/cashin`,
+        method: 'post',
         data: bodyData
       });
     }

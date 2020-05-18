@@ -32,6 +32,7 @@ const ExternalTransaction = props => {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState([]);
   const [recipient, setRecipient] = useState({});
+  const [agentSecretKey, setAgentSecretKey] = useState("")
 
   useEffect(() => {
     async function getUserInfo() {
@@ -82,14 +83,14 @@ const ExternalTransaction = props => {
   }, []);
 
   const onFinish = async values => {
-    setLoading(true);
+    //setLoading(true);
 
     const userDetail = JSON.parse(localStorage.getItem('user'));
     values.accountNumberA = userInfo.ID_TaiKhoanTTTK;
     values.username = userDetail.username;
-
+    values.agentSecretKey = agentSecretKey
     console.log(values)
-    //const result = await transactionService.getOTP(userDetail.username);
+    const result = await externalService.cashin(values)
 
     // if (result && result.success) {
     //   setFormData(values);
@@ -125,10 +126,12 @@ const ExternalTransaction = props => {
     console.log(stk)
     const bank = await bankService.getBankByAgentCode(bankName)
 
-    const getInfo = await externalService.getRecipientInfo(bankName, {"SoTK": stk},
-     bank && bank.data && bank.data.Key_Auth)
-    console.log(getInfo)
-    setRecipient(getInfo)
+    if (bank && bank.data) {
+      setAgentSecretKey(bank.data.Key_Auth)
+      const getInfo = await externalService.getRecipientInfo(bankName, { "SoTK": stk }, bank.data.Key_Auth)
+      console.log(getInfo)
+      setRecipient(getInfo)
+    }
 
   }
 
@@ -209,7 +212,7 @@ const ExternalTransaction = props => {
                   options={options}
                 />
               </Form.Item>
-              <Button onClick={() => getInfoRecipient()} style={{float: 'right'}} type="primary">Kiểm tra</Button>
+              <Button onClick={() => getInfoRecipient()} style={{ float: 'right' }} type="primary">Kiểm tra</Button>
             </Card>
           </Col>
           <Col span={8}>
