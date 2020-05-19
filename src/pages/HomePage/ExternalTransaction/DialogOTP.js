@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { notificationActions } from '../../../actions/notification.action';
 import { transactionService } from '../../../services';
+import { externalService } from '../../../services/external.service';
 
 const layout = {
   labelCol: {
@@ -34,11 +35,12 @@ const DialogOTP = props => {
     try {
       let values = await form.validateFields();
       formDataParent.OTP_CODE = values.OTP_CODE;
-      formDataParent.transType = 'Gui';
+      const data = props.data
+      data.OTP_CODE = values.OTP_CODE;
       console.log(formDataParent);
-      const result = await transactionService.externalTrans(formDataParent);
+      const result = await externalService.cashin(data)
 
-      if (result && result.success) {
+      if (result && result.result_code === 0) {
         props.notify_success(result.message);
         props.handleClose();
       }

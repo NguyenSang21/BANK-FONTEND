@@ -90,13 +90,15 @@ const ExternalTransaction = props => {
     values.username = userDetail.username;
     values.agentSecretKey = agentSecretKey
     console.log(values)
-    const result = await externalService.cashin(values)
 
-    // if (result && result.success) {
-    //   setFormData(values);
-    //   setOpenModal(true);
-    //   setLoading(false);
-    // }
+    const result = await transactionService.getOTP(userDetail.username, values);
+
+    if (result && result.success) {
+      setFormData(values);
+      setOpenModal(true);
+      setLoading(false);
+    }
+  
   };
 
   const onFinishFailed = errorInfo => {
