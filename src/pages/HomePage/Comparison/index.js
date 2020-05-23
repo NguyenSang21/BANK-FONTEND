@@ -45,7 +45,7 @@ const Comparison = props => {
     },
     {
       title: 'Họ tên A',
-      dataIndex: 'Username_A',
+      dataIndex: 'HoTen_A',
       width: '20%',
       editable: true
     },
@@ -66,7 +66,7 @@ const Comparison = props => {
     },
     {
       title: 'Họ tên B',
-      dataIndex: 'Username_B',
+      dataIndex: 'HoTen_B',
       width: '20%',
       editable: true
     },
@@ -128,12 +128,12 @@ const Comparison = props => {
       width: '15%',
       editable: true
     },
-    {
-      title: 'Chữ ký',
-      dataIndex: 'Key_Auth',
-      width: '30%',
-      editable: true
-    },
+    // {
+    //   title: 'Chữ ký',
+    //   dataIndex: 'Key_Auth',
+    //   width: '30%',
+    //   editable: true
+    // },
     {
       title: 'Trạng thái',
       dataIndex: 'TrangThai',
