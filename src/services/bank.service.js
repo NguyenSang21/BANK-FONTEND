@@ -12,7 +12,7 @@ async function getBankList() {
   });
 
   // check expire token
-  if (resultData && resultData.status === 403) {
+  if (resultData && resultData.status === 401) {
     const result = await refreshToken();
     if (result) {
       return await fetchData({
@@ -32,7 +32,7 @@ async function getBankByAgentCode(bankName) {
   });
 
   // check expire token
-  if (resultData && resultData.status === 403) {
+  if (resultData && resultData.status === 401) {
     const result = await refreshToken();
     if (result) {
       return await fetchData({

@@ -10,17 +10,23 @@ import {
   Input,
   Radio,
   Tag,
-  Select
+  Select,
+  DatePicker,
+  Popover,
 } from 'antd';
+import moment from 'moment';
 import { transactionService } from '../../../services';
 import { bankService } from '../../../services/bank.service';
 import shortid from 'shortid';
+
+const { RangePicker } = DatePicker;
+
 const layout = {
   labelCol: {
     span: 16
   },
   wrapperCol: {
-    span: 12
+    span: 4
   }
 };
 
@@ -128,12 +134,17 @@ const Comparison = props => {
       width: '15%',
       editable: true
     },
-    // {
-    //   title: 'Chữ ký',
-    //   dataIndex: 'Key_Auth',
-    //   width: '30%',
-    //   editable: true
-    // },
+    {
+      title: 'Chữ ký',
+      dataIndex: 'Key_Auth',
+      width: '10%',
+      editable: true,
+      render: (text, record) => {
+        return <Popover placement="top" title="Chữ ký" content={record.Key_Auth} trigger="click">
+            <Button type="dashed">Chữ ký</Button>
+        </Popover>
+      }
+    },
     {
       title: 'Trạng thái',
       dataIndex: 'TrangThai',
@@ -173,8 +184,7 @@ const Comparison = props => {
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
-      const result = await transactionService.getAll('', '');
-      console.log('DATA=', result);
+      const result = await transactionService.getAll('', '', '', '');
 
       if (result && result.success) {
         setData(result.data);
@@ -197,7 +207,6 @@ const Comparison = props => {
   }, []);
 
   const handleChangeSelected = (type, value) => {
-    console.log(value);
     if (type === 'Gui') {
       setNhGui(value);
     } else if (type === 'Nhan') {
@@ -205,10 +214,9 @@ const Comparison = props => {
     }
   };
 
-  const fetchDataByQuery = async () => {
+  const fetchDataByQuery = async (date) => {
     setLoading(true);
-    const result = await transactionService.getAll(nhGui, nhNhan);
-    console.log('DATA=', result);
+    const result = await transactionService.getAll(nhGui, nhNhan, date.startDay, date.endDay);
 
     if (result && result.success) {
       setData(result.data);
@@ -217,9 +225,20 @@ const Comparison = props => {
   };
 
   const onFinishSearch = values => {
-    console.log('Received values from form: ', values);
-    fetchDataByQuery();
+    const date = {
+      startDay: '',
+      endDay: ''
+    }
+
+    if(values.date) {
+      date.startDay = moment(values.date[0]).format('YYYY-MM-DD')
+      date.endDay = moment(values.date[1]).format('YYYY-MM-DD')
+    }
+    
+    fetchDataByQuery(date);
   };
+
+  const dateFormat = 'YYYY/MM/DD';
 
   return (
     <>
@@ -261,8 +280,13 @@ const Comparison = props => {
               })}
             </Select>
           </Form.Item>
+          <Form.Item name="date" label="Thời gian:">
+            <RangePicker
+              format={dateFormat}
+            />
+          </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit" style={{ marginLeft: 20 }}>
+            <Button type="primary" htmlType="submit" style={{ marginLeft: 10, marginTop: 10 }}>
               Tìm kiếm
             </Button>
           </Form.Item>

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Form, Row, Button, Col, Card, Tag } from 'antd';
-import { PlusCircleOutlined } from '@ant-design/icons';
+import { Table, Form, Row, Button, Col, Card, Tag, message, Modal } from 'antd';
+import { PlusCircleOutlined, DeleteOutlined, ExclamationCircleOutlined  } from '@ant-design/icons';
 import { recieverService } from '../../../services/reciever.service';
 import CreateReciever from './CreateReciever';
 import UpdateReciever from './UpdateReciever';
 import shortid from 'shortid';
+const { confirm } = Modal;
 
 const layout = {
   labelCol: {
@@ -44,7 +45,7 @@ const RecieverList = props => {
       }
     },
     {
-      title: 'Actions',
+      title: 'Action 1',
       dataIndex: 'action',
       width: '15%',
       editable: true,
@@ -52,6 +53,20 @@ const RecieverList = props => {
         return (
           <Button type="primary" onClick={() => handleUpdate(record)}>
             Sửa đổi
+          </Button>
+        );
+      }
+    },
+    {
+      title: 'Action 2',
+      dataIndex: 'action',
+      width: '15%',
+      editable: true,
+      render: (text, record) => {
+        return (
+          <Button type="danger" onClick={() => showDeleteConfirm(record)}>
+            <DeleteOutlined />
+            Xóa
           </Button>
         );
       }
@@ -86,6 +101,36 @@ const RecieverList = props => {
     setOpenModalUpdate(true);
     setUpdateData(record);
   };
+
+  const handleDelete = async record => {
+    console.log(record)
+    const userInfo = JSON.parse(localStorage.getItem('user'));
+    const result = await recieverService.deleteReciver(userInfo.username, record)
+    
+    if (result && result.success) {
+      message.success('Xóa thành công!')
+      setLoading(false)
+      await initData()
+    }
+  }
+
+  function showDeleteConfirm(record) {
+    confirm({
+      title: 'Bạn có chắc chắn muốn xóa?',
+      icon: <ExclamationCircleOutlined />,
+      content: 'Nhấn "Yes" để hoàn thành thao tác',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk() {
+      setLoading(true);
+       handleDelete(record)
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  }
 
   return (
     <>

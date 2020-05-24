@@ -111,9 +111,9 @@ const CreateReciever = props => {
             hasFeedback
           >
             <Select placeholder="Vui lòng chọn ngân hàng">
-              {bankList.map(item => {
+              {bankList.map((item, index) => {
                 return (
-                  <Option value={item.TenNganHang}>{item.TenNganHang}</Option>
+                  <Option key={index} value={item.TenNganHang}>{item.TenNganHang}</Option>
                 );
               })}
             </Select>

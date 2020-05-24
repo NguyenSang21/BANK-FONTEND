@@ -33,11 +33,11 @@ async function create(data) {
   });
 
   // check expire token
-  if (resultData && resultData.status === 403) {
+  if (resultData && resultData.status === 401) {
     const result = await refreshToken();
     if (result) {
       return await fetchData({
-        path: '/user',
+        path: '/client',
         method: 'post',
         data
       });
@@ -54,7 +54,7 @@ async function getListClient() {
   });
 
   // check expire token
-  if (resultData && resultData.status === 403) {
+  if (resultData && resultData.status === 401) {
     const result = await refreshToken();
     if (result) {
       return await fetchData({
@@ -85,7 +85,7 @@ async function getAccountList() {
   });
 
   // check expire token
-  if (result && result.status === 403) {
+  if (result && result.status === 401) {
     const result = await refreshToken();
     if (result) {
       return await fetchData({
@@ -105,7 +105,7 @@ async function getAccountByType(username, type) {
   });
 
   // check expire token
-  if (resultData && resultData.status === 403) {
+  if (resultData && resultData.status === 401) {
     const result = await refreshToken();
     if (result) {
       return await fetchData({
@@ -125,7 +125,7 @@ async function getInfo(username) {
   });
 
   // check expire token
-  if (resultData && resultData.status === 403) {
+  if (resultData && resultData.status === 401) {
     const result = await refreshToken();
     if (result) {
       return await fetchData({
@@ -145,7 +145,7 @@ async function sendOTP(username) {
   });
 
   // check expire token
-  if (resultData && resultData.status === 403) {
+  if (resultData && resultData.status === 401) {
     const result = await refreshToken();
     if (result) {
       return await fetchData({
@@ -166,7 +166,7 @@ async function resetPassword(data) {
   });
 
   // check expire token
-  if (resultData && resultData.status === 403) {
+  if (resultData && resultData.status === 401) {
     const result = await refreshToken();
     if (result) {
       return await fetchData({

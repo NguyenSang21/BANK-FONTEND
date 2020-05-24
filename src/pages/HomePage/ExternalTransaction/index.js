@@ -301,6 +301,7 @@ const ExternalTransaction = props => {
           </Button>
         </Card>
         <DialogOTP
+          key={shortid.generate()}
           open={openModal}
           data={formData}
           handleClose={() => setOpenModal(false)}

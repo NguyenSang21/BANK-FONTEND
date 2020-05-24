@@ -8,18 +8,18 @@ export const transactionService = {
   getOTP
 };
 
-async function getAll(bankA, bankB) {
+async function getAll(bankA, bankB, startDay, endDay) {
   const resultData = await fetchData({
-    path: `/trans?bankA=${bankA}&bankB=${bankB}`,
+    path: `/trans?bankA=${bankA}&bankB=${bankB}&startDay=${startDay}&endDay${endDay}`,
     method: 'get'
   });
 
   // check expire token
-  if (resultData && resultData.status === 403) {
+  if (resultData && resultData.status === 401) {
     const result = await refreshToken();
     if (result) {
       return await fetchData({
-        path: `/trans?bankA=${bankA}&bankB=${bankB}`,
+        path: `/trans?bankA=${bankA}&bankB=${bankB}&startDay=${startDay}&endDay${endDay}`,
         method: 'get'
       });
     }
@@ -36,7 +36,7 @@ async function internalTrans(data) {
   });
 
   // check expire token
-  if (resultData && resultData.status === 403) {
+  if (resultData && resultData.status === 401) {
     const result = await refreshToken();
     if (result) {
       return await fetchData({
@@ -58,7 +58,7 @@ async function externalTrans(data) {
   });
 
   // check expire token
-  if (resultData && resultData.status === 403) {
+  if (resultData && resultData.status === 401) {
     const result = await refreshToken();
     if (result) {
       return await fetchData({
@@ -79,7 +79,7 @@ async function getTransByUser(username) {
   });
 
   // check expire token
-  if (resultData && resultData.status === 403) {
+  if (resultData && resultData.status === 401) {
     const result = await refreshToken();
     if (result) {
       return await fetchData({
@@ -100,7 +100,7 @@ async function getOTP(username, data) {
   });
 
   // check expire token
-  if (resultData && resultData.status === 403) {
+  if (resultData && resultData.status === 401) {
     const result = await refreshToken();
     if (result) {
       return await fetchData({

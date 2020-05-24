@@ -4,12 +4,17 @@ import CreateUser from './CreateUser';
 import {
   PlusCircleOutlined,
   EyeOutlined,
-  DownOutlined
+  DownOutlined,
+  LockOutlined,
+  UnlockOutlined,
+  MoneyCollectOutlined
 } from '@ant-design/icons';
 import { userService } from '../../../services';
 import History from './History';
 import Topup from './Topup';
 import shortid from 'shortid';
+import LockAccount from './LockAccount';
+import UnlockAccount from './UnlockAccount';
 
 const layout = {
   labelCol: {
@@ -25,8 +30,15 @@ const UserList = props => {
   const [openModal, setOpenModal] = useState(false);
   const [openModalHistory, setOpenModalHistory] = useState(false);
   const [formDataHistory, setFormDataHistory] = useState([]);
+
   const [openModalTopup, setOpenModalTopup] = useState(false);
   const [formDataTopup, setFormDataTopup] = useState([]);
+
+  const [openModalLockAccount, setModalLockAccount] = useState(false);
+  const [lockFormData, setLockFormData] = useState([]);
+
+  const [openModalUnlockAccount, setModalUnlockAccount] = useState(false);
+  const [unlockFormData, setUnlockFormData] = useState([]);
 
   const columns = [
     {
@@ -131,7 +143,7 @@ const UserList = props => {
     },
     {
       title: 'Action 1',
-      dataIndex: 'detail',
+      dataIndex: 'history',
       width: '15%',
       editable: true,
       render: (text, record) => {
@@ -145,14 +157,42 @@ const UserList = props => {
     },
     {
       title: 'Action 2',
-      dataIndex: 'napTien',
+      dataIndex: 'topup',
       width: '15%',
       editable: true,
       render: (text, record) => {
         return (
           <Button type="primary" onClick={() => handleTopup(record)}>
-            <DownOutlined />
+            <MoneyCollectOutlined />
             Nạp Tiền
+          </Button>
+        );
+      }
+    },
+    {
+      title: 'Action 3',
+      dataIndex: 'Khoa TK',
+      width: '15%',
+      editable: true,
+      render: (text, record) => {
+        return (
+          <Button type="danger" onClick={() => lockAccount(record)}>
+            <LockOutlined />
+            Khóa TK
+          </Button>
+        );
+      }
+    },
+    {
+      title: 'Action 3',
+      dataIndex: 'Mo TK',
+      width: '15%',
+      editable: true,
+      render: (text, record) => {
+        return (
+          <Button type="primary" onClick={() => unlockAccount(record)}>
+            <UnlockOutlined />
+            Mở TK
           </Button>
         );
       }
@@ -173,7 +213,7 @@ const UserList = props => {
   const initData = async () => {
     setLoading(true);
     const result = await userService.getListClient();
-    console.log('DATA=', result);
+
     if (result && result.success) {
       setData(result.data);
       setLoading(false);
@@ -181,16 +221,24 @@ const UserList = props => {
   };
 
   const handleViewHistory = record => {
-    console.log(record);
     setFormDataHistory(record);
     setOpenModalHistory(true);
   };
 
   const handleTopup = record => {
-    console.log(record);
     setOpenModalTopup(true);
     setFormDataTopup(record);
   };
+
+  const lockAccount = record => {
+    setModalLockAccount(true)
+    setLockFormData(record)
+  }
+
+  const unlockAccount = record => {
+    setModalUnlockAccount(true)
+    setUnlockFormData(record)
+  }
 
   return (
     <div>
@@ -228,10 +276,10 @@ const UserList = props => {
       <Table
         loading={isLoading}
         bordered
-        scroll={{ x: 2500 }}
+        scroll={{ x: 3000 }}
         dataSource={data}
         columns={columns}
-        rowKey={shortid}
+        rowKey={shortid.generate()}
         rowClassName="editable-row"
         pagination={{
           onChange: () => {
@@ -241,17 +289,31 @@ const UserList = props => {
       />
       <CreateUser open={openModal} handleClose={() => setOpenModal(false)} />
       <History
-        key={Math.random(0, 99999999)}
+        key={shortid.generate()}
         data={formDataHistory}
         open={openModalHistory}
         handleClose={() => setOpenModalHistory(false)}
       />
       <Topup
         reload={() => initData()}
-        key={Math.random(0, 99999999)}
+        key={shortid.generate()}
         data={formDataTopup}
         open={openModalTopup}
         handleClose={() => setOpenModalTopup(false)}
+      />
+      <LockAccount
+        reload={() => initData()}
+        key={shortid.generate()}
+        data={lockFormData}
+        open={openModalLockAccount}
+        handleClose={() => setModalLockAccount(false)}
+      />
+      <UnlockAccount
+        reload={() => initData()}
+        key={shortid.generate()}
+        data={unlockFormData}
+        open={openModalUnlockAccount}
+        handleClose={() => setModalUnlockAccount(false)}
       />
     </div>
   );

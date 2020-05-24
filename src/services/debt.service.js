@@ -14,7 +14,7 @@ async function create(data) {
   });
 
   // check expire token
-  if (resultData && resultData.status === 403) {
+  if (resultData && resultData.status === 401) {
     const result = await refreshToken();
     if (result) {
       return await fetchData({
@@ -35,7 +35,7 @@ async function getDebtList(username) {
   });
 
   // check expire token
-  if (resultData && resultData.status === 403) {
+  if (resultData && resultData.status === 401) {
     const result = await refreshToken();
     if (result) {
       return await fetchData({
@@ -56,7 +56,7 @@ async function removeDebt(id, data) {
   });
 
   // check expire token
-  if (resultData && resultData.status === 403) {
+  if (resultData && resultData.status === 401) {
     const result = await refreshToken();
     if (result) {
       return await fetchData({

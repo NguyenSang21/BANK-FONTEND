@@ -57,8 +57,6 @@ export const fetchData = ({ path, method, data, params, ext_headers }, type) => 
         const statusCode = error.response.status;
 
         switch (statusCode) {
-          case 403: // expire token
-            break;
           case 401: // Unauthorized
             // nothing to do
             break;

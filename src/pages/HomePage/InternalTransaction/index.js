@@ -20,6 +20,7 @@ import { notificationActions } from '../../../actions/notification.action';
 import { connect } from 'react-redux';
 import DialogOTP from './DialogOTP';
 import { recieverService } from '../../../services/reciever.service';
+import shortid from 'shortid';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -263,6 +264,7 @@ const InternalTransaction = props => {
         </Card>
       </Form>
       <DialogOTP
+        key={shortid.generate()}
         open={openModal}
         data={formData}
         handleClose={() => setOpenModal(false)}
