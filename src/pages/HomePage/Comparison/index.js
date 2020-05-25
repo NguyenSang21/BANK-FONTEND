@@ -286,7 +286,7 @@ const Comparison = props => {
             />
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit" style={{ marginLeft: 10, marginTop: 10 }}>
+            <Button type="primary" htmlType="submit" style={{ marginLeft: 10}}>
               Tìm kiếm
             </Button>
           </Form.Item>

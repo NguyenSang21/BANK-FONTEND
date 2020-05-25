@@ -67,7 +67,7 @@ const LockAccount = props => {
   return (
     <Modal
       maskClosable={false}
-      title="LockAccount"
+      title="Lock Account"
       visible={visible}
       onOk={() => handleSubmit()}
       okText="Đồng ý"
@@ -75,7 +75,7 @@ const LockAccount = props => {
       cancelText="Hủy"
     >
       <p style={{ textAlign: 'center' }}>
-        Điền thông tin của khách hàng mà bạn muốn nạp:
+        Chọn số tài khoản mà bạn muốn khóa
       </p>
       <Spin spinning={loading}>
         <Form {...layout} form={form} onFinishFailed={onFinishFailed}>

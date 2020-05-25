@@ -67,7 +67,7 @@ const UnlockAccount = props => {
   return (
     <Modal
       maskClosable={false}
-      title="UnlockAccount"
+      title="Unlock Account"
       visible={visible}
       onOk={() => handleSubmit()}
       okText="Đồng ý"
@@ -75,7 +75,7 @@ const UnlockAccount = props => {
       cancelText="Hủy"
     >
       <p style={{ textAlign: 'center' }}>
-        Điền thông tin của khách hàng mà bạn muốn nạp:
+        Chọn số tài khoản mà bạn muốn mở khóa
       </p>
       <Spin spinning={loading}>
         <Form {...layout} form={form} onFinishFailed={onFinishFailed}>
