@@ -21,6 +21,7 @@ import DialogOTP from './DialogOTP';
 import { recieverService } from '../../../services/reciever.service';
 import shortid from 'shortid';
 import { externalService } from '../../../services/external.service';
+import SaveReciever from '../InternalTransaction/SaveReciever';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -33,6 +34,9 @@ const ExternalTransaction = props => {
   const [formData, setFormData] = useState([]);
   const [recipient, setRecipient] = useState({});
   const [agentSecretKey, setAgentSecretKey] = useState("")
+
+  const [saveRecieverData, setSaveRecieverData] = useState({})
+  const [openModalSaveReciever, setOpenModalSaveReciever] = useState(false)
 
   useEffect(() => {
     async function getUserInfo() {
@@ -137,6 +141,11 @@ const ExternalTransaction = props => {
 
   }
 
+  const openSaveReciever = () => {
+    setOpenModalSaveReciever(true)
+    setSaveRecieverData(form.getFieldsValue())
+  }
+
   const formItemLayout = {
     labelCol: { span: 10 },
     wrapperCol: { span: 14 }
@@ -215,6 +224,7 @@ const ExternalTransaction = props => {
                 />
               </Form.Item>
               <Button onClick={() => getInfoRecipient()} style={{ float: 'right' }} type="primary">Kiểm tra</Button>
+              <Button onClick={() => openSaveReciever()} style={{ float: 'right', marginRight: 5 }} type="primary">Lưu Danh Bạ</Button>
             </Card>
           </Col>
           <Col span={8}>
@@ -305,6 +315,13 @@ const ExternalTransaction = props => {
           open={openModal}
           data={formData}
           handleClose={() => setOpenModal(false)}
+        />
+        <SaveReciever
+          key={shortid.generate()}
+          bank={form.getFieldValue("bankNameB")}
+          data={saveRecieverData}
+          open={openModalSaveReciever}
+          handleClose={() => setOpenModalSaveReciever(false)}
         />
       </Form>
     </Spin>

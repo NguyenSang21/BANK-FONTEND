@@ -22,12 +22,8 @@ const DialogOTP = props => {
   let idInterval = 0;
 
   useEffect(() => {
-    function resetField() {
-      form.resetFields();
-    }
     setVisible(props.open);
     setFormDataParent(props.data);
-    return resetField();
   }, [props.open]);
 
   useEffect(() => {

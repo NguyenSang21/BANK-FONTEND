@@ -98,7 +98,6 @@ class HomePage extends Component {
   };
 
   handleLogout = () => {
-    console.log('logout');
     localStorage.removeItem('user');
     window.location.reload();
   };
@@ -203,13 +202,13 @@ class HomePage extends Component {
             <Col span={12}>
               <DescriptionItem
                 title="Mã khách hàng"
-                content={data.length !== 0 && data.ID_TaiKhoan}
+                content={data && data.lenght !== 0 && data.ID_TaiKhoan}
               />
             </Col>
             <Col span={12}>
               <DescriptionItem
                 title="Họ tên"
-                content={data.length !== 0 && data.HoTen}
+                content={data && data.lenght !== 0 && data.HoTen}
               />
             </Col>
           </Row>
@@ -217,13 +216,13 @@ class HomePage extends Component {
             <Col span={12}>
               <DescriptionItem
                 title="Email"
-                content={data.length !== 0 && data.Email}
+                content={data && data.lenght !== 0 && data.Email}
               />
             </Col>
             <Col span={12}>
               <DescriptionItem
                 title="Điện thoại"
-                content={data.length !== 0 && data.DienThoai}
+                content={data && data.lenght !== 0 && data.DienThoai}
               />
             </Col>
           </Row>

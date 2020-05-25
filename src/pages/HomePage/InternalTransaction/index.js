@@ -21,6 +21,7 @@ import { connect } from 'react-redux';
 import DialogOTP from './DialogOTP';
 import { recieverService } from '../../../services/reciever.service';
 import shortid from 'shortid';
+import SaveReciever from './SaveReciever';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -34,6 +35,10 @@ const InternalTransaction = props => {
   const [options, setOptions] = useState([]);
   const [stk, setSTK] = useState(0);
   const [infoB, setInfoB] = useState({});
+
+  const [saveRecieverData, setSaveRecieverData] = useState({})
+  const [openModalSaveReciever, setOpenModalSaveReciever] = useState(false)
+
 
   const formItemLayout = {
     labelCol: { span: 6 },
@@ -122,11 +127,16 @@ const InternalTransaction = props => {
     return null;
   };
 
+  const openSaveReciever = () => {
+    setOpenModalSaveReciever(true)
+    setSaveRecieverData(form.getFieldsValue())
+  }
+
   return (
     <Spin spinning={loading}>
       <Form onFinish={onFinish} onFinishFailed={onFinishFailed} form={form}>
         <Row gutter={16}>
-          <Col span={12}>
+          <Col span={10}>
             <Card
               headStyle={{ background: '#fafafa' }}
               title="THÔNG TIN NGƯỜI CHUYỂN"
@@ -145,17 +155,16 @@ const InternalTransaction = props => {
               </div>
               <br />
               <br />
-              <br />
             </Card>
           </Col>
-          <Col span={12}>
+          <Col span={14}>
             <Card
               headStyle={{ background: '#fafafa' }}
               title="THÔNG TIN NGƯỜI HƯỞNG"
               style={{ width: '100%' }}
             >
               <Row>
-                <Col span={20}>
+                <Col span={18}>
                   <Form.Item
                   rules={[
                     {
@@ -178,23 +187,29 @@ const InternalTransaction = props => {
                   <Button onClick={() => checkSTK()} type="primary">Kiểm tra</Button>
                 </Col>
               </Row>
+              <Row>
+                <Col span={18}>
+                  <Form.Item
+                    {...formItemLayout2}
+                    name="nameB"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Vui lòng nhập tên người hưởng!'
+                      }
+                    ]}
+                    label="Người hưởng:"
+                  >
+                    <Input
+                      placeholder="Vui lòng nhập tên người hưởng!"
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={4}>
+                  <Button onClick={() => openSaveReciever()} type="primary">Lưu Danh Bạ</Button>
+                </Col>
+              </Row>
               
-              <Form.Item
-                {...formItemLayout}
-                name="nameB"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Vui lòng nhập tên người hưởng!'
-                  }
-                ]}
-                label="Người hưởng:"
-              >
-                <Input
-                  style={{ width: '100%' }}
-                  placeholder="Vui lòng nhập tên người hưởng!"
-                />
-              </Form.Item>
             </Card>
           </Col>
         </Row>
@@ -268,6 +283,13 @@ const InternalTransaction = props => {
         open={openModal}
         data={formData}
         handleClose={() => setOpenModal(false)}
+      />
+      <SaveReciever
+        key={shortid.generate()}
+        bank="BBC"
+        data={saveRecieverData}
+        open={openModalSaveReciever}
+        handleClose={() => setOpenModalSaveReciever(false)}
       />
     </Spin>
   );
