@@ -17,7 +17,7 @@ const TransHistory = props => {
       editable: true
     },
     {
-      title: 'STK người nhận',
+      title: 'Số tài khoản',
       dataIndex: 'ID_TaiKhoan_TTTK_B',
       width: '10%',
       editable: true

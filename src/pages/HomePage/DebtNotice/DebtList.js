@@ -166,6 +166,7 @@ const DebtList = props => {
   ];
 
   const handlePayDebt = async values => {
+    console.log(values)
     const userInfo = JSON.parse(localStorage.getItem('user'));
     const formData = {
       accountNumberA: values.TTbangTK,
@@ -174,12 +175,13 @@ const DebtList = props => {
       note: 'Tra nợ nhé',
       payer: 'A',
       username: userInfo.username,
+      usernameB: values.Username,
       transType: 'TraNo',
       ID_TraNo: values.ID_GiaoDich
     };
     console.log(formData);
 
-    const result = await transactionService.getOTP(userInfo.username);
+    const result = await transactionService.getOTP(userInfo.username, formData);
 
     if (result && result.success) {
       setFormData(formData);

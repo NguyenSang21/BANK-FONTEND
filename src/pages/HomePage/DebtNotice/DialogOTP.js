@@ -38,6 +38,7 @@ const DialogOTP = props => {
       const result = await transactionService.internalTrans(formDataParent);
 
       if (result && result.success) {
+        setLoading(false); // end loading
         props.notify_success(result.message);
         props.handleClose();
       }
