@@ -11,7 +11,6 @@ const SideBar = props => {
   const [selectedKey, setSelectedKey] = useState(props.location.pathname);
 
   useEffect(() => {
-    console.log(props.location.pathname);
     setSelectedKey(props.location.pathname);
   }, [props.location.pathname]);
 
