@@ -39,6 +39,7 @@ const InternalTransaction = props => {
   const [saveRecieverData, setSaveRecieverData] = useState({})
   const [openModalSaveReciever, setOpenModalSaveReciever] = useState(false)
 
+  const [loadingInfo, setLoadingInfo] = useState(false)
 
   const formItemLayout = {
     labelCol: { span: 6 },
@@ -114,9 +115,11 @@ const InternalTransaction = props => {
   };
 
   const checkSTK = async () => {
+    setLoadingInfo(true)
     const info = await getUserByAcountNumber(stk);
     setInfoB(info)
     form.setFieldsValue({ nameB: info && info.HoTen });
+    setLoadingInfo(false)
   }
 
   const getUserByAcountNumber = async id => {
@@ -158,62 +161,62 @@ const InternalTransaction = props => {
             </Card>
           </Col>
           <Col span={14}>
-            <Card
-              headStyle={{ background: '#fafafa' }}
-              title="THÔNG TIN NGƯỜI HƯỞNG"
-              style={{ width: '100%' }}
-            >
-              <Row>
-                <Col span={18}>
-                  <Form.Item
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Vui lòng nhập số tài khoản!'
-                    }
-                  ]}
-                  {...formItemLayout2}
-                  name="accountNumberB"
-                  label="Số tài khoản:"
-                >
-                  <AutoComplete
-                    onChange={e => handleChangeAutoComplete(e)}
-                    placeholder="Nhập vào STK hoặc chọn người nhận!"
-                    options={options}
-                  />
-                </Form.Item>
-                </Col>
-                <Col span={4}>
-                  <Button onClick={() => checkSTK()} type="primary">Kiểm tra</Button>
-                </Col>
-              </Row>
-              <Row>
-                <Col span={18}>
-                  <Form.Item
-                    {...formItemLayout2}
-                    name="nameB"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Vui lòng nhập tên người hưởng!'
-                      }
-                    ]}
-                    label="Người hưởng:"
-                  >
-                    <Input
-                      placeholder="Vui lòng nhập tên người hưởng!"
-                    />
-                  </Form.Item>
-                </Col>
-                <Col span={4}>
-                  <Button onClick={() => openSaveReciever()} type="primary">Lưu Danh Bạ</Button>
-                </Col>
-              </Row>
-              
-            </Card>
+            <Spin spinning={loadingInfo}>
+              <Card
+                headStyle={{ background: '#fafafa' }}
+                title="THÔNG TIN NGƯỜI HƯỞNG"
+                style={{ width: '100%' }}
+              >
+                <Row>
+                  <Col span={18}>
+                    <Form.Item
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Vui lòng nhập số tài khoản!'
+                        }
+                      ]}
+                      {...formItemLayout2}
+                      name="accountNumberB"
+                      label="Số tài khoản:"
+                    >
+                      <AutoComplete
+                        onChange={e => handleChangeAutoComplete(e)}
+                        placeholder="Nhập vào STK hoặc chọn người nhận!"
+                        options={options}
+                        onBlur={() => checkSTK()}
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={18}>
+                    <Form.Item
+                      {...formItemLayout2}
+                      name="nameB"
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Vui lòng nhập tên người hưởng!'
+                        }
+                      ]}
+                      label="Người hưởng:"
+                    >
+                      <Input
+                        placeholder="Vui lòng nhập tên người hưởng!"
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col span={4}>
+                    <Button onClick={() => openSaveReciever()} type="primary">Lưu Danh Bạ</Button>
+                  </Col>
+                </Row>
+              </Card>
+            </Spin>
           </Col>
         </Row>
         <br />
+
         <Card
           headStyle={{ background: '#fafafa' }}
           title="THÔNG TIN GIAO DỊCH"
@@ -277,6 +280,7 @@ const InternalTransaction = props => {
             Chuyển tiền
           </Button>
         </Card>
+
       </Form>
       <DialogOTP
         key={shortid.generate()}

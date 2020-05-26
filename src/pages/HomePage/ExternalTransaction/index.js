@@ -38,6 +38,8 @@ const ExternalTransaction = props => {
   const [saveRecieverData, setSaveRecieverData] = useState({})
   const [openModalSaveReciever, setOpenModalSaveReciever] = useState(false)
 
+  const [loadingInfo, setLoadingInfo] = useState(false)
+
   useEffect(() => {
     async function getUserInfo() {
       const userDetail = JSON.parse(localStorage.getItem('user'));
@@ -93,7 +95,6 @@ const ExternalTransaction = props => {
     values.accountNumberA = userInfo.ID_TaiKhoanTTTK;
     values.username = userDetail.username;
     values.agentSecretKey = agentSecretKey
-    console.log(values)
 
     const result = await transactionService.getOTP(userDetail.username, values);
 
@@ -127,18 +128,18 @@ const ExternalTransaction = props => {
   };
 
   const getInfoRecipient = async () => {
+    setLoadingInfo(true)
     const bankName = form.getFieldValue('bankNameB')
     const stk = form.getFieldValue('accountNumberB')
-    console.log(stk)
     const bank = await bankService.getBankByAgentCode(bankName)
 
     if (bank && bank.data) {
       setAgentSecretKey(bank.data.Key_Auth)
       const getInfo = await externalService.getRecipientInfo(bankName, { "SoTK": stk }, bank.data.Key_Auth)
-      console.log(getInfo)
       setRecipient(getInfo)
     }
 
+    setLoadingInfo(false)
   }
 
   const openSaveReciever = () => {
@@ -189,6 +190,9 @@ const ExternalTransaction = props => {
               title="TÙY CHỈNH"
               style={{ width: '100%' }}
             >
+              <Row span={18}>
+
+              </Row>
               <Form.Item
                 {...formItemLayout}
                 name="bankNameB"
@@ -199,9 +203,10 @@ const ExternalTransaction = props => {
                 <Select placeholder="Vui lòng chọn ngân hàng">
                   {bankList.map(item => {
                     return (
+                      item.TenNganHang !== 'BBC' ?
                       <Option key={shortid()} value={item.TenNganHang}>
                         {item.TenNganHang}
-                      </Option>
+                      </Option> : null
                     );
                   })}
                 </Select>
@@ -218,37 +223,37 @@ const ExternalTransaction = props => {
                 label="Số tài khoản:"
               >
                 <AutoComplete
-                  // onChange={e => handleChangeAutoComplete(e)}
                   placeholder="Nhập vào STK hoặc chọn người nhận!"
                   options={options}
+                  onBlur={() => getInfoRecipient()}
                 />
               </Form.Item>
-              <Button onClick={() => getInfoRecipient()} style={{ float: 'right' }} type="primary">Kiểm tra</Button>
               <Button onClick={() => openSaveReciever()} style={{ float: 'right', marginRight: 5 }} type="primary">Lưu Danh Bạ</Button>
             </Card>
           </Col>
           <Col span={8}>
-            <Card
-              headStyle={{ background: '#fafafa' }}
-              title="THÔNG TIN NGƯỜI NHẬN"
-              style={{ width: '100%' }}
-            >
-              <div>
-                <label>Tên khách hàng:</label>
-                &nbsp;
-                <span>{recipient && recipient.TenKH}</span>
-              </div>
-              <br />
-              <div>
-                <label>Số điện thoại:</label>
-                &nbsp;
-                <span>{recipient && recipient.SoDienThoai}</span>
-              </div>
-              <br />
-              <br />
-              <br />
-              <br />
-            </Card>
+            <Spin spinning={loadingInfo}>
+              <Card
+                headStyle={{ background: '#fafafa' }}
+                title="THÔNG TIN NGƯỜI NHẬN"
+                style={{ width: '100%' }}>
+                <div>
+                  <label>Tên khách hàng:</label>
+                  &nbsp;
+                  <span>{recipient && recipient.TenKH}</span>
+                </div>
+                <br />
+                <div>
+                  <label>Số điện thoại:</label>
+                  &nbsp;
+                  <span>{recipient && recipient.SoDienThoai}</span>
+                </div>
+                <br />
+                <br />
+                <br />
+                <br />
+              </Card>
+            </Spin>
           </Col>
         </Row>
         <br />

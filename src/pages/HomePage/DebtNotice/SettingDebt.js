@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import {
   Form,
   Select,
@@ -8,12 +8,14 @@ import {
   Button,
   Col,
   Row,
-  Spin
+  Spin,
+  AutoComplete
 } from 'antd';
 import { SettingOutlined } from '@ant-design/icons';
 import { userService, debtService, clientService } from '../../../services';
 import { notificationActions } from '../../../actions/notification.action';
 import { connect } from 'react-redux';
+import { recieverService } from '../../../services/reciever.service';
 
 const { TextArea } = Input;
 const { Search } = Input;
@@ -22,10 +24,38 @@ const SettingDebt = props => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [userInfo, setUserInfo] = useState([]);
+  const [stk, setSTK] = useState(0);
+
   const formItemLayout = {
-    labelCol: { span: 6 },
+    labelCol: { span: 8 },
     wrapperCol: { span: 14 }
   };
+
+  const formItemLayout2 = {
+    labelCol: { span: 10 },
+    wrapperCol: { span: 12 }
+  };
+
+  const [options, setOptions] = useState([]);
+  useEffect(() => {
+    async function fetchData() {
+      const userInfo = JSON.parse(localStorage.getItem('user'));
+      const result = await recieverService.getReciverList(userInfo.username);
+
+      if (result && result.success) {
+        const temp = [];
+        result.data.map(item => {
+          temp.push({
+            label: item.BietDanh,
+            value: item.ID_TaiKhoan_TTTK_B + '',
+            key: Math.random(0, 999999)
+          });
+        });
+        setOptions(temp);
+      }
+    }
+    fetchData();
+  }, []);
 
   const onFinish = async values => {
     setLoading(true);
@@ -66,6 +96,13 @@ const SettingDebt = props => {
     }
   };
 
+  const handleChangeAutoComplete = async e => {
+    if (e) {
+      setSTK(e)
+      form.setFieldsValue({accountNumberB: e})
+    }
+  };
+
   return (
     <Spin spinning={loading}>
       <Form
@@ -83,24 +120,33 @@ const SettingDebt = props => {
           <Row gutter={16}>
             <Col span={12}>
               <Card>
-                <Form.Item
-                  name="accountNumberB"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Nhập số tài khoản người nợ!'
-                    }
-                  ]}
-                  {...formItemLayout}
-                  label="Số tài khoản:"
-                >
-                  <Search
-                    placeholder="Nhập số tài khoản người nợ!"
-                    enterButton="Kiểm tra"
-                    size="middle"
-                    onSearch={() => checkUserInfo()}
-                  />
-                </Form.Item>
+                <Row>
+                <Col span={18}>
+                  <Form.Item
+                    name="accountNumberB"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Nhập số tài khoản người nợ!'
+                      }
+                    ]}
+                    {...formItemLayout2}
+                    label="Số tài khoản:"
+                  >
+                    <AutoComplete
+                      onChange={e => handleChangeAutoComplete(e)}
+                      placeholder="Nhập vào STK hoặc chọn người nhận!"
+                      options={options}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={4}>
+                  <Button
+                    type="primary"
+                    onClick={() => checkUserInfo()}
+                  >Kiểm tra</Button>
+                </Col>
+                </Row>
                 <Form.Item
                   name="amount"
                   {...formItemLayout}

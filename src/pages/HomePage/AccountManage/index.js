@@ -51,9 +51,9 @@ function AccountManage(props) {
           case 'BinhThuong':
             return <Tag color="green">Bình Thường</Tag>;
           case 'TK':
-            return <Tag color="green">Tiết kiệm</Tag>;
-          default:
-            return <Tag color="green">Bình thường</Tag>;
+            return <Tag color="blue">Tiết kiệm</Tag>;
+          case 'Khoa':
+            return <Tag color="red">Khóa</Tag>;
         }
       }
     }
