@@ -66,7 +66,7 @@ const Comparison = props => {
     },
     {
       title: 'Tài khoản B',
-      dataIndex: 'ID_NganHangLienKet_B',
+      dataIndex: 'ID_TaiKhoan_TTTK_B',
       width: '10%',
       editable: true
     },
