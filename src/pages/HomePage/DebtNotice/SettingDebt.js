@@ -25,13 +25,9 @@ const SettingDebt = props => {
   const [loading, setLoading] = useState(false);
   const [userInfo, setUserInfo] = useState([]);
   const [stk, setSTK] = useState(0);
+  const [loadingInfo, setLoadingInfo] = useState(false)
 
   const formItemLayout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 14 }
-  };
-
-  const formItemLayout2 = {
     labelCol: { span: 10 },
     wrapperCol: { span: 12 }
   };
@@ -84,7 +80,7 @@ const SettingDebt = props => {
   };
 
   const checkUserInfo = async () => {
-    console.log(form.getFieldValue('accountNumberB'));
+    setLoadingInfo(true)
     const id = form.getFieldValue('accountNumberB');
     const result = await clientService.getInfoByTK(id);
 
@@ -94,12 +90,13 @@ const SettingDebt = props => {
       data.accountNumber = id;
       setUserInfo(data);
     }
+    setLoadingInfo(false)
   };
 
   const handleChangeAutoComplete = async e => {
     if (e) {
       setSTK(e)
-      form.setFieldsValue({accountNumberB: e})
+      form.setFieldsValue({ accountNumberB: e })
     }
   };
 
@@ -120,33 +117,24 @@ const SettingDebt = props => {
           <Row gutter={16}>
             <Col span={12}>
               <Card>
-                <Row>
-                <Col span={18}>
-                  <Form.Item
-                    name="accountNumberB"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Nhập số tài khoản người nợ!'
-                      }
-                    ]}
-                    {...formItemLayout2}
-                    label="Số tài khoản:"
-                  >
-                    <AutoComplete
-                      onChange={e => handleChangeAutoComplete(e)}
-                      placeholder="Nhập vào STK hoặc chọn người nhận!"
-                      options={options}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col span={4}>
-                  <Button
-                    type="primary"
-                    onClick={() => checkUserInfo()}
-                  >Kiểm tra</Button>
-                </Col>
-                </Row>
+                <Form.Item
+                  name="accountNumberB"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Nhập số tài khoản người nợ!'
+                    }
+                  ]}
+                  {...formItemLayout}
+                  label="Số tài khoản:"
+                >
+                  <AutoComplete
+                    onChange={e => handleChangeAutoComplete(e)}
+                    placeholder="Nhập vào STK hoặc chọn người nhận!"
+                    options={options}
+                    onBlur={() => checkUserInfo()}
+                  />
+                </Form.Item>
                 <Form.Item
                   name="amount"
                   {...formItemLayout}
@@ -178,28 +166,31 @@ const SettingDebt = props => {
               </Card>
             </Col>
             <Col span={12}>
-              <Card title="Thông tin tài khoản (Nợ)">
-                <div>
-                  <label>Số tài khoản:</label>
+              <Spin spinning={loadingInfo}>
+                <Card title="Thông tin tài khoản (Nợ)">
+                  <div>
+                    <label>Số tài khoản:</label>
                   &nbsp;
                   <span>
-                    {(userInfo.length !== 0 && userInfo.accountNumber) || '...'}
-                  </span>
-                </div>
-                <br />
-                <div>
-                  <label>Chủ tài khoản:</label>
+                      {(userInfo.length !== 0 && userInfo.accountNumber) || '...'}
+                    </span>
+                  </div>
+                  <br />
+                  <div>
+                    <label>Chủ tài khoản:</label>
                   &nbsp;
                   <span>
-                    {(userInfo.length !== 0 && userInfo.Username) || '...'}
-                  </span>
-                </div>
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-              </Card>
+                      {(userInfo.length !== 0 && userInfo.Username) || '...'}
+                    </span>
+                  </div>
+                  <br />
+                  <br />
+                  <br />
+                  <br />
+                  <br />
+                </Card>
+              </Spin>
+
             </Col>
           </Row>
           <Button
