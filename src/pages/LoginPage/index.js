@@ -1,11 +1,14 @@
 import React, { Component, useEffect, useState } from 'react';
-import { Form, Input, Button, Checkbox, Spin } from 'antd';
+import { Form, Input, Button, Checkbox, Spin, Layout, Menu, Breadcrumb } from 'antd';
 import { message } from 'antd';
 import { userService } from '../../services';
 import { Redirect } from 'react-router-dom';
 import { UserOutlined } from '@ant-design/icons';
 import ReCAPTCHA from 'react-google-recaptcha';
 import ForgetPassword from '../HomePage/Profile/ForgetPassword';
+
+const { Header, Content, Footer } = Layout;
+
 const recaptchaRef = React.createRef();
 
 const layout = {
@@ -65,15 +68,43 @@ const LoginPage = props => {
   }
 
   return (
-    <div
+    <Layout className="layout">
+    <Header style={{background: '#f0b046'}}>
+      <div className="logo">
+            <p
+              style={{
+                lineHeight: '30px',
+                fontSize: 14,
+                fontWeight: 'bold',
+                color: 'white',
+                textAlign: 'center'
+              }}
+            >
+              I@Banking BBC
+            </p>
+          </div>
+      <Menu  theme="light"
+            mode="horizontal"
+            style={{
+              lineHeight: '64px',
+              background: '#f0b046',
+              color: 'white'
+            }}>
+      <Menu.Item key="1">Tiết kiệm trực tuyến</Menu.Item>
+      <Menu.Item key="2">Tiện ích gia tăng</Menu.Item>
+      <Menu.Item key="3">Hỗ trợ giao dịch</Menu.Item>
+      </Menu>
+    </Header>
+    <Content style={{ padding: 0, height: 835 }}>
+      <div
       style={{
         width: '100%',
         height: '100%',
         display: 'flex',
-        justifyContent: 'center',
+        paddingLeft: '1490px',
         alignItems: 'center',
         backgroundImage:
-          "url('https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg')",
+          "url('https://www.msb.com.vn:8080/razuna/assets/1/CECEFCF63C70477CAA12F13B9CEFDE28/img/D54324C7D3DB4CEA9F2871748E0D28B2/MBusiness_TopbannerWeb_2500x1080px.jpg')",
         backgroundSize: 'cover'
       }}
     >
@@ -84,7 +115,7 @@ const LoginPage = props => {
           style={{
             width: 350,
             textAlign: 'center',
-            background: '#20676b',
+            background: '#f06725',
             padding: 20,
             borderRadius: 5
           }}
@@ -92,7 +123,7 @@ const LoginPage = props => {
           onFinishFailed={onFinishFailed}
           className="login-form"
         >
-          <h1 style={{ color: 'white' }}>Internet Banking</h1>
+          <h1 style={{ color: 'white' }}>Internet Banking BBC</h1>
           <Form.Item
             name="username"
             label="Username"
@@ -153,6 +184,9 @@ const LoginPage = props => {
         handleClose={() => setOpenModal(false)}
       />
     </div>
+    </Content>
+    <Footer style={{ textAlign: 'center', background: '#f0b046'}}>Ant Design ©2018 Created by Ant UED</Footer>
+  </Layout>
   );
 };
 

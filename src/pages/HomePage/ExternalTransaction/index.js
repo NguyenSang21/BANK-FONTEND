@@ -301,9 +301,9 @@ const ExternalTransaction = props => {
             hasFeedback
           >
             <Select placeholder="Vui lòng chọn quốc gia">
-              <Option value="VNĐ">Việt Nam</Option>
-              <Option value="USD">Mỹ</Option>
-              <Option value="EURO">Nhật Bản</Option>
+              <Option value="VietNam">Việt Nam</Option>
+              <Option value="My">Mỹ</Option>
+              <Option value="NhatBan">Nhật Bản</Option>
             </Select>
           </Form.Item>
           <Form.Item

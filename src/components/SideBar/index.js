@@ -62,13 +62,14 @@ const SideBar = props => {
 
   return (
     <Sider
-      theme="light"
+      
       collapsible
       collapsed={collapsed}
       width={250}
       onCollapse={() => setCollapsed(!collapsed)}
     >
       <Menu
+      theme="dark"
         mode="inline"
         defaultSelectedKeys={[selectedKey]}
         defaultOpenKeys={['sub1', 'sub2', 'sub3', 'sub4', 'sub5', 'sub6']}

@@ -17,7 +17,7 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 import { NotificationOutlined } from '@ant-design/icons';
 import { userService } from '../../services';
 
-const { Header, Content } = Layout;
+const { Header, Content, Footer } = Layout;
 
 const pStyle = {
   fontSize: 16,
@@ -118,7 +118,7 @@ class HomePage extends Component {
     const data = this.state.infoData;
     return (
       <Layout>
-        <Header style={{ background: '#24292e' }}>
+        <Header style={{ background: '#40a9ff' }}>
           <div className="logo">
             <p
               style={{
@@ -129,7 +129,7 @@ class HomePage extends Component {
                 textAlign: 'center'
               }}
             >
-              Internet Banking
+              I@Banking BBC
             </p>
           </div>
           <Menu
@@ -137,7 +137,7 @@ class HomePage extends Component {
             mode="horizontal"
             style={{
               lineHeight: '64px',
-              background: '#24292e',
+              background: '#40a9ff',
               color: 'white'
             }}
           >
@@ -169,10 +169,10 @@ class HomePage extends Component {
             </Breadcrumb>
             <Content
               style={{
-                background: '#fff',
+                background: `url('https://i.imgur.com/F8s4fFr.png')`,
                 padding: 24,
                 margin: 0,
-                minHeight: 280
+                height: 750
               }}
             >
               <Switch>
@@ -180,6 +180,8 @@ class HomePage extends Component {
                 <Redirect from="/" to="/home/account-list" />
               </Switch>
             </Content>
+            <Footer style={{ textAlign: 'center', background: '#40a9ff'}}>Design ©2020 Created by BBC Banking</Footer>
+
           </Layout>
         </Layout>
         <Drawer
