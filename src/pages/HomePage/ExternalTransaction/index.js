@@ -282,6 +282,32 @@ const ExternalTransaction = props => {
           </Form.Item>
           <Form.Item
             {...formItemLayout2}
+            name="money_type"
+            label="Loại tiền"
+            rules={[{ required: true, message: 'Vui lòng chọn loại tiền!' }]}
+            hasFeedback
+          >
+            <Select placeholder="Vui lòng chọn loại tiền">
+              <Option value="VNĐ">VNĐ</Option>
+              <Option value="USD">USD</Option>
+              <Option value="EURO">EURO</Option>
+            </Select>
+          </Form.Item>
+          <Form.Item
+            {...formItemLayout2}
+            name="country"
+            label="Quốc gia"
+            rules={[{ required: true, message: 'Vui lòng chọn quốc gia!' }]}
+            hasFeedback
+          >
+            <Select placeholder="Vui lòng chọn quốc gia">
+              <Option value="VNĐ">Việt Nam</Option>
+              <Option value="USD">Mỹ</Option>
+              <Option value="EURO">Nhật Bản</Option>
+            </Select>
+          </Form.Item>
+          <Form.Item
+            {...formItemLayout2}
             name="note"
             rules={[
               {
@@ -294,18 +320,7 @@ const ExternalTransaction = props => {
           >
             <TextArea rows={4} />
           </Form.Item>
-          <Form.Item
-            {...formItemLayout2}
-            name="payer"
-            label="Phí chuyển tiền"
-            rules={[{ required: true, message: 'Vui lòng chọn phí!' }]}
-            hasFeedback
-          >
-            <Select placeholder="Vui lòng chọn phí">
-              <Option value="A">Người chuyển trả</Option>
-              <Option value="B">Người hưởng trả</Option>
-            </Select>
-          </Form.Item>
+          
           <Button
             style={{ float: 'right', marginRight: '20%' }}
             type="primary"
